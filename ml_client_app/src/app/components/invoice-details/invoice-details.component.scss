@@ -1,0 +1,175 @@
+.details-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.loading-container, .error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  
+  p {
+    margin-top: 16px;
+    color: #555;
+  }
+  
+  button {
+    margin-top: 20px;
+  }
+}
+
+.error-container {
+  mat-icon {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+    margin-bottom: 16px;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  
+  h2 {
+    margin: 0;
+    color: #333;
+  }
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  
+  &.status-completed {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  
+  &.status-failed {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+  
+  &.status-processing {
+    background-color: #e3f2fd;
+    color: #1565c0;
+  }
+  
+  &.status-pending {
+    background-color: #fff8e1;
+    color: #f57f17;
+  }
+}
+
+.processing-card {
+  margin-bottom: 24px;
+  
+  .processing-info {
+    display: flex;
+    align-items: center;
+    
+    p {
+      margin-left: 16px;
+      color: #555;
+    }
+  }
+}
+
+.results-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.main-info, .extraction-details {
+  height: 100%;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  
+  @media (min-width: 500px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+  
+  .label {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 4px;
+  }
+  
+  .value {
+    font-size: 16px;
+    color: #333;
+  }
+}
+
+.json-data {
+  margin-top: 24px;
+  
+  h4 {
+    margin-bottom: 8px;
+    color: #555;
+  }
+  
+  pre {
+    background-color: #f5f5f5;
+    padding: 12px;
+    border-radius: 4px;
+    overflow: auto;
+    font-size: 12px;
+    max-height: 300px;
+  }
+}
+
+.error-card {
+  margin-bottom: 24px;
+  
+  mat-card-header {
+    margin-bottom: 16px;
+  }
+  
+  .error-details {
+    margin-top: 16px;
+    
+    h4 {
+      margin-bottom: 8px;
+      color: #555;
+    }
+    
+    pre {
+      background-color: #ffebee;
+      padding: 12px;
+      border-radius: 4px;
+      overflow: auto;
+      font-size: 12px;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}

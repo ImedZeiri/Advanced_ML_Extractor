@@ -1,1 +1,38 @@
-/* You can add global styles to this file, and also import other style files */
+/* Importation du thème Angular Material */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Réinitialisation des styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* Styles globaux */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Styles pour les cartes */
+mat-card {
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Styles pour les boutons */
+button.mat-raised-button {
+  text-transform: uppercase;
+  font-weight: 500;
+}

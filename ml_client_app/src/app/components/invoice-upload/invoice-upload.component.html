@@ -1,0 +1,32 @@
+<div class="upload-container">
+  <h2>Télécharger une facture</h2>
+  
+  <div class="upload-area">
+    <ngx-file-drop
+      [disabled]="isUploading"
+      (onFileDrop)="dropped($event)"
+      (onFileOver)="fileOver($event)"
+      (onFileLeave)="fileLeave($event)"
+      dropZoneClassName="drop-zone"
+      contentClassName="drop-content">
+      
+      <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+        <div class="upload-instructions">
+          <mat-icon>cloud_upload</mat-icon>
+          <p>Glissez et déposez votre facture ici</p>
+          <p class="small">ou</p>
+          <button mat-raised-button color="primary" type="button" (click)="openFileSelector()">
+            Sélectionner un fichier
+          </button>
+          <p class="file-types">Formats acceptés: PDF, JPG, PNG, TIFF</p>
+        </div>
+      </ng-template>
+      
+    </ngx-file-drop>
+  </div>
+  
+  <div *ngIf="isUploading" class="loading-indicator">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Téléchargement en cours...</p>
+  </div>
+</div>

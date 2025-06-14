@@ -1,0 +1,27 @@
+# Django et REST Framework
+Django==4.2.7
+djangorestframework==3.14.0
+django-cors-headers==4.3.0
+
+# Traitement d'images et OCR
+opencv-python==4.8.0.76
+pytesseract==0.3.10
+Pillow==10.0.0
+
+# NLP et ML
+spacy==3.6.1
+scikit-learn==1.3.0
+tensorflow==2.13.0
+transformers==4.31.0
+torch==2.0.1
+
+# Manipulation de PDF
+PyPDF2==3.0.1
+pdf2image==1.16.3
+
+# Outils de développement
+python-dotenv==1.0.0
+gunicorn==21.2.0
+
+# Dépendances pour l'annotation de données
+doccano-client==1.2.2

@@ -1,0 +1,105 @@
+<div class="details-container">
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Chargement des détails de la facture...</p>
+  </div>
+  
+  <div *ngIf="error" class="error-container">
+    <mat-icon color="warn">error</mat-icon>
+    <p>Impossible de charger les détails de la facture.</p>
+    <button mat-raised-button color="primary" routerLink="/">Retour à l'accueil</button>
+  </div>
+  
+  <div *ngIf="!loading && !error && invoice" class="invoice-details">
+    <div class="header">
+      <h2>Détails de la facture</h2>
+      <div class="status-badge" [ngClass]="getStatusClass()">
+        {{ getStatusText() }}
+      </div>
+    </div>
+    
+    <mat-card *ngIf="invoice.status === 'processing' || invoice.status === 'pending'" class="processing-card">
+      <mat-card-content>
+        <div class="processing-info">
+          <mat-spinner diameter="30"></mat-spinner>
+          <p>Traitement de la facture en cours. Veuillez patienter...</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    
+    <div *ngIf="invoice.status === 'completed'" class="results-container">
+      <mat-card class="main-info">
+        <mat-card-header>
+          <mat-card-title>Informations principales</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Fournisseur</span>
+              <span class="value">{{ invoice.vendor_name || 'Non détecté' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Numéro de facture</span>
+              <span class="value">{{ invoice.invoice_number || 'Non détecté' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Date de facture</span>
+              <span class="value">{{ invoice.invoice_date || 'Non détecté' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Date d'échéance</span>
+              <span class="value">{{ invoice.due_date || 'Non détecté' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Montant total</span>
+              <span class="value">{{ invoice.total_amount ? (invoice.total_amount | currency:'EUR') : 'Non détecté' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">TVA</span>
+              <span class="value">{{ invoice.tax_amount ? (invoice.tax_amount | currency:'EUR') : 'Non détecté' }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card class="extraction-details">
+        <mat-card-header>
+          <mat-card-title>Détails de l'extraction</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-item">
+            <span class="label">Score de confiance</span>
+            <span class="value">{{ invoice.confidence_score ? (invoice.confidence_score | percent) : 'Non disponible' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Temps de traitement</span>
+            <span class="value">{{ invoice.processing_time ? (invoice.processing_time | number:'1.2-2') + ' secondes' : 'Non disponible' }}</span>
+          </div>
+          
+          <div class="json-data">
+            <h4>Données extraites (JSON)</h4>
+            <pre>{{ invoice.extracted_data | json }}</pre>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+    <mat-card *ngIf="invoice.status === 'failed'" class="error-card">
+      <mat-card-header>
+        <mat-icon color="warn">error</mat-icon>
+        <mat-card-title>Échec du traitement</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Une erreur s'est produite lors du traitement de la facture.</p>
+        <div *ngIf="invoice.extracted_data?.error" class="error-details">
+          <h4>Détails de l'erreur</h4>
+          <pre>{{ invoice.extracted_data.error }}</pre>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    
+    <div class="actions">
+      <button mat-raised-button color="primary" routerLink="/">Retour à l'accueil</button>
+    </div>
+  </div>
+</div>
