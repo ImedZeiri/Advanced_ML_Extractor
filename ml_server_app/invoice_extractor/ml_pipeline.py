@@ -45,35 +45,60 @@ class InvoiceExtractionPipeline:
         Returns:
             dict: Données extraites de la facture
         """
-        # Vérification de l'extension du fichier
-        _, ext = os.path.splitext(file_path)
-        
-        # Conversion du document en images
-        if ext.lower() == '.pdf':
-            images = self._convert_pdf_to_images(file_path)
-        else:
-            # Pour les formats image
-            images = [cv2.imread(file_path)]
-        
-        # Prétraitement des images
-        processed_images = [self._preprocess_image(img) for img in images]
-        
-        # OCR sur les images prétraitées
-        text_content = ""
-        for img in processed_images:
-            text_content += pytesseract.image_to_string(img, lang='fra') + "\n"
-        
-        # Extraction des informations à partir du texte
-        extracted_data = self._extract_information(text_content)
-        
-        # Ajout d'un score de confiance (simulé ici)
-        extracted_data['confidence_score'] = 0.85
-        
-        return extracted_data
+        try:
+            # Vérification de l'extension du fichier
+            _, ext = os.path.splitext(file_path)
+            
+            # Conversion du document en images
+            if ext.lower() == '.pdf':
+                try:
+                    # Spécifier explicitement le chemin de poppler si nécessaire
+                    poppler_path = '/usr/local/bin'  # Chemin typique sur macOS avec Homebrew
+                    if os.path.exists(poppler_path):
+                        images = pdf2image.convert_from_path(file_path, dpi=300, poppler_path=poppler_path)
+                    else:
+                        images = pdf2image.convert_from_path(file_path, dpi=300)
+                except Exception as e:
+                    # Fallback pour les fichiers PDF: traiter comme une image si la conversion échoue
+                    return {"error": f"Erreur lors de la conversion PDF: {str(e)}. Vérifiez que poppler est installé."}
+            else:
+                # Pour les formats image
+                img = cv2.imread(file_path)
+                if img is None:
+                    return {"error": f"Impossible de lire le fichier image: {file_path}"}
+                images = [img]
+            
+            # Prétraitement des images
+            processed_images = [self._preprocess_image(img) for img in images]
+            
+            # OCR sur les images prétraitées
+            text_content = ""
+            for img in processed_images:
+                text_content += pytesseract.image_to_string(img, lang='fra') + "\n"
+            
+            # Extraction des informations à partir du texte
+            extracted_data = self._extract_information(text_content)
+            
+            # Ajout d'un score de confiance (simulé ici)
+            extracted_data['confidence_score'] = 0.85
+            
+            return extracted_data
+            
+        except Exception as e:
+            # Gestion des erreurs
+            return {"error": str(e)}
     
     def _convert_pdf_to_images(self, pdf_path):
         """Convertit un PDF en liste d'images"""
-        return pdf2image.convert_from_path(pdf_path, dpi=300)
+        try:
+            # Spécifier explicitement le chemin de poppler si nécessaire
+            poppler_path = '/usr/local/bin'  # Chemin typique sur macOS avec Homebrew
+            if os.path.exists(poppler_path):
+                return pdf2image.convert_from_path(pdf_path, dpi=300, poppler_path=poppler_path)
+            else:
+                return pdf2image.convert_from_path(pdf_path, dpi=300)
+        except Exception as e:
+            raise Exception(f"Erreur lors de la conversion PDF: {str(e)}. Vérifiez que poppler est installé.")
     
     def _preprocess_image(self, image):
         """

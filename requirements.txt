@@ -17,7 +17,7 @@ torch==2.0.1
 
 # Manipulation de PDF
 PyPDF2==3.0.1
-pdf2image==1.16.3
+pdf2image==1.16.3  # Nécessite Poppler: brew install poppler (macOS) ou apt-get install poppler-utils (Linux)
 
 # Outils de développement
 python-dotenv==1.0.0
