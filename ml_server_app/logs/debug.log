@@ -1,0 +1,544 @@
+INFO 2025-06-15 00:02:08,530 autoreload Watching for file changes with StatReloader
+WARNING 2025-06-15 00:02:23,233 pipeline Modèle spaCy fr_core_news_md non trouvé. Utilisation du modèle par défaut.
+WARNING 2025-06-15 00:02:23,237 pipeline Modèle spaCy fr_core_news_md non trouvé. Utilisation du modèle par défaut.
+INFO 2025-06-15 00:07:40,094 autoreload /Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/typing_extensions.py changed, reloading.
+INFO 2025-06-15 00:07:41,965 autoreload Watching for file changes with StatReloader
+WARNING 2025-06-15 00:09:40,546 pipeline Modèle spaCy fr_core_news_md non trouvé. Utilisation du modèle par défaut.
+INFO 2025-06-15 00:12:15,553 autoreload Watching for file changes with StatReloader
+WARNING 2025-06-15 00:12:37,480 log Not Found: /
+WARNING 2025-06-15 00:12:37,481 basehttp "GET / HTTP/1.1" 404 2650
+INFO 2025-06-15 00:12:44,667 basehttp "GET /admin HTTP/1.1" 301 0
+INFO 2025-06-15 00:12:44,693 basehttp "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-06-15 00:12:44,721 basehttp "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4251
+INFO 2025-06-15 00:12:44,771 basehttp "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2025-06-15 00:12:44,774 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-06-15 00:12:44,775 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-06-15 00:12:44,776 basehttp "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-06-15 00:12:44,777 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-06-15 00:12:44,777 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-06-15 00:12:44,784 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-06-15 00:12:51,593 basehttp "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2025-06-15 00:12:51,618 basehttp "GET /admin/ HTTP/1.1" 200 8895
+INFO 2025-06-15 00:12:51,653 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2025-06-15 00:12:51,661 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-06-15 00:12:51,662 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+WARNING 2025-06-15 00:21:34,308 log Forbidden: /api/invoices/
+WARNING 2025-06-15 00:21:34,310 basehttp "GET /api/invoices/ HTTP/1.1" 403 58
+WARNING 2025-06-15 00:22:07,824 log Forbidden: /api/invoices/
+WARNING 2025-06-15 00:22:07,825 basehttp "GET /api/invoices/ HTTP/1.1" 403 58
+WARNING 2025-06-15 00:22:20,975 log Forbidden: /api/invoices/
+WARNING 2025-06-15 00:22:22,811 basehttp "POST /api/invoices/ HTTP/1.1" 403 58
+WARNING 2025-06-15 00:23:51,255 log Forbidden: /api/invoices/
+WARNING 2025-06-15 00:23:51,257 basehttp "GET /api/invoices/ HTTP/1.1" 403 58
+WARNING 2025-06-15 00:24:49,627 log Forbidden: /api/invoices/
+WARNING 2025-06-15 00:24:49,630 basehttp "GET /api/invoices/ HTTP/1.1" 403 58
+WARNING 2025-06-15 00:26:22,473 log Forbidden: /api/invoices/
+WARNING 2025-06-15 00:26:22,474 basehttp "GET /api/invoices/ HTTP/1.1" 403 58
+WARNING 2025-06-15 00:26:32,008 log Forbidden: /api/invoices/
+WARNING 2025-06-15 00:26:32,463 basehttp "POST /api/invoices/ HTTP/1.1" 403 58
+WARNING 2025-06-15 00:27:42,967 log Forbidden: /api/invoices/
+WARNING 2025-06-15 00:27:42,969 basehttp "GET /api/invoices/ HTTP/1.1" 403 58
+INFO 2025-06-15 00:27:51,086 autoreload /Users/macbookpro/Desktop/Advanced_ML_Extractor/ml_server_app/invoice_extractor/api.py changed, reloading.
+INFO 2025-06-15 00:27:53,443 autoreload Watching for file changes with StatReloader
+ERROR 2025-06-15 00:28:11,850 log Internal Server Error: /api/invoices/
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+sqlite3.OperationalError: no such table: invoice_extractor_invoice
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/generics.py", line 171, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/pagination.py", line 204, in paginate_queryset
+    self.page = paginator.page(page_number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 89, in page
+    number = self.validate_number(number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 110, in count
+    return c()
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/query.py", line 604, in count
+    return self.query.get_count(using=self.db)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 644, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 626, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+django.db.utils.OperationalError: no such table: invoice_extractor_invoice
+ERROR 2025-06-15 00:28:11,856 basehttp "GET /api/invoices/ HTTP/1.1" 500 184432
+INFO 2025-06-15 00:28:32,619 autoreload Watching for file changes with StatReloader
+INFO 2025-06-15 00:28:41,640 autoreload /Users/macbookpro/Desktop/Advanced_ML_Extractor/ml_server_app/ml_server_app/settings.py changed, reloading.
+INFO 2025-06-15 00:28:43,551 autoreload Watching for file changes with StatReloader
+ERROR 2025-06-15 00:29:10,911 log Internal Server Error: /api/invoices/
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+sqlite3.OperationalError: no such table: invoice_extractor_invoice
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/generics.py", line 171, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/pagination.py", line 204, in paginate_queryset
+    self.page = paginator.page(page_number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 89, in page
+    number = self.validate_number(number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 110, in count
+    return c()
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/query.py", line 604, in count
+    return self.query.get_count(using=self.db)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 644, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 626, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+django.db.utils.OperationalError: no such table: invoice_extractor_invoice
+ERROR 2025-06-15 00:29:10,919 basehttp "GET /api/invoices/ HTTP/1.1" 500 184432
+INFO 2025-06-15 00:29:56,868 autoreload Watching for file changes with StatReloader
+ERROR 2025-06-15 00:30:18,795 log Internal Server Error: /api/invoices/
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+sqlite3.OperationalError: no such table: invoice_extractor_invoice
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/generics.py", line 171, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/pagination.py", line 204, in paginate_queryset
+    self.page = paginator.page(page_number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 89, in page
+    number = self.validate_number(number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 110, in count
+    return c()
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/query.py", line 604, in count
+    return self.query.get_count(using=self.db)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 644, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 626, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+django.db.utils.OperationalError: no such table: invoice_extractor_invoice
+ERROR 2025-06-15 00:30:18,804 basehttp "GET /api/invoices/ HTTP/1.1" 500 184463
+INFO 2025-06-15 00:30:51,519 autoreload Watching for file changes with StatReloader
+ERROR 2025-06-15 00:31:06,236 log Internal Server Error: /api/invoices/
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+sqlite3.OperationalError: no such table: invoice_extractor_invoice
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/generics.py", line 171, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/pagination.py", line 204, in paginate_queryset
+    self.page = paginator.page(page_number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 89, in page
+    number = self.validate_number(number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 110, in count
+    return c()
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/query.py", line 604, in count
+    return self.query.get_count(using=self.db)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 644, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 626, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+django.db.utils.OperationalError: no such table: invoice_extractor_invoice
+ERROR 2025-06-15 00:31:06,243 basehttp "GET /api/invoices/ HTTP/1.1" 500 184463
+INFO 2025-06-15 00:31:59,674 autoreload Watching for file changes with StatReloader
+ERROR 2025-06-15 00:32:16,283 log Internal Server Error: /api/invoices/
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+sqlite3.OperationalError: no such table: invoice_extractor_invoice
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/generics.py", line 171, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/pagination.py", line 204, in paginate_queryset
+    self.page = paginator.page(page_number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 89, in page
+    number = self.validate_number(number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 110, in count
+    return c()
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/query.py", line 604, in count
+    return self.query.get_count(using=self.db)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 644, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 626, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+django.db.utils.OperationalError: no such table: invoice_extractor_invoice
+ERROR 2025-06-15 00:32:16,290 basehttp "GET /api/invoices/ HTTP/1.1" 500 184463
+INFO 2025-06-15 00:34:24,552 autoreload Watching for file changes with StatReloader
+ERROR 2025-06-15 00:34:43,550 log Internal Server Error: /api/invoices/
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+sqlite3.OperationalError: no such table: invoice_extractor_invoice
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/generics.py", line 171, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/pagination.py", line 204, in paginate_queryset
+    self.page = paginator.page(page_number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 89, in page
+    number = self.validate_number(number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 110, in count
+    return c()
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/query.py", line 604, in count
+    return self.query.get_count(using=self.db)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 644, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 626, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+django.db.utils.OperationalError: no such table: invoice_extractor_invoice
+ERROR 2025-06-15 00:34:43,566 basehttp "GET /api/invoices/ HTTP/1.1" 500 184465
+INFO 2025-06-15 00:46:34,447 autoreload Watching for file changes with StatReloader
+ERROR 2025-06-15 00:47:01,326 log Internal Server Error: /api/invoices/
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+sqlite3.OperationalError: no such table: invoice_extractor_invoice
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/generics.py", line 171, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/rest_framework/pagination.py", line 204, in paginate_queryset
+    self.page = paginator.page(page_number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 89, in page
+    number = self.validate_number(number)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/core/paginator.py", line 110, in count
+    return c()
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/query.py", line 604, in count
+    return self.query.get_count(using=self.db)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 644, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/query.py", line 626, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/macbookpro/Desktop/Advanced_ML_Extractor/venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+django.db.utils.OperationalError: no such table: invoice_extractor_invoice
+ERROR 2025-06-15 00:47:01,346 basehttp "GET /api/invoices/ HTTP/1.1" 500 184465
+ERROR 2025-06-15 00:49:50,519 api Erreur lors du traitement de la facture: no such table: invoice_extractor_invoice
+ERROR 2025-06-15 00:49:50,520 log Internal Server Error: /api/invoices/
+ERROR 2025-06-15 00:49:50,520 basehttp "POST /api/invoices/ HTTP/1.1" 500 52
+INFO 2025-06-15 00:57:54,946 autoreload Watching for file changes with StatReloader
+ERROR 2025-06-15 00:58:27,796 api Erreur lors du traitement de la facture 1: Unable to get page count. Is poppler installed and in PATH?
+INFO 2025-06-15 00:58:27,816 basehttp "POST /api/invoices/ HTTP/1.1" 201 346
+ERROR 2025-06-15 00:58:45,151 api Erreur lors du traitement de la facture 2: Unable to get page count. Is poppler installed and in PATH?
+INFO 2025-06-15 00:58:45,165 basehttp "POST /api/invoices/ HTTP/1.1" 201 342
+INFO 2025-06-15 00:59:03,538 basehttp "GET /api/invoices/ HTTP/1.1" 200 911
+INFO 2025-06-15 00:59:09,050 basehttp "GET /api/invoices/1/ HTTP/1.1" 200 431
+INFO 2025-06-15 01:00:56,292 autoreload Watching for file changes with StatReloader

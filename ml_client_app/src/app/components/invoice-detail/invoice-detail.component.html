@@ -1,0 +1,105 @@
+<div class="invoice-detail-container">
+  <div class="header">
+    <h2>Détails de la facture</h2>
+    <button routerLink="/invoices">Retour à la liste</button>
+  </div>
+  
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+  
+  <div *ngIf="isLoading" class="loading">
+    Chargement des détails de la facture...
+  </div>
+  
+  <div *ngIf="!isLoading && invoice" class="invoice-card">
+    <div class="card-header">
+      <div class="status-badge" [ngClass]="getStatusClass(invoice.status)">
+        {{ getStatusLabel(invoice.status) }}
+      </div>
+      <h3>{{ invoice.original_filename }}</h3>
+    </div>
+    
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <div class="info-group">
+            <label>Fournisseur</label>
+            <div class="value">{{ invoice.vendor_name || 'Non détecté' }}</div>
+          </div>
+          
+          <div class="info-group">
+            <label>Numéro de facture</label>
+            <div class="value">{{ invoice.invoice_number || 'Non détecté' }}</div>
+          </div>
+          
+          <div class="info-group">
+            <label>Date de facture</label>
+            <div class="value">{{ invoice.invoice_date | date:'dd/MM/yyyy' || 'Non détecté' }}</div>
+          </div>
+        </div>
+        
+        <div class="col">
+          <div class="info-group">
+            <label>Date d'échéance</label>
+            <div class="value">{{ invoice.due_date | date:'dd/MM/yyyy' || 'Non détecté' }}</div>
+          </div>
+          
+          <div class="info-group">
+            <label>Montant total</label>
+            <div class="value">{{ invoice.total_amount ? (invoice.total_amount | currency:invoice.currency || 'EUR') : 'Non détecté' }}</div>
+          </div>
+          
+          <div class="info-group">
+            <label>TVA</label>
+            <div class="value">{{ invoice.tax_amount ? (invoice.tax_amount | currency:invoice.currency || 'EUR') : 'Non détecté' }}</div>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="invoice.line_items && invoice.line_items.length > 0" class="line-items">
+        <h4>Lignes de facture</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Quantité</th>
+              <th>Prix unitaire</th>
+              <th>Prix total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of invoice.line_items">
+              <td>{{ item.description }}</td>
+              <td>{{ item.quantity || '-' }}</td>
+              <td>{{ item.unit_price ? (item.unit_price | currency:invoice.currency || 'EUR') : '-' }}</td>
+              <td>{{ item.total_price ? (item.total_price | currency:invoice.currency || 'EUR') : '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div *ngIf="invoice.extracted_data" class="extracted-data">
+        <h4>Données extraites brutes</h4>
+        <pre>{{ invoice.extracted_data | json }}</pre>
+      </div>
+    </div>
+    
+    <div class="card-footer">
+      <div class="info-group">
+        <label>Téléchargé le</label>
+        <div class="value">{{ invoice.uploaded_at | date:'dd/MM/yyyy HH:mm' }}</div>
+      </div>
+      
+      <div *ngIf="invoice.processed_at" class="info-group">
+        <label>Traité le</label>
+        <div class="value">{{ invoice.processed_at | date:'dd/MM/yyyy HH:mm' }}</div>
+      </div>
+      
+      <div *ngIf="invoice.error_message" class="error-details">
+        <label>Message d'erreur</label>
+        <div class="value">{{ invoice.error_message }}</div>
+      </div>
+    </div>
+  </div>
+</div>

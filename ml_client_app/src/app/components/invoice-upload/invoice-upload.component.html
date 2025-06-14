@@ -1,0 +1,66 @@
+<div class="upload-container">
+  <h2>Télécharger des factures</h2>
+  
+  <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="file">Sélectionner des fichiers</label>
+      <input 
+        type="file" 
+        id="file" 
+        multiple
+        accept=".pdf,.jpg,.jpeg,.png,.tiff,.bmp"
+        (change)="onFileSelect($event)"
+      >
+      <small class="form-text text-muted">
+        Formats acceptés: PDF, JPG, PNG, TIFF, BMP
+      </small>
+    </div>
+    
+    <div *ngIf="selectedFiles.length > 0" class="selected-files">
+      <h4>Fichiers sélectionnés ({{ selectedFiles.length }})</h4>
+      <ul>
+        <li *ngFor="let file of selectedFiles">
+          {{ file.name }} ({{ (file.size / 1024).toFixed(2) }} KB)
+        </li>
+      </ul>
+    </div>
+    
+    <button 
+      type="submit" 
+      [disabled]="isUploading || selectedFiles.length === 0"
+    >
+      <span *ngIf="!isUploading">Télécharger</span>
+      <span *ngIf="isUploading">Téléchargement en cours...</span>
+    </button>
+  </form>
+  
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+  
+  <div *ngIf="uploadedInvoices.length > 0" class="uploaded-invoices">
+    <h3>Factures téléchargées</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom du fichier</th>
+          <th>Statut</th>
+          <th>Date d'upload</th>
+          <th>Fournisseur</th>
+          <th>Numéro de facture</th>
+          <th>Montant</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invoice of uploadedInvoices">
+          <td>{{ invoice.original_filename }}</td>
+          <td>{{ invoice.status }}</td>
+          <td>{{ invoice.uploaded_at | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ invoice.vendor_name || 'En attente' }}</td>
+          <td>{{ invoice.invoice_number || 'En attente' }}</td>
+          <td>{{ invoice.total_amount ? (invoice.total_amount | currency:invoice.currency || 'EUR') : 'En attente' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
