@@ -17,7 +17,31 @@
           <mat-card-title>Facture téléchargée avec succès</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <pre>{{ extractionData | json }}</pre>
+          <div *ngIf="extractionData.invoice.extracted_content">
+            <h3>Texte extrait:</h3>
+            <div class="extracted-text">
+              {{ extractionData.invoice.extracted_content.text }}
+            </div>
+            
+            <h3>Métadonnées:</h3>
+            <ul>
+              <li><strong>Méthode d'extraction:</strong> {{ extractionData.invoice.extracted_content.extraction_method }}</li>
+              <li><strong>Type de document:</strong> {{ extractionData.invoice.extracted_content.document_type }}</li>
+              <li *ngIf="extractionData.invoice.extracted_content.page_count">
+                <strong>Nombre de pages:</strong> {{ extractionData.invoice.extracted_content.page_count }}
+              </li>
+            </ul>
+          </div>
+          
+          <div *ngIf="extractionData.invoice.extracted_content?.error" class="error-message">
+            <h3>Erreur d'extraction:</h3>
+            <p>{{ extractionData.invoice.extracted_content.error }}</p>
+          </div>
+          
+          <div class="json-data">
+            <h3>Données JSON complètes:</h3>
+            <pre>{{ extractionData | json }}</pre>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
