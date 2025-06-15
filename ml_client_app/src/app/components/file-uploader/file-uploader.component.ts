@@ -3,6 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { InvoiceService } from '../../services/invoice.service';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 
+interface DetectedField {
+  key: string;
+  value: string;
+}
+
 @Component({
   selector: 'app-file-uploader',
   templateUrl: './file-uploader.component.html',
@@ -16,6 +21,7 @@ export class FileUploaderComponent implements OnChanges {
   isUploading = false;
   dragOver = false;
   structuredData: any = null;
+  detectedFields: DetectedField[] = [];
 
   constructor(
     private invoiceService: InvoiceService,
@@ -31,7 +37,39 @@ export class FileUploaderComponent implements OnChanges {
   updateStructuredData(): void {
     if (this.extractionData?.invoice?.extracted_content?.structured_data) {
       this.structuredData = this.extractionData.invoice.extracted_content.structured_data;
+      this.processDetectedFields();
     }
+  }
+  
+  processDetectedFields(): void {
+    this.detectedFields = [];
+    
+    // Récupérer les champs détectés automatiquement
+    const detectedFields = this.structuredData?.detected_fields || {};
+    
+    // Convertir l'objet en tableau pour l'affichage
+    for (const [key, value] of Object.entries(detectedFields)) {
+      // Éviter les doublons avec les champs principaux
+      if (this.isMainField(key)) {
+        continue;
+      }
+      
+      this.detectedFields.push({
+        key: key,
+        value: value as string
+      });
+    }
+    
+    // Trier par ordre alphabétique des clés
+    this.detectedFields.sort((a, b) => a.key.localeCompare(b.key));
+  }
+  
+  isMainField(key: string): boolean {
+    // Vérifier si le champ est déjà présent dans les champs principaux
+    const mainFieldKeys = ['Numéro de facture', 'Date', 'Montant total', 'Total'];
+    return mainFieldKeys.some(mainKey => 
+      key.toLowerCase().includes(mainKey.toLowerCase())
+    );
   }
 
   onFileSelected(event: any): void {

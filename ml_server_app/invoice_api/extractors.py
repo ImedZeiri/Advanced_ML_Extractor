@@ -107,7 +107,8 @@ class TextProcessor:
             "date": None,
             "total_amount": None,
             "vendor": None,
-            "items": []
+            "items": [],
+            "detected_fields": {}
         }
         
         # Extraire le numéro de facture
@@ -124,6 +125,34 @@ class TextProcessor:
         amount_match = re.search(r'(?i)(total|montant|somme).*?(\d+[,.]\d{2})', text)
         if amount_match:
             data["total_amount"] = amount_match.group(2).replace(',', '.')
+        
+        # Détecter automatiquement les paires clé-valeur
+        # Recherche des motifs comme "Clé: Valeur" ou "Clé = Valeur"
+        key_value_patterns = [
+            r'([A-Za-z0-9\s\-\']{3,30})\s*[:=]\s*([A-Za-z0-9\s\-\.,€\$£&@\'\/]{1,50})',  # Clé: Valeur ou Clé = Valeur
+            r'([A-Za-z0-9\s\-\']{3,30})\s*[:|]\s*([A-Za-z0-9\s\-\.,€\$£&@\'\/]{1,50})',  # Variante avec | comme séparateur
+        ]
+        
+        for pattern in key_value_patterns:
+            for match in re.finditer(pattern, text):
+                key = match.group(1).strip()
+                value = match.group(2).strip()
+                
+                # Ignorer les clés trop courtes ou les valeurs vides
+                if len(key) < 3 or not value:
+                    continue
+                    
+                # Ignorer les clés qui sont des mots communs
+                common_words = ['le', 'la', 'les', 'un', 'une', 'des', 'et', 'ou', 'pour', 'par']
+                if key.lower() in common_words:
+                    continue
+                
+                # Nettoyer la clé et la valeur
+                key = key.strip().capitalize()
+                value = value.strip()
+                
+                # Ajouter au dictionnaire des champs détectés
+                data["detected_fields"][key] = value
         
         return data
     
