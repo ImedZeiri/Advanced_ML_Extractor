@@ -26,6 +26,25 @@
         Fichier sélectionné: {{ selectedFile.name }}
       </p>
     </div>
+    
+    <!-- Données structurées -->
+    <div *ngIf="structuredData" class="structured-data-container">
+      <h3>Données extraites</h3>
+      <div class="structured-data-grid">
+        <div *ngIf="structuredData.invoice_number" class="data-item">
+          <div class="data-label">Numéro de facture</div>
+          <div class="data-value">{{ structuredData.invoice_number }}</div>
+        </div>
+        <div *ngIf="structuredData.date" class="data-item">
+          <div class="data-label">Date</div>
+          <div class="data-value">{{ structuredData.date }}</div>
+        </div>
+        <div *ngIf="structuredData.total_amount" class="data-item">
+          <div class="data-label">Montant total</div>
+          <div class="data-value">{{ structuredData.total_amount }} €</div>
+        </div>
+      </div>
+    </div>
   </mat-card-content>
   
   <mat-card-actions align="end">

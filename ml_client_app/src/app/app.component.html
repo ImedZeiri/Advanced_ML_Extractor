@@ -34,24 +34,7 @@
                   {{ extractionData.invoice.extracted_content.text }}
                 </div>
               </mat-tab>
-              <mat-tab label="Données structurées" *ngIf="extractionData.invoice.extracted_content.structured_data">
-                <div class="structured-data">
-                  <mat-list>
-                    <mat-list-item *ngIf="extractionData.invoice.extracted_content.structured_data.invoice_number">
-                      <span matListItemTitle>Numéro de facture</span>
-                      <span matListItemLine>{{ extractionData.invoice.extracted_content.structured_data.invoice_number }}</span>
-                    </mat-list-item>
-                    <mat-list-item *ngIf="extractionData.invoice.extracted_content.structured_data.date">
-                      <span matListItemTitle>Date</span>
-                      <span matListItemLine>{{ extractionData.invoice.extracted_content.structured_data.date }}</span>
-                    </mat-list-item>
-                    <mat-list-item *ngIf="extractionData.invoice.extracted_content.structured_data.total_amount">
-                      <span matListItemTitle>Montant total</span>
-                      <span matListItemLine>{{ extractionData.invoice.extracted_content.structured_data.total_amount }} €</span>
-                    </mat-list-item>
-                  </mat-list>
-                </div>
-              </mat-tab>
+
               <mat-tab label="Aperçu de la facture" *ngIf="extractionData.invoice.file">
                 <div class="file-container">
                   <!-- Affichage d'image -->
@@ -85,7 +68,7 @@
 
   <mat-sidenav-content>
     <div class="main-content">
-      <app-file-uploader (extractionSuccess)="onExtractionSuccess($event)"></app-file-uploader>
+      <app-file-uploader [extractionData]="extractionData" (extractionSuccess)="onExtractionSuccess($event)"></app-file-uploader>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

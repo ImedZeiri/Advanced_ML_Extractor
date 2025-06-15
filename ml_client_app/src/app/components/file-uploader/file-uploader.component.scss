@@ -39,3 +39,43 @@ mat-card {
   font-weight: bold;
   color: #333;
 }
+
+.structured-data-container {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  border-left: 4px solid #4caf50;
+  
+  h3 {
+    margin-top: 0;
+    color: #2e7d32;
+    font-size: 18px;
+  }
+}
+
+.structured-data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.data-item {
+  background-color: white;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.data-label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.data-value {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
