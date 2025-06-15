@@ -31,7 +31,6 @@ export class FileUploaderComponent implements OnChanges {
   detectedFields: DetectedField[] = [];
   categorizedFields: {[category: string]: DetectedField[]} = {};
   
-  // Définition des catégories avec leurs informations d'affichage
   categories: {[key: string]: CategoryInfo} = {
     'vendor_info': { title: 'Informations fournisseur', icon: 'business', color: '#4caf50' },
     'client_info': { title: 'Informations client', icon: 'person', color: '#2196f3' },
@@ -122,14 +121,12 @@ export class FileUploaderComponent implements OnChanges {
   }
   
   isMainField(key: string): boolean {
-    // Vérifier si le champ est déjà présent dans les champs principaux
     const mainFieldKeys = ['Numéro de facture', 'Date', 'Montant total', 'Total'];
     return mainFieldKeys.some(mainKey => 
       key.toLowerCase().includes(mainKey.toLowerCase())
     );
   }
   
-  // Vérifier si une catégorie a des champs à afficher
   hasCategoryFields(category: string): boolean {
     return this.categorizedFields[category] && this.categorizedFields[category].length > 0;
   }

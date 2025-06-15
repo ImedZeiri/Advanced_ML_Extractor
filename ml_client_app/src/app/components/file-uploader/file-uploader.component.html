@@ -16,7 +16,7 @@
       
       <div class="file-input-container">
         <input type="file" id="file" (change)="onFileSelected($event)" accept=".pdf,.jpg,.jpeg,.png" #fileInput hidden>
-        <button mat-raised-button color="primary" (click)="fileInput.click()">
+        <button mat-raised-button color="primary" (click)="fileInput.click();structuredData=null">
           <mat-icon>attach_file</mat-icon>
           Sélectionner un fichier
         </button>

@@ -22,7 +22,6 @@ export class AppComponent {
     if (data.invoice && data.invoice.file) {
       this.fileSrc = this.sanitizer.bypassSecurityTrustResourceUrl(data.invoice.file);
       
-      // Vérifier si c'est une image
       const fileExt = data.invoice.file.toLowerCase().split('.').pop();
       this.isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExt);
     }
