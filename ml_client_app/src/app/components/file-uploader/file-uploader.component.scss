@@ -51,6 +51,82 @@ mat-card {
     margin-top: 0;
     color: #2e7d32;
     font-size: 18px;
+    margin-bottom: 20px;
+  }
+}
+
+// Données principales
+.main-data-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.main-data-item {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  flex: 1;
+  min-width: 200px;
+}
+
+.main-data-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e8f5e9;
+  margin-right: 12px;
+  
+  mat-icon {
+    color: #4caf50;
+  }
+}
+
+.main-data-content {
+  flex: 1;
+}
+
+.main-data-label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.main-data-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+// Catégories
+.category-section {
+  margin-bottom: 25px;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border-left: 4px solid #ccc;
+  
+  mat-icon {
+    margin-right: 10px;
+  }
+  
+  h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
   }
 }
 
@@ -58,7 +134,7 @@ mat-card {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 15px;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 .data-item {
@@ -66,11 +142,6 @@ mat-card {
   padding: 10px;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.main-data {
-  background-color: #e8f5e9;
-  border-left: 3px solid #4caf50;
 }
 
 .data-label {
@@ -83,4 +154,24 @@ mat-card {
   font-size: 16px;
   font-weight: bold;
   color: #333;
+  word-break: break-word;
+}
+
+// Lignes de produits
+.product-lines {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.product-line {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  font-family: monospace;
+  white-space: pre-wrap;
+  
+  &:last-child {
+    border-bottom: none;
+  }
 }

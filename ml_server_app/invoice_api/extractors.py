@@ -4,7 +4,6 @@ import re
 from PIL import Image
 import json
 
-# Importations conditionnelles pour éviter les erreurs si certaines bibliothèques ne sont pas disponibles
 try:
     import pytesseract
     TESSERACT_AVAILABLE = True
@@ -23,21 +22,9 @@ try:
 except ImportError:
     PYPDF2_AVAILABLE = False
 
-class TextProcessor:
-    """Classe pour nettoyer et formater le texte extrait des factures"""
-    
+class TextProcessor:    
     @staticmethod
     def clean_text(text):
-        """
-        Nettoie le texte extrait en supprimant les caractères indésirables
-        et en normalisant les espaces
-        
-        Args:
-            text: Texte brut extrait
-            
-        Returns:
-            str: Texte nettoyé
-        """
         if not text:
             return ""
             
@@ -54,15 +41,6 @@ class TextProcessor:
     
     @staticmethod
     def format_invoice_text(text):
-        """
-        Formate le texte pour qu'il ressemble davantage à la mise en page originale
-        
-        Args:
-            text: Texte nettoyé
-            
-        Returns:
-            str: Texte formaté
-        """
         if not text:
             return ""
             
@@ -93,44 +71,157 @@ class TextProcessor:
     
     @staticmethod
     def extract_structured_data(text):
-        """
-        Extrait des données structurées à partir du texte de la facture
-        
-        Args:
-            text: Texte nettoyé
-            
-        Returns:
-            dict: Données structurées extraites
-        """
         data = {
             "invoice_number": None,
             "date": None,
             "total_amount": None,
             "vendor": None,
+            "client": None,
+            "payment_info": {},
+            "tax_info": {},
             "items": [],
-            "detected_fields": {}
+            "detected_fields": {},
+            "categorized_fields": {
+                "vendor_info": {},
+                "client_info": {},
+                "payment_details": {},
+                "tax_details": {},
+                "product_details": {},
+                "dates": {},
+                "totals": {},
+                "other": {}
+            }
+        }
+        
+        # Dictionnaires de mots-clés pour la catégorisation
+        field_categories = {
+            "vendor_info": [
+                "fournisseur", "vendeur", "émetteur", "société", "entreprise", "siret", "siren", 
+                "rcs", "capital", "adresse", "tel", "téléphone", "email", "courriel", "site", 
+                "web", "http", "www", "magasin", "boutique"
+            ],
+            "client_info": [
+                "client", "acheteur", "destinataire", "livraison", "facturation", "adresse de",
+                "adresse du", "compte client", "référence client"
+            ],
+            "payment_details": [
+                "paiement", "règlement", "échéance", "date limite", "iban", "bic", "swift", "virement",
+                "chèque", "carte", "bancaire", "payé", "réglé", "mode de", "conditions", "délai"
+            ],
+            "tax_details": [
+                "tva", "taxe", "tax", "vat", "taux", "intracommunautaire", "exonéré", "n° tva", 
+                "numéro tva", "id tva"
+            ],
+            "product_details": [
+                "produit", "article", "référence", "ref", "désignation", "description", "quantité", 
+                "qté", "prix", "unitaire", "pu", "remise", "sous-total", "sous total"
+            ],
+            "dates": [
+                "date", "émission", "facture", "livraison", "échéance", "paiement", "commande"
+            ],
+            "totals": [
+                "total", "ht", "ttc", "tva", "net à payer", "montant", "somme", "sous-total", 
+                "remise", "frais", "port", "livraison", "acompte"
+            ]
         }
         
         # Extraire le numéro de facture
-        invoice_match = re.search(r'(?i)(facture|invoice|n°|numéro)[\s:]*([A-Z0-9-]{5,})', text)
-        if invoice_match:
-            data["invoice_number"] = invoice_match.group(2)
+        invoice_patterns = [
+            r'(?i)(?:facture|invoice|n°|numéro|ref)[\s:]*([A-Z0-9-]{5,})',
+            r'(?i)(?:facture|invoice)[^\n]*?(?:n°|numéro|ref)[^\n]*?([A-Z0-9-]{5,})'
+        ]
         
-        # Extraire la date
-        date_match = re.search(r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})', text)
-        if date_match:
-            data["date"] = date_match.group(1)
+        for pattern in invoice_patterns:
+            invoice_match = re.search(pattern, text)
+            if invoice_match:
+                data["invoice_number"] = invoice_match.group(1).strip()
+                break
+        
+        # Extraire les dates (avec différents formats)
+        date_patterns = [
+            r'(?i)(?:date|émission|facturé le)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
+            r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
+            r'(\d{1,2}\s+(?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s+\d{2,4})'
+        ]
+        
+        for pattern in date_patterns:
+            date_match = re.search(pattern, text)
+            if date_match:
+                data["date"] = date_match.group(1).strip()
+                break
         
         # Extraire le montant total
-        amount_match = re.search(r'(?i)(total|montant|somme).*?(\d+[,.]\d{2})', text)
-        if amount_match:
-            data["total_amount"] = amount_match.group(2).replace(',', '.')
+        total_patterns = [
+            r'(?i)(?:total\s+ttc|montant\s+ttc|net\s+à\s+payer|total\s+à\s+payer)[\s:]*(\d+[,.]\d{2})',
+            r'(?i)(?:total|montant|somme).*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?',
+            r'(?i)(?:à\s+payer)[\s:]*(\d+[,.]\d{2})'
+        ]
+        
+        for pattern in total_patterns:
+            amount_match = re.search(pattern, text)
+            if amount_match:
+                data["total_amount"] = amount_match.group(1).replace(',', '.')
+                break
+        
+        # Extraire les informations du fournisseur
+        # Recherche de SIRET, SIREN, site web, etc.
+        vendor_patterns = {
+            "siret": r'(?i)(?:SIRET)[\s:]*(\d{14})',
+            "siren": r'(?i)(?:SIREN)[\s:]*(\d{9})',
+            "website": r'(?i)(?:www\.[\w-]+\.[\w]{2,}|https?://[\w-]+\.[\w]{2,}[\w/\-\.]*)',
+            "email": r'[\w\.-]+@[\w\.-]+\.\w+',
+            "phone": r'(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}'
+        }
+        
+        for key, pattern in vendor_patterns.items():
+            match = re.search(pattern, text)
+            if match:
+                if key == "website" or key == "email" or key == "phone":
+                    data["categorized_fields"]["vendor_info"][key] = match.group(0)
+                else:
+                    data["categorized_fields"]["vendor_info"][key] = match.group(1)
+        
+        # Extraire les informations de TVA
+        vat_patterns = {
+            "tva_number": r'(?i)(?:TVA|VAT|n°\s*TVA|numéro\s*TVA)[\s:]*([A-Z0-9]{2,14})',
+            "tva_rate": r'(?i)(?:TVA|VAT|Taux)[\s:]*(\d{1,2}[,.]\d{1,2}\s*%|\d{1,2}\s*%)'
+        }
+        
+        for key, pattern in vat_patterns.items():
+            match = re.search(pattern, text)
+            if match:
+                data["categorized_fields"]["tax_details"][key] = match.group(1)
+        
+        # Extraire les lignes de produits/services
+        # Recherche de tableaux ou de listes d'articles
+        product_lines_pattern = r'(?i)(?:Désignation|Article|Produit|Description).*?(?:Quantité|Qté|Qte).*?(?:Prix|Montant|Total)'
+        if re.search(product_lines_pattern, text):
+            # Présence probable d'un tableau de produits
+            # Extraction simplifiée des lignes de produits
+            lines = text.split('\n')
+            product_section = False
+            product_lines = []
+            
+            for line in lines:
+                if re.search(product_lines_pattern, line):
+                    product_section = True
+                    continue
+                
+                if product_section and re.search(r'(?i)(?:Total|Sous-total)', line):
+                    product_section = False
+                    
+                if product_section and re.search(r'\d+[,.]\d{2}', line):
+                    # Ligne contenant probablement un prix
+                    product_lines.append(line.strip())
+            
+            if product_lines:
+                data["items"] = product_lines
         
         # Détecter automatiquement les paires clé-valeur
-        # Recherche des motifs comme "Clé: Valeur" ou "Clé = Valeur"
         key_value_patterns = [
             r'([A-Za-z0-9\s\-\']{3,30})\s*[:=]\s*([A-Za-z0-9\s\-\.,€\$£&@\'\/]{1,50})',  # Clé: Valeur ou Clé = Valeur
             r'([A-Za-z0-9\s\-\']{3,30})\s*[:|]\s*([A-Za-z0-9\s\-\.,€\$£&@\'\/]{1,50})',  # Variante avec | comme séparateur
+            r'([A-Za-z0-9\s\-\']{3,30})\s{2,}([A-Za-z0-9\s\-\.,€\$£&@\'\/]{1,50})'       # Clé suivie de plusieurs espaces puis Valeur
         ]
         
         for pattern in key_value_patterns:
@@ -143,7 +234,7 @@ class TextProcessor:
                     continue
                     
                 # Ignorer les clés qui sont des mots communs
-                common_words = ['le', 'la', 'les', 'un', 'une', 'des', 'et', 'ou', 'pour', 'par']
+                common_words = ['le', 'la', 'les', 'un', 'une', 'des', 'et', 'ou', 'pour', 'par', 'avec', 'dans']
                 if key.lower() in common_words:
                     continue
                 
@@ -153,20 +244,26 @@ class TextProcessor:
                 
                 # Ajouter au dictionnaire des champs détectés
                 data["detected_fields"][key] = value
+                
+                # Catégoriser le champ
+                categorized = False
+                for category, keywords in field_categories.items():
+                    for keyword in keywords:
+                        if keyword.lower() in key.lower():
+                            data["categorized_fields"][category][key] = value
+                            categorized = True
+                            break
+                    if categorized:
+                        break
+                
+                # Si non catégorisé, mettre dans "other"
+                if not categorized:
+                    data["categorized_fields"]["other"][key] = value
         
         return data
     
     @staticmethod
     def process_extracted_text(extraction_result):
-        """
-        Traite le résultat d'extraction pour produire un texte propre et formaté
-        
-        Args:
-            extraction_result: Dictionnaire contenant le texte extrait et des métadonnées
-            
-        Returns:
-            dict: Dictionnaire contenant le texte original, nettoyé, formaté et les données structurées
-        """
         if "error" in extraction_result:
             return extraction_result
             
@@ -195,15 +292,6 @@ class TextExtractor:
     
     @staticmethod
     def extract_from_file(file_path):
-        """
-        Extrait le texte d'un fichier en fonction de son type
-        
-        Args:
-            file_path: Chemin vers le fichier
-            
-        Returns:
-            dict: Dictionnaire contenant le texte extrait et des métadonnées
-        """
         file_ext = os.path.splitext(file_path)[1].lower()
         
         extraction_result = {}
@@ -219,16 +307,6 @@ class TextExtractor:
     
     @staticmethod
     def extract_from_pdf(pdf_path):
-        """
-        Extrait le texte d'un fichier PDF
-        Essaie d'abord d'extraire le texte directement, puis utilise l'OCR si nécessaire
-        
-        Args:
-            pdf_path: Chemin vers le fichier PDF
-            
-        Returns:
-            dict: Dictionnaire contenant le texte extrait et des métadonnées
-        """
         # Vérifier si PyPDF2 est disponible
         if not PYPDF2_AVAILABLE:
             return {"error": "PyPDF2 n'est pas installé. Impossible d'extraire le texte du PDF."}
@@ -261,15 +339,6 @@ class TextExtractor:
     
     @staticmethod
     def extract_from_scanned_pdf(pdf_path):
-        """
-        Extrait le texte d'un PDF scanné en utilisant OCR
-        
-        Args:
-            pdf_path: Chemin vers le fichier PDF
-            
-        Returns:
-            dict: Dictionnaire contenant le texte extrait et des métadonnées
-        """
         try:
             # Convertir le PDF en images
             with tempfile.TemporaryDirectory() as temp_dir:
@@ -292,15 +361,6 @@ class TextExtractor:
     
     @staticmethod
     def extract_from_image(image_path):
-        """
-        Extrait le texte d'une image en utilisant OCR
-        
-        Args:
-            image_path: Chemin vers le fichier image
-            
-        Returns:
-            dict: Dictionnaire contenant le texte extrait et des métadonnées
-        """
         if not TESSERACT_AVAILABLE:
             return {"error": "pytesseract n'est pas installé. Impossible d'extraire le texte de l'image."}
         

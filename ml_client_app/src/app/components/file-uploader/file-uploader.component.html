@@ -30,25 +30,68 @@
     <!-- Données structurées -->
     <div *ngIf="structuredData" class="structured-data-container">
       <h3>Données extraites</h3>
-      <div class="structured-data-grid">
-        <!-- Données principales -->
-        <div *ngIf="structuredData.invoice_number" class="data-item main-data">
-          <div class="data-label">Numéro de facture</div>
-          <div class="data-value">{{ structuredData.invoice_number }}</div>
-        </div>
-        <div *ngIf="structuredData.date" class="data-item main-data">
-          <div class="data-label">Date</div>
-          <div class="data-value">{{ structuredData.date }}</div>
-        </div>
-        <div *ngIf="structuredData.total_amount" class="data-item main-data">
-          <div class="data-label">Montant total</div>
-          <div class="data-value">{{ structuredData.total_amount }} €</div>
+      
+      <!-- Données principales -->
+      <div class="main-data-container">
+        <div *ngIf="structuredData.invoice_number" class="main-data-item">
+          <div class="main-data-icon">
+            <mat-icon>receipt</mat-icon>
+          </div>
+          <div class="main-data-content">
+            <div class="main-data-label">Numéro de facture</div>
+            <div class="main-data-value">{{ structuredData.invoice_number }}</div>
+          </div>
         </div>
         
-        <!-- Champs détectés automatiquement -->
-        <div *ngFor="let field of detectedFields" class="data-item">
-          <div class="data-label">{{ field.key }}</div>
-          <div class="data-value">{{ field.value }}</div>
+        <div *ngIf="structuredData.date" class="main-data-item">
+          <div class="main-data-icon">
+            <mat-icon>event</mat-icon>
+          </div>
+          <div class="main-data-content">
+            <div class="main-data-label">Date</div>
+            <div class="main-data-value">{{ structuredData.date }}</div>
+          </div>
+        </div>
+        
+        <div *ngIf="structuredData.total_amount" class="main-data-item">
+          <div class="main-data-icon">
+            <mat-icon>euro_symbol</mat-icon>
+          </div>
+          <div class="main-data-content">
+            <div class="main-data-label">Montant total</div>
+            <div class="main-data-value">{{ structuredData.total_amount }} €</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Champs catégorisés -->
+      <div *ngFor="let category of categoryOrder">
+        <div *ngIf="hasCategoryFields(category)" class="category-section">
+          <div class="category-header" [style.borderLeftColor]="categories[category].color">
+            <mat-icon [style.color]="categories[category].color">{{ categories[category].icon }}</mat-icon>
+            <h4>{{ categories[category].title }}</h4>
+          </div>
+          
+          <div class="structured-data-grid">
+            <div *ngFor="let field of categorizedFields[category]" class="data-item">
+              <div class="data-label">{{ field.key }}</div>
+              <div class="data-value">{{ field.value }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Lignes de produits -->
+      <div *ngIf="structuredData.items && structuredData.items.length > 0" class="category-section">
+        <div class="category-header" [style.borderLeftColor]="categories['product_details'].color">
+          <mat-icon [style.color]="categories['product_details'].color">{{ categories['product_details'].icon }}</mat-icon>
+          <h4>Lignes de produits</h4>
+        </div>
+        
+        <div class="product-lines">
+          <div *ngFor="let item of structuredData.items" class="product-line">
+            {{ item }}
+          </div>
         </div>
       </div>
     </div>

@@ -6,6 +6,13 @@ import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 interface DetectedField {
   key: string;
   value: string;
+  category?: string;
+}
+
+interface CategoryInfo {
+  title: string;
+  icon: string;
+  color: string;
 }
 
 @Component({
@@ -22,6 +29,25 @@ export class FileUploaderComponent implements OnChanges {
   dragOver = false;
   structuredData: any = null;
   detectedFields: DetectedField[] = [];
+  categorizedFields: {[category: string]: DetectedField[]} = {};
+  
+  // Définition des catégories avec leurs informations d'affichage
+  categories: {[key: string]: CategoryInfo} = {
+    'vendor_info': { title: 'Informations fournisseur', icon: 'business', color: '#4caf50' },
+    'client_info': { title: 'Informations client', icon: 'person', color: '#2196f3' },
+    'payment_details': { title: 'Détails de paiement', icon: 'payment', color: '#ff9800' },
+    'tax_details': { title: 'Informations fiscales', icon: 'receipt', color: '#f44336' },
+    'product_details': { title: 'Détails des produits', icon: 'shopping_cart', color: '#9c27b0' },
+    'dates': { title: 'Dates', icon: 'event', color: '#607d8b' },
+    'totals': { title: 'Montants', icon: 'euro_symbol', color: '#795548' },
+    'other': { title: 'Autres informations', icon: 'more_horiz', color: '#9e9e9e' }
+  };
+  
+  // Liste des catégories à afficher dans l'ordre
+  categoryOrder: string[] = [
+    'vendor_info', 'client_info', 'product_details', 'totals', 
+    'tax_details', 'payment_details', 'dates', 'other'
+  ];
 
   constructor(
     private invoiceService: InvoiceService,
@@ -38,6 +64,7 @@ export class FileUploaderComponent implements OnChanges {
     if (this.extractionData?.invoice?.extracted_content?.structured_data) {
       this.structuredData = this.extractionData.invoice.extracted_content.structured_data;
       this.processDetectedFields();
+      this.processCategorizedFields();
     }
   }
   
@@ -64,6 +91,36 @@ export class FileUploaderComponent implements OnChanges {
     this.detectedFields.sort((a, b) => a.key.localeCompare(b.key));
   }
   
+  processCategorizedFields(): void {
+    // Réinitialiser les catégories
+    this.categorizedFields = {};
+    
+    // Initialiser toutes les catégories avec un tableau vide
+    for (const category of this.categoryOrder) {
+      this.categorizedFields[category] = [];
+    }
+    
+    // Récupérer les champs catégorisés
+    const categorized = this.structuredData?.categorized_fields || {};
+    
+    // Parcourir chaque catégorie
+    for (const [category, fields] of Object.entries(categorized)) {
+      if (typeof fields === 'object' && fields !== null) {
+        // Convertir l'objet en tableau pour l'affichage
+        for (const [key, value] of Object.entries(fields)) {
+          this.categorizedFields[category].push({
+            key: key,
+            value: value as string,
+            category: category
+          });
+        }
+        
+        // Trier par ordre alphabétique des clés
+        this.categorizedFields[category].sort((a, b) => a.key.localeCompare(b.key));
+      }
+    }
+  }
+  
   isMainField(key: string): boolean {
     // Vérifier si le champ est déjà présent dans les champs principaux
     const mainFieldKeys = ['Numéro de facture', 'Date', 'Montant total', 'Total'];
@@ -71,6 +128,12 @@ export class FileUploaderComponent implements OnChanges {
       key.toLowerCase().includes(mainKey.toLowerCase())
     );
   }
+  
+  // Vérifier si une catégorie a des champs à afficher
+  hasCategoryFields(category: string): boolean {
+    return this.categorizedFields[category] && this.categorizedFields[category].length > 0;
+  }
+
 
   onFileSelected(event: any): void {
     if (event.target.files) {
