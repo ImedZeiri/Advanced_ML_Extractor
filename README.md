@@ -1,76 +1,71 @@
 # Advanced ML Extractor
 
-Application d'extraction de texte à partir de factures (PDF et images) utilisant Django et Angular.
+Application d'extraction et de traitement de texte à partir de factures et documents PDF.
 
 ## Fonctionnalités
 
-- Upload de factures (PDF texte, PDF scanné, images)
-- Extraction automatique du texte
-- Affichage des résultats au format JSON
-- Interface utilisateur Angular
+- Extraction de texte à partir de PDF (textuels et scannés) et d'images
+- Nettoyage et formatage du texte extrait
+- Présentation visuelle améliorée des factures
+- Extraction de données structurées (numéro de facture, date, montant)
+- API REST pour l'intégration avec d'autres systèmes
+- Interface utilisateur Angular pour le téléchargement et la visualisation
 
-## Prérequis
+## Structure du projet
 
-- Python 3.8+
-- Node.js et npm
-- Tesseract OCR
+- `ml_server_app/` : Application backend Django avec API REST
+  - `invoice_api/` : API pour l'extraction et le traitement des factures
+  - `extractors.py` : Classes pour l'extraction et le traitement du texte
+  - `text_utils.py` : Utilitaires pour la mise en forme du texte et la génération HTML
+- `ml_client_app/` : Application frontend Angular
+- `data_source/` : Exemples de factures pour les tests
 
-## Installation
+## Utilisation de l'API
 
-1. Cloner le dépôt
-```bash
-git clone <repository-url>
-cd Advanced_ML_Extractor
+### Télécharger une facture
+
+```
+POST /api/invoices/
 ```
 
-2. Installer les dépendances Python
-```bash
+### Obtenir le texte formaté
+
+```
+GET /api/invoices/{id}/formatted_text/
+```
+
+### Obtenir le texte formaté en HTML
+
+```
+GET /api/invoices/{id}/formatted_text/?format=html
+```
+
+## Traitement du texte
+
+Le système effectue les opérations suivantes sur le texte extrait :
+
+1. **Extraction** : Utilise PyPDF2 pour les PDF textuels et Tesseract OCR pour les PDF scannés et images
+2. **Nettoyage** : Supprime les caractères indésirables et normalise les espaces
+3. **Formatage** : Améliore la présentation visuelle en identifiant les sections importantes
+4. **Extraction structurée** : Identifie les informations clés comme les numéros de facture, dates et montants
+5. **Présentation** : Génère une version HTML formatée pour une meilleure lisibilité
+
+## Installation et démarrage
+
+1. Installer les dépendances :
+```
 pip install -r requirements.txt
 ```
 
-3. Installer Tesseract OCR
-   - Sur macOS: `brew install tesseract`
-   - Sur Ubuntu: `sudo apt-get install tesseract-ocr`
-   - Sur Windows: Télécharger depuis https://github.com/UB-Mannheim/tesseract/wiki
-
-4. Installer les dépendances Angular
-```bash
-cd ml_client_app
-npm install
+2. Démarrer le serveur Django :
 ```
-
-## Configuration
-
-1. Assurez-vous que Tesseract est correctement installé et accessible dans le PATH
-2. Vérifiez que les langues françaises et anglaises sont installées pour Tesseract
-
-## Exécution
-
-1. Démarrer le serveur Django
-```bash
 cd ml_server_app
 python manage.py runserver
 ```
 
-2. Démarrer l'application Angular
-```bash
+3. Démarrer l'application Angular :
+```
 cd ml_client_app
+npm install
 ng serve
 ```
-
-3. Accéder à l'application à l'adresse http://localhost:4200
-
-## API Endpoints
-
-- `POST /api/invoices/`: Upload d'une facture et extraction du texte
-- `GET /api/invoices/`: Liste de toutes les factures
-- `GET /api/invoices/{id}/`: Détails d'une facture spécifique
-- `GET /api/invoices/{id}/extract/`: Réextraire le texte d'une facture existante
-
-## Structure du projet
-
-- `ml_client_app/`: Application frontend Angular
-- `ml_server_app/`: Application backend Django
-  - `invoice_api/`: API REST pour la gestion des factures
-  - `extractors.py`: Module d'extraction de texte
-- `data_source/`: Exemples de factures pour les tests

@@ -1,5 +1,6 @@
 import os
 import tempfile
+import re
 from PIL import Image
 import json
 
@@ -22,6 +23,144 @@ try:
 except ImportError:
     PYPDF2_AVAILABLE = False
 
+class TextProcessor:
+    """Classe pour nettoyer et formater le texte extrait des factures"""
+    
+    @staticmethod
+    def clean_text(text):
+        """
+        Nettoie le texte extrait en supprimant les caractères indésirables
+        et en normalisant les espaces
+        
+        Args:
+            text: Texte brut extrait
+            
+        Returns:
+            str: Texte nettoyé
+        """
+        if not text:
+            return ""
+            
+        # Supprimer les caractères de contrôle sauf les sauts de ligne
+        text = re.sub(r'[\x00-\x09\x0b\x0c\x0e-\x1f\x7f]', '', text)
+        
+        # Normaliser les espaces multiples
+        text = re.sub(r' +', ' ', text)
+        
+        # Normaliser les sauts de ligne multiples
+        text = re.sub(r'\n{3,}', '\n\n', text)
+        
+        return text.strip()
+    
+    @staticmethod
+    def format_invoice_text(text):
+        """
+        Formate le texte pour qu'il ressemble davantage à la mise en page originale
+        
+        Args:
+            text: Texte nettoyé
+            
+        Returns:
+            str: Texte formaté
+        """
+        if not text:
+            return ""
+            
+        # Identifier et mettre en évidence les sections importantes
+        formatted_text = text
+        
+        # Mettre en évidence les montants
+        formatted_text = re.sub(r'(\d+[,.]\d{2})\s*(€|EUR|EURO|EUROS)?', r'→ \1 € ←', formatted_text)
+        
+        # Identifier les dates (format JJ/MM/AAAA ou JJ-MM-AAAA)
+        formatted_text = re.sub(r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})', r'Date: \1', formatted_text)
+        
+        # Identifier les numéros de facture potentiels
+        formatted_text = re.sub(r'(?i)(facture|invoice|n°|numéro)[\s:]*([A-Z0-9-]{5,})', r'Numéro de facture: \2', formatted_text)
+        
+        # Ajouter des séparateurs pour améliorer la lisibilité
+        lines = formatted_text.split('\n')
+        result = []
+        
+        for line in lines:
+            # Ajouter des séparateurs pour les lignes qui semblent être des en-têtes
+            if line.isupper() and len(line) > 5:
+                result.append('\n' + line + '\n' + '-' * len(line))
+            else:
+                result.append(line)
+        
+        return '\n'.join(result)
+    
+    @staticmethod
+    def extract_structured_data(text):
+        """
+        Extrait des données structurées à partir du texte de la facture
+        
+        Args:
+            text: Texte nettoyé
+            
+        Returns:
+            dict: Données structurées extraites
+        """
+        data = {
+            "invoice_number": None,
+            "date": None,
+            "total_amount": None,
+            "vendor": None,
+            "items": []
+        }
+        
+        # Extraire le numéro de facture
+        invoice_match = re.search(r'(?i)(facture|invoice|n°|numéro)[\s:]*([A-Z0-9-]{5,})', text)
+        if invoice_match:
+            data["invoice_number"] = invoice_match.group(2)
+        
+        # Extraire la date
+        date_match = re.search(r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})', text)
+        if date_match:
+            data["date"] = date_match.group(1)
+        
+        # Extraire le montant total
+        amount_match = re.search(r'(?i)(total|montant|somme).*?(\d+[,.]\d{2})', text)
+        if amount_match:
+            data["total_amount"] = amount_match.group(2).replace(',', '.')
+        
+        return data
+    
+    @staticmethod
+    def process_extracted_text(extraction_result):
+        """
+        Traite le résultat d'extraction pour produire un texte propre et formaté
+        
+        Args:
+            extraction_result: Dictionnaire contenant le texte extrait et des métadonnées
+            
+        Returns:
+            dict: Dictionnaire contenant le texte original, nettoyé, formaté et les données structurées
+        """
+        if "error" in extraction_result:
+            return extraction_result
+            
+        raw_text = extraction_result.get("text", "")
+        
+        # Nettoyer le texte
+        cleaned_text = TextProcessor.clean_text(raw_text)
+        
+        # Formater le texte
+        formatted_text = TextProcessor.format_invoice_text(cleaned_text)
+        
+        # Extraire des données structurées
+        structured_data = TextProcessor.extract_structured_data(cleaned_text)
+        
+        # Ajouter les résultats au dictionnaire d'origine
+        result = extraction_result.copy()
+        result["cleaned_text"] = cleaned_text
+        result["formatted_text"] = formatted_text
+        result["structured_data"] = structured_data
+        
+        return result
+
+
 class TextExtractor:
     """Classe pour extraire du texte à partir de différents types de documents"""
     
@@ -38,12 +177,16 @@ class TextExtractor:
         """
         file_ext = os.path.splitext(file_path)[1].lower()
         
+        extraction_result = {}
         if file_ext == '.pdf':
-            return TextExtractor.extract_from_pdf(file_path)
+            extraction_result = TextExtractor.extract_from_pdf(file_path)
         elif file_ext in ['.jpg', '.jpeg', '.png', '.tiff', '.bmp']:
-            return TextExtractor.extract_from_image(file_path)
+            extraction_result = TextExtractor.extract_from_image(file_path)
         else:
             return {"error": "Format de fichier non pris en charge"}
+            
+        # Traiter le texte extrait pour le nettoyer et le formater
+        return TextProcessor.process_extracted_text(extraction_result)
     
     @staticmethod
     def extract_from_pdf(pdf_path):

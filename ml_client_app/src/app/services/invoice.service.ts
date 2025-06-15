@@ -12,11 +12,16 @@ export interface InvoiceResponse {
     processed: boolean;
     extracted_content: {
       text: string;
+      cleaned_text?: string;
+      formatted_text?: string;
+      structured_data?: any;
       extraction_method: string;
       document_type: string;
       page_count?: number;
       error?: string;
     } | null;
+    formatted_text_url?: string;
+    html_formatted_text_url?: string;
   };
 }
 

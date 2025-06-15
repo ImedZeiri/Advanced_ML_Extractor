@@ -51,10 +51,13 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',  # Commenté pour permettre l'affichage dans un iframe
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Permettre l'affichage dans un iframe
+X_FRAME_OPTIONS = 'ALLOWALL'
 
 ROOT_URLCONF = 'ml_server_app.urls'
 

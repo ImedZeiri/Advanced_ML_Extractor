@@ -18,19 +18,55 @@
         </mat-card-header>
         <mat-card-content>
           <div *ngIf="extractionData.invoice.extracted_content">
-            <h3>Texte extrait:</h3>
-            <div class="extracted-text">
-              {{ extractionData.invoice.extracted_content.text }}
-            </div>
-            
-            <h3>Métadonnées:</h3>
-            <ul>
-              <li><strong>Méthode d'extraction:</strong> {{ extractionData.invoice.extracted_content.extraction_method }}</li>
-              <li><strong>Type de document:</strong> {{ extractionData.invoice.extracted_content.document_type }}</li>
-              <li *ngIf="extractionData.invoice.extracted_content.page_count">
-                <strong>Nombre de pages:</strong> {{ extractionData.invoice.extracted_content.page_count }}
-              </li>
-            </ul>
+            <mat-tab-group>
+              <mat-tab label="Texte formaté">
+                <div *ngIf="extractionData.invoice.extracted_content.formatted_text" class="formatted-text">
+                  <pre>{{ extractionData.invoice.extracted_content.formatted_text }}</pre>
+                </div>
+                <div *ngIf="extractionData.invoice.html_formatted_text_url" class="view-options">
+                  <a [href]="extractionData.invoice.html_formatted_text_url" target="_blank" mat-raised-button color="primary">
+                    <mat-icon>open_in_new</mat-icon> Voir en HTML
+                  </a>
+                </div>
+              </mat-tab>
+              <mat-tab label="Texte brut">
+                <div class="extracted-text">
+                  {{ extractionData.invoice.extracted_content.text }}
+                </div>
+              </mat-tab>
+              <mat-tab label="Données structurées" *ngIf="extractionData.invoice.extracted_content.structured_data">
+                <div class="structured-data">
+                  <mat-list>
+                    <mat-list-item *ngIf="extractionData.invoice.extracted_content.structured_data.invoice_number">
+                      <span matListItemTitle>Numéro de facture</span>
+                      <span matListItemLine>{{ extractionData.invoice.extracted_content.structured_data.invoice_number }}</span>
+                    </mat-list-item>
+                    <mat-list-item *ngIf="extractionData.invoice.extracted_content.structured_data.date">
+                      <span matListItemTitle>Date</span>
+                      <span matListItemLine>{{ extractionData.invoice.extracted_content.structured_data.date }}</span>
+                    </mat-list-item>
+                    <mat-list-item *ngIf="extractionData.invoice.extracted_content.structured_data.total_amount">
+                      <span matListItemTitle>Montant total</span>
+                      <span matListItemLine>{{ extractionData.invoice.extracted_content.structured_data.total_amount }} €</span>
+                    </mat-list-item>
+                  </mat-list>
+                </div>
+              </mat-tab>
+              <mat-tab label="Aperçu de la facture" *ngIf="extractionData.invoice.file">
+                <div class="file-container">
+                  <!-- Affichage d'image -->
+                  <img *ngIf="isImage" [src]="fileSrc" alt="Facture" class="invoice-image">
+                  
+                  <!-- Affichage de PDF avec lien de secours -->
+                  <div *ngIf="!isImage" class="pdf-fallback">
+                    <iframe [src]="fileSrc" class="invoice-pdf" frameborder="0"></iframe>
+                    <div class="fallback-message">
+                      <p>Si le PDF ne s'affiche pas, <a [href]="extractionData.invoice.file" target="_blank">cliquez ici pour l'ouvrir</a>.</p>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
           </div>
           
           <div *ngIf="extractionData.invoice.extracted_content?.error" class="error-message">

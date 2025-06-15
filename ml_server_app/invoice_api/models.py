@@ -1,5 +1,6 @@
 from django.db import models
 import json
+from django.urls import reverse
 
 class Invoice(models.Model):
     file = models.FileField(upload_to='invoices/')
@@ -31,3 +32,21 @@ class Invoice(models.Model):
         if self.extracted_text:
             return json.loads(self.extracted_text)
         return None
+        
+    def get_formatted_text_url(self):
+        """
+        Retourne l'URL pour accéder au texte formaté
+        
+        Returns:
+            str: URL du texte formaté
+        """
+        return reverse('invoice-formatted-text', kwargs={'pk': self.pk})
+        
+    def get_html_formatted_text_url(self):
+        """
+        Retourne l'URL pour accéder au texte formaté en HTML
+        
+        Returns:
+            str: URL du texte formaté en HTML
+        """
+        return f"{reverse('invoice-formatted-text', kwargs={'pk': self.pk})}?format=html"
