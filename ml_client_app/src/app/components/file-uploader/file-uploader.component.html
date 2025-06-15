@@ -1,0 +1,41 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Téléchargement de factures</mat-card-title>
+    <mat-card-subtitle>Téléchargez vos factures pour traitement automatique</mat-card-subtitle>
+  </mat-card-header>
+  
+  <mat-card-content>
+    <div class="upload-area" 
+         [class.drag-over]="dragOver" 
+         (dragover)="dragOver=true; $event.preventDefault();" 
+         (dragleave)="dragOver=false" 
+         (drop)="dragOver=false; onFileSelected($event); $event.preventDefault();">
+      
+      <mat-icon class="upload-icon">cloud_upload</mat-icon>
+      <p>Glissez et déposez votre facture ici ou</p>
+      
+      <div class="file-input-container">
+        <input type="file" id="file" (change)="onFileSelected($event)" accept=".pdf,.jpg,.jpeg,.png" #fileInput hidden>
+        <button mat-raised-button color="primary" (click)="fileInput.click()">
+          <mat-icon>attach_file</mat-icon>
+          Sélectionner un fichier
+        </button>
+      </div>
+      
+      <p *ngIf="selectedFile" class="selected-file">
+        Fichier sélectionné: {{ selectedFile.name }}
+      </p>
+    </div>
+  </mat-card-content>
+  
+  <mat-card-actions align="end">
+    <button mat-raised-button color="accent" (click)="onUpload()" [disabled]="!selectedFile || isUploading">
+      <mat-icon>upload</mat-icon>
+      {{ isUploading ? 'Téléchargement en cours...' : 'Télécharger' }}
+    </button>
+  </mat-card-actions>
+  
+  <mat-card-footer *ngIf="isUploading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </mat-card-footer>
+</mat-card>

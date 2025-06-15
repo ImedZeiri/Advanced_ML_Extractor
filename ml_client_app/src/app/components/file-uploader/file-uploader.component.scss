@@ -1,0 +1,41 @@
+mat-card {
+  margin-bottom: 20px;
+}
+
+.upload-area {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  margin: 20px 0;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+  
+  &.drag-over {
+    border-color: #3f51b5;
+    background-color: rgba(63, 81, 181, 0.05);
+  }
+  
+  .upload-icon {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+    color: #3f51b5;
+    margin-bottom: 15px;
+  }
+  
+  p {
+    margin-bottom: 15px;
+    color: #666;
+  }
+}
+
+.file-input-container {
+  margin: 15px 0;
+}
+
+.selected-file {
+  margin-top: 15px;
+  font-weight: bold;
+  color: #333;
+}

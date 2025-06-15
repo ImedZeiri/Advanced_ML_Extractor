@@ -6,5 +6,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'ml_client_app';
+  title = 'Extracteur de Factures';
+  sidenavOpen = false;
+  extractionData: any = null;
+
+  onExtractionSuccess(data: any): void {
+    this.extractionData = data;
+    this.sidenavOpen = true;
+  }
 }
