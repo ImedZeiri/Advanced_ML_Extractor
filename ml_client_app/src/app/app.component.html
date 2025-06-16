@@ -4,7 +4,13 @@
 </mat-toolbar>
 
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #sidenav mode="side" position="end" [opened]="sidenavOpen" class="extraction-sidenav">
+  <mat-sidenav
+    #sidenav
+    mode="side"
+    position="end"
+    [opened]="sidenavOpen"
+    class="extraction-sidenav"
+  >
     <div class="sidenav-header">
       <h2>Résultats de l'extraction</h2>
       <button mat-icon-button (click)="sidenavOpen = false">
@@ -20,11 +26,26 @@
           <div *ngIf="extractionData.invoice.extracted_content">
             <mat-tab-group>
               <mat-tab label="Texte formaté">
-                <div *ngIf="extractionData.invoice.extracted_content.formatted_text" class="formatted-text">
-                  <pre>{{ extractionData.invoice.extracted_content.formatted_text }}</pre>
+                <div
+                  *ngIf="
+                    extractionData.invoice.extracted_content.formatted_text
+                  "
+                  class="formatted-text"
+                >
+                  <pre>{{
+                    extractionData.invoice.extracted_content.formatted_text
+                  }}</pre>
                 </div>
-                <div *ngIf="extractionData.invoice.html_formatted_text_url" class="view-options">
-                  <a [href]="extractionData.invoice.html_formatted_text_url" target="_blank" mat-raised-button color="primary">
+                <div
+                  *ngIf="extractionData.invoice.html_formatted_text_url"
+                  class="view-options"
+                >
+                  <a
+                    [href]="extractionData.invoice.html_formatted_text_url"
+                    target="_blank"
+                    mat-raised-button
+                    color="primary"
+                  >
                     <mat-icon>open_in_new</mat-icon> Voir en HTML
                   </a>
                 </div>
@@ -35,28 +56,45 @@
                 </div>
               </mat-tab>
 
-              <mat-tab label="Aperçu de la facture" *ngIf="extractionData.invoice.file">
+              <mat-tab
+                label="Aperçu de la facture"
+                *ngIf="extractionData.invoice.file"
+              >
                 <div class="file-container">
                   <!-- Affichage d'image -->
-                  <img *ngIf="isImage" [src]="fileSrc" alt="Facture" class="invoice-image">
-                  
+                  <img
+                    *ngIf="isImage"
+                    [src]="fileSrc"
+                    alt="Facture"
+                    class="invoice-image"
+                  />
+
                   <!-- Affichage de PDF avec lien de secours -->
                   <div *ngIf="!isImage" class="pdf-fallback">
-                    <iframe [src]="fileSrc" class="invoice-pdf" frameborder="0"></iframe>
+                    <iframe
+                      [src]="fileSrc"
+                      class="invoice-pdf"
+                      frameborder="0"
+                    ></iframe>
+                    <!--
                     <div class="fallback-message">
-                      <!-- <p>Si le PDF ne s'affiche pas, <a [href]="extractionData.invoice.file" target="_blank">cliquez ici pour l'ouvrir</a>.</p> -->
+                      <p>Si le PDF ne s'affiche pas, <a [href]="extractionData.invoice.file" target="_blank">cliquez ici pour l'ouvrir</a>.</p>
                     </div>
+                    -->
                   </div>
                 </div>
               </mat-tab>
             </mat-tab-group>
           </div>
-          
-          <div *ngIf="extractionData.invoice.extracted_content?.error" class="error-message">
+
+          <div
+            *ngIf="extractionData.invoice.extracted_content?.error"
+            class="error-message"
+          >
             <h3>Erreur d'extraction:</h3>
             <p>{{ extractionData.invoice.extracted_content.error }}</p>
           </div>
-          
+
           <div class="json-data">
             <h3>Données JSON complètes:</h3>
             <pre>{{ extractionData | json }}</pre>
@@ -68,7 +106,10 @@
 
   <mat-sidenav-content>
     <div class="main-content">
-      <app-file-uploader [extractionData]="extractionData" (extractionSuccess)="onExtractionSuccess($event)"></app-file-uploader>
+      <app-file-uploader
+        [extractionData]="extractionData"
+        (extractionSuccess)="onExtractionSuccess($event)"
+      ></app-file-uploader>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

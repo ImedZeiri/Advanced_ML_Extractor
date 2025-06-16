@@ -33,65 +33,141 @@
       
       <!-- Données principales -->
       <div class="main-data-container">
-        <div *ngIf="structuredData.invoice_number" class="main-data-item">
+        <div class="main-data-item">
           <div class="main-data-icon">
             <mat-icon>receipt</mat-icon>
           </div>
           <div class="main-data-content">
             <div class="main-data-label">Numéro de facture</div>
-            <div class="main-data-value">{{ structuredData.invoice_number }}</div>
+            <div class="main-data-value">{{ structuredData.numeroFacture || 'Non détecté' }}</div>
           </div>
         </div>
         
-        <div *ngIf="structuredData.date" class="main-data-item">
+        <div class="main-data-item">
           <div class="main-data-icon">
             <mat-icon>event</mat-icon>
           </div>
           <div class="main-data-content">
             <div class="main-data-label">Date</div>
-            <div class="main-data-value">{{ structuredData.date }}</div>
+            <div class="main-data-value">{{ structuredData.datePiece || 'Non détectée' }}</div>
           </div>
         </div>
         
-        <div *ngIf="structuredData.total_amount" class="main-data-item">
+        <div class="main-data-item">
           <div class="main-data-icon">
             <mat-icon>euro_symbol</mat-icon>
           </div>
           <div class="main-data-content">
-            <div class="main-data-label">Montant total</div>
-            <div class="main-data-value">{{ structuredData.total_amount }} €</div>
+            <div class="main-data-label">Montant total TTC</div>
+            <div class="main-data-value">{{ structuredData.totalTTC ? (structuredData.totalTTC + ' €') : 'Non détecté' }}</div>
           </div>
         </div>
       </div>
       
-      <!-- Champs catégorisés -->
-      <div *ngFor="let category of categoryOrder">
-        <div *ngIf="hasCategoryFields(category)" class="category-section">
-          <div class="category-header" [style.borderLeftColor]="categories[category].color">
-            <mat-icon [style.color]="categories[category].color">{{ categories[category].icon }}</mat-icon>
-            <h4>{{ categories[category].title }}</h4>
-          </div>
-          
-          <div class="structured-data-grid">
-            <div *ngFor="let field of categorizedFields[category]" class="data-item">
-              <div class="data-label">{{ field.key }}</div>
-              <div class="data-value">{{ field.value }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Lignes de produits -->
-      <div *ngIf="structuredData.items && structuredData.items.length > 0" class="category-section">
-        <div class="category-header" [style.borderLeftColor]="categories['product_details'].color">
-          <mat-icon [style.color]="categories['product_details'].color">{{ categories['product_details'].icon }}</mat-icon>
-          <h4>Lignes de produits</h4>
+      <!-- Informations client -->
+      <div class="category-section">
+        <div class="category-header" style="borderLeftColor: #2196f3">
+          <mat-icon style="color: #2196f3">person</mat-icon>
+          <h4>Informations client</h4>
         </div>
         
-        <div class="product-lines">
-          <div *ngFor="let item of structuredData.items" class="product-line">
-            {{ item }}
+        <div class="structured-data-grid">
+          <div class="data-item">
+            <div class="data-label">Société</div>
+            <div class="data-value">{{ structuredData.client.societe || 'Non détectée' }}</div>
           </div>
+          <div class="data-item">
+            <div class="data-label">Code client</div>
+            <div class="data-value">{{ structuredData.client.code || 'Non détecté' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">TVA</div>
+            <div class="data-value">{{ structuredData.client.tva || 'Non détectée' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">SIRET</div>
+            <div class="data-value">{{ structuredData.client.siret || 'Non détecté' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Ville</div>
+            <div class="data-value">{{ structuredData.client.ville || 'Non détectée' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Pays</div>
+            <div class="data-value">{{ structuredData.client.pays || 'Non détecté' }}</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Informations commande -->
+      <div class="category-section">
+        <div class="category-header" style="borderLeftColor: #ff9800">
+          <mat-icon style="color: #ff9800">shopping_basket</mat-icon>
+          <h4>Informations commande</h4>
+        </div>
+        
+        <div class="structured-data-grid">
+          <div class="data-item">
+            <div class="data-label">Numéro de commande</div>
+            <div class="data-value">{{ structuredData.numeroCommande || 'Non détecté' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Numéro de contrat</div>
+            <div class="data-value">{{ structuredData.numeroContrat || 'Non détecté' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Date de commande</div>
+            <div class="data-value">{{ structuredData.dateCommande || 'Non détectée' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Date de livraison</div>
+            <div class="data-value">{{ structuredData.dateLivraison || 'Non détectée' }}</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Montants -->
+      <div class="category-section">
+        <div class="category-header" style="borderLeftColor: #795548">
+          <mat-icon style="color: #795548">euro_symbol</mat-icon>
+          <h4>Montants</h4>
+        </div>
+        
+        <div class="structured-data-grid">
+          <div class="data-item">
+            <div class="data-label">Total HT</div>
+            <div class="data-value">{{ structuredData.totalHT ? (structuredData.totalHT + ' €') : 'Non détecté' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Total TVA</div>
+            <div class="data-value">{{ structuredData.totalTVA ? (structuredData.totalTVA + ' €') : 'Non détecté' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Total TTC</div>
+            <div class="data-value">{{ structuredData.totalTTC ? (structuredData.totalTTC + ' €') : 'Non détecté' }}</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Articles -->
+      <div class="category-section">
+        <div class="category-header" style="borderLeftColor: #9c27b0">
+          <mat-icon style="color: #9c27b0">shopping_cart</mat-icon>
+          <h4>Articles</h4>
+        </div>
+        
+        <div *ngIf="structuredData.articles && structuredData.articles.length > 0" class="product-lines">
+          <div *ngFor="let article of structuredData.articles" class="product-line">
+            <div>{{ article.nom || 'Article sans nom' }}</div>
+            <div class="product-detail">Quantité: {{ article.quantite || 'Non détectée' }}</div>
+            <div class="product-detail">Prix HT: {{ article.prixHT ? (article.prixHT + ' €') : 'Non détecté' }}</div>
+            <div class="product-detail">Remise: {{ article.remise || 'Non détectée' }}</div>
+            <div class="product-detail">Total HT: {{ article.totalHT ? (article.totalHT + ' €') : 'Non détecté' }}</div>
+            <div class="product-detail">Total TTC: {{ article.totalTTC ? (article.totalTTC + ' €') : 'Non détecté' }}</div>
+          </div>
+        </div>
+        <div *ngIf="!structuredData.articles || structuredData.articles.length === 0" class="no-data">
+          Aucun article détecté
         </div>
       </div>
     </div>
