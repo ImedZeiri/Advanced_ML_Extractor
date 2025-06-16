@@ -8,7 +8,7 @@ import os
 
 from .models import Invoice
 from .serializers import InvoiceSerializer
-from .extractors_new import TextExtractor, TextProcessor
+from .extractors import TextExtractor, TextProcessor
 
 class InvoiceViewSet(viewsets.ModelViewSet):
     queryset = Invoice.objects.all()

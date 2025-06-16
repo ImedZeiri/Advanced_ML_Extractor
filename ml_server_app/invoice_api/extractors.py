@@ -72,57 +72,24 @@ class TextProcessor:
     @staticmethod
     def extract_structured_data(text):
         data = {
-            "invoice_number": None,
-            "date": None,
-            "total_amount": None,
-            "vendor": None,
-            "client": None,
-            "payment_info": {},
-            "tax_info": {},
-            "items": [],
-            "detected_fields": {},
-            "categorized_fields": {
-                "vendor_info": {},
-                "client_info": {},
-                "payment_details": {},
-                "tax_details": {},
-                "product_details": {},
-                "dates": {},
-                "totals": {},
-                "other": {}
-            }
-        }
-        
-        # Dictionnaires de mots-clés pour la catégorisation
-        field_categories = {
-            "vendor_info": [
-                "fournisseur", "vendeur", "émetteur", "société", "entreprise", "siret", "siren", 
-                "rcs", "capital", "adresse", "tel", "téléphone", "email", "courriel", "site", 
-                "web", "http", "www", "magasin", "boutique"
-            ],
-            "client_info": [
-                "client", "acheteur", "destinataire", "livraison", "facturation", "adresse de",
-                "adresse du", "compte client", "référence client"
-            ],
-            "payment_details": [
-                "paiement", "règlement", "échéance", "date limite", "iban", "bic", "swift", "virement",
-                "chèque", "carte", "bancaire", "payé", "réglé", "mode de", "conditions", "délai"
-            ],
-            "tax_details": [
-                "tva", "taxe", "tax", "vat", "taux", "intracommunautaire", "exonéré", "n° tva", 
-                "numéro tva", "id tva"
-            ],
-            "product_details": [
-                "produit", "article", "référence", "ref", "désignation", "description", "quantité", 
-                "qté", "prix", "unitaire", "pu", "remise", "sous-total", "sous total"
-            ],
-            "dates": [
-                "date", "émission", "facture", "livraison", "échéance", "paiement", "commande"
-            ],
-            "totals": [
-                "total", "ht", "ttc", "tva", "net à payer", "montant", "somme", "sous-total", 
-                "remise", "frais", "port", "livraison", "acompte"
-            ]
+            "numeroFacture": None,
+            "numeroCommande": None,
+            "numeroContrat": None,
+            "datePiece": None,
+            "dateCommande": None,
+            "dateLivraison": None,
+            "client": {
+                "societe": None,
+                "code": None,
+                "tva": None,
+                "siret": None,
+                "ville": None,
+                "pays": None
+            },
+            "totalTTC": None,
+            "totalHT": None,
+            "totalTVA": None,
+            "articles": []
         }
         
         # Extraire le numéro de facture
@@ -134,70 +101,121 @@ class TextProcessor:
         for pattern in invoice_patterns:
             invoice_match = re.search(pattern, text)
             if invoice_match:
-                data["invoice_number"] = invoice_match.group(1).strip()
+                data["numeroFacture"] = invoice_match.group(1).strip()
                 break
         
-        # Extraire les dates (avec différents formats)
-        date_patterns = [
-            r'(?i)(?:date|émission|facturé le)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
-            r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
-            r'(\d{1,2}\s+(?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s+\d{2,4})'
+        # Extraire le numéro de commande
+        order_patterns = [
+            r'(?i)(?:commande|order|n°\s*commande|numéro\s*commande)[\s:]*([A-Z0-9-]{3,})',
+            r'(?i)(?:bon\s*de\s*commande)[^\n]*?(?:n°|numéro)[^\n]*?([A-Z0-9-]{3,})'
         ]
         
-        for pattern in date_patterns:
-            date_match = re.search(pattern, text)
+        for pattern in order_patterns:
+            order_match = re.search(pattern, text)
+            if order_match:
+                data["numeroCommande"] = order_match.group(1).strip()
+                break
+        
+        # Extraire le numéro de contrat
+        contract_patterns = [
+            r'(?i)(?:contrat|contract|n°\s*contrat|numéro\s*contrat)[\s:]*([A-Z0-9-]{3,})',
+        ]
+        
+        for pattern in contract_patterns:
+            contract_match = re.search(pattern, text)
+            if contract_match:
+                data["numeroContrat"] = contract_match.group(1).strip()
+                break
+        
+        # Extraire les dates
+        date_patterns = {
+            "datePiece": [
+                r'(?i)(?:date|émission|facturé le|date\s*facture)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
+                r'(?i)(?:date|émission)[^\n]*?(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})'
+            ],
+            "dateCommande": [
+                r'(?i)(?:date\s*commande|date\s*de\s*commande)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
+            ],
+            "dateLivraison": [
+                r'(?i)(?:date\s*livraison|date\s*de\s*livraison|livré\s*le)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
+            ]
+        }
+        
+        # Si aucune date spécifique n'est trouvée, utiliser la première date du document
+        general_date_pattern = r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})'
+        
+        for date_field, patterns in date_patterns.items():
+            for pattern in patterns:
+                date_match = re.search(pattern, text)
+                if date_match:
+                    data[date_field] = date_match.group(1).strip()
+                    break
+        
+        # Si datePiece est toujours null, chercher une date générique
+        if data["datePiece"] is None:
+            date_match = re.search(general_date_pattern, text)
             if date_match:
-                data["date"] = date_match.group(1).strip()
-                break
+                data["datePiece"] = date_match.group(1).strip()
         
-        # Extraire le montant total
-        total_patterns = [
-            r'(?i)(?:total\s+ttc|montant\s+ttc|net\s+à\s+payer|total\s+à\s+payer)[\s:]*(\d+[,.]\d{2})',
-            r'(?i)(?:total|montant|somme).*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?',
-            r'(?i)(?:à\s+payer)[\s:]*(\d+[,.]\d{2})'
-        ]
-        
-        for pattern in total_patterns:
-            amount_match = re.search(pattern, text)
-            if amount_match:
-                data["total_amount"] = amount_match.group(1).replace(',', '.')
-                break
-        
-        # Extraire les informations du fournisseur
-        # Recherche de SIRET, SIREN, site web, etc.
-        vendor_patterns = {
-            "siret": r'(?i)(?:SIRET)[\s:]*(\d{14})',
-            "siren": r'(?i)(?:SIREN)[\s:]*(\d{9})',
-            "website": r'(?i)(?:www\.[\w-]+\.[\w]{2,}|https?://[\w-]+\.[\w]{2,}[\w/\-\.]*)',
-            "email": r'[\w\.-]+@[\w\.-]+\.\w+',
-            "phone": r'(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}'
+        # Extraire les informations du client
+        client_patterns = {
+            "societe": [
+                r'(?i)(?:client|customer|acheteur|destinataire)[\s:]*([A-Za-z0-9\s]{3,50})',
+                r'(?i)(?:facturer\s*à|facturé\s*à)[\s:]*([A-Za-z0-9\s]{3,50})'
+            ],
+            "code": [
+                r'(?i)(?:code\s*client|customer\s*code|référence\s*client)[\s:]*([A-Za-z0-9-]{2,20})'
+            ],
+            "tva": [
+                r'(?i)(?:TVA\s*client|TVA\s*intra|n°\s*TVA)[\s:]*([A-Z0-9]{2,14})'
+            ],
+            "siret": [
+                r'(?i)(?:SIRET\s*client)[\s:]*(\d{14})'
+            ],
+            "ville": [
+                r'(?i)(?:ville|city)[\s:]*([A-Za-z\s-]{2,30})',
+                r'(?i)\b([A-Z][A-Za-z\s-]{2,25})\s+\d{5}\b'
+            ],
+            "pays": [
+                r'(?i)(?:pays|country)[\s:]*([A-Za-z\s-]{3,20})'
+            ]
         }
         
-        for key, pattern in vendor_patterns.items():
-            match = re.search(pattern, text)
-            if match:
-                if key == "website" or key == "email" or key == "phone":
-                    data["categorized_fields"]["vendor_info"][key] = match.group(0)
-                else:
-                    data["categorized_fields"]["vendor_info"][key] = match.group(1)
+        for field, patterns in client_patterns.items():
+            for pattern in patterns:
+                match = re.search(pattern, text)
+                if match:
+                    data["client"][field] = match.group(1).strip()
+                    break
         
-        # Extraire les informations de TVA
-        vat_patterns = {
-            "tva_number": r'(?i)(?:TVA|VAT|n°\s*TVA|numéro\s*TVA)[\s:]*([A-Z0-9]{2,14})',
-            "tva_rate": r'(?i)(?:TVA|VAT|Taux)[\s:]*(\d{1,2}[,.]\d{1,2}\s*%|\d{1,2}\s*%)'
+        # Extraire les montants
+        amount_patterns = {
+            "totalTTC": [
+                r'(?i)(?:total\s*ttc|montant\s*ttc|net\s*à\s*payer|total\s*à\s*payer)[\s:]*(\d+[,.]\d{2})',
+                r'(?i)(?:ttc)[^\n]*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?'
+            ],
+            "totalHT": [
+                r'(?i)(?:total\s*ht|montant\s*ht|prix\s*ht)[\s:]*(\d+[,.]\d{2})',
+                r'(?i)(?:ht)[^\n]*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?'
+            ],
+            "totalTVA": [
+                r'(?i)(?:total\s*tva|montant\s*tva|tva)[\s:]*(\d+[,.]\d{2})',
+                r'(?i)(?:tva)[^\n]*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?'
+            ]
         }
         
-        for key, pattern in vat_patterns.items():
-            match = re.search(pattern, text)
-            if match:
-                data["categorized_fields"]["tax_details"][key] = match.group(1)
+        for amount_field, patterns in amount_patterns.items():
+            for pattern in patterns:
+                amount_match = re.search(pattern, text)
+                if amount_match:
+                    data[amount_field] = amount_match.group(1).replace(',', '.')
+                    break
         
-        # Extraire les lignes de produits/services
+        # Extraire les articles/lignes de produits
         # Recherche de tableaux ou de listes d'articles
         product_lines_pattern = r'(?i)(?:Désignation|Article|Produit|Description).*?(?:Quantité|Qté|Qte).*?(?:Prix|Montant|Total)'
         if re.search(product_lines_pattern, text):
             # Présence probable d'un tableau de produits
-            # Extraction simplifiée des lignes de produits
             lines = text.split('\n')
             product_section = False
             product_lines = []
@@ -214,51 +232,34 @@ class TextProcessor:
                     # Ligne contenant probablement un prix
                     product_lines.append(line.strip())
             
-            if product_lines:
-                data["items"] = product_lines
-        
-        # Détecter automatiquement les paires clé-valeur
-        key_value_patterns = [
-            r'([A-Za-z0-9\s\-\']{3,30})\s*[:=]\s*([A-Za-z0-9\s\-\.,€\$£&@\'\/]{1,50})',  # Clé: Valeur ou Clé = Valeur
-            r'([A-Za-z0-9\s\-\']{3,30})\s*[:|]\s*([A-Za-z0-9\s\-\.,€\$£&@\'\/]{1,50})',  # Variante avec | comme séparateur
-            r'([A-Za-z0-9\s\-\']{3,30})\s{2,}([A-Za-z0-9\s\-\.,€\$£&@\'\/]{1,50})'       # Clé suivie de plusieurs espaces puis Valeur
-        ]
-        
-        for pattern in key_value_patterns:
-            for match in re.finditer(pattern, text):
-                key = match.group(1).strip()
-                value = match.group(2).strip()
+            # Essayer d'extraire des informations structurées pour chaque ligne de produit
+            for line in product_lines:
+                article = {
+                    "nom": line,  # Par défaut, utiliser la ligne complète comme nom
+                    "quantite": None,
+                    "prixHT": None,
+                    "remise": None,
+                    "totalHT": None,
+                    "totalTTC": None
+                }
                 
-                # Ignorer les clés trop courtes ou les valeurs vides
-                if len(key) < 3 or not value:
-                    continue
-                    
-                # Ignorer les clés qui sont des mots communs
-                common_words = ['le', 'la', 'les', 'un', 'une', 'des', 'et', 'ou', 'pour', 'par', 'avec', 'dans']
-                if key.lower() in common_words:
-                    continue
+                # Essayer d'extraire la quantité
+                qty_match = re.search(r'\b(\d+(?:[,.]\d+)?)\s*(?:x|pcs|u|unités?)\b', line)
+                if qty_match:
+                    article["quantite"] = qty_match.group(1).replace(',', '.')
                 
-                # Nettoyer la clé et la valeur
-                key = key.strip().capitalize()
-                value = value.strip()
+                # Essayer d'extraire le prix unitaire HT
+                price_match = re.search(r'\b(\d+[,.]\d{2})\s*(?:€|EUR)?\s*(?:HT|H\.T\.)\b', line)
+                if price_match:
+                    article["prixHT"] = price_match.group(1).replace(',', '.')
                 
-                # Ajouter au dictionnaire des champs détectés
-                data["detected_fields"][key] = value
+                # Essayer d'extraire le total HT
+                total_ht_match = re.search(r'\b(\d+[,.]\d{2})\s*(?:€|EUR)?\s*(?:HT|H\.T\.)\b', line)
+                if total_ht_match and article["prixHT"] is None:  # Si pas déjà trouvé comme prix unitaire
+                    article["totalHT"] = total_ht_match.group(1).replace(',', '.')
                 
-                # Catégoriser le champ
-                categorized = False
-                for category, keywords in field_categories.items():
-                    for keyword in keywords:
-                        if keyword.lower() in key.lower():
-                            data["categorized_fields"][category][key] = value
-                            categorized = True
-                            break
-                    if categorized:
-                        break
-                
-                # Si non catégorisé, mettre dans "other"
-                if not categorized:
-                    data["categorized_fields"]["other"][key] = value
+                # Ajouter l'article à la liste
+                data["articles"].append(article)
         
         return data
     
