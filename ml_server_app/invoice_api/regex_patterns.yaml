@@ -1,0 +1,150 @@
+invoice_patterns:
+  - (?i)(?:facture|invoice|n°|numéro|ref|référence)[\s:]*([A-Z0-9-]{5,})
+  - (?i)(?:facture|invoice)[^\n]*?(?:n°|numéro|ref|référence)[^\n]*?([A-Z0-9-]{5,})
+  - (?i)(?:fact\.?|fac\.?)[\s:]*([A-Z0-9-]{5,})
+  - (?i)(?:n°\s*de\s*facture|numéro\s*de\s*facture)[\s:]*([A-Z0-9-]{5,})
+  - (?i)(?:facture\s*n°|facture\s*numéro)[\s:]*([A-Z0-9-]{5,})
+  - (?i)(?:invoice\s*no\.?|invoice\s*number|bill\s*no\.?)[\s:]*([A-Z0-9-]{5,})
+  - (?i)(?:inv\.?\s*no\.?|inv\.?\s*#)[\s:]*([A-Z0-9-]{5,})
+  - (?i)(?:document\s*no\.?|doc\s*no\.?)[\s:]*([A-Z0-9-]{5,})
+  - (?i)(?:reference\s*no\.?|ref\s*no\.?)[\s:]*([A-Z0-9-]{5,})
+  - (?i)(?:invoice|facture)[\s\-_]*#[\s]*([A-Z0-9-]{5,})
+  - (?i)(?:#|№)[\s]*([A-Z0-9-]{5,})
+  - (?i)(?:ID|id)[\s:]*([A-Z0-9-]{5,})
+
+order_patterns:
+  - (?i)(?:commande|order|n°\s*commande|numéro\s*commande)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:bon\s*de\s*commande)[^\n]*?(?:n°|numéro)[^\n]*?([A-Z0-9-]{3,})
+  - (?i)(?:cmd\.?|comm\.?)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:n°\s*de\s*commande|numéro\s*de\s*commande)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:commande\s*n°|commande\s*numéro)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:ordre\s*d'achat|ordre\s*de\s*commande)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:order\s*no\.?|order\s*number|purchase\s*order)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:po\s*no\.?|po\s*number|p\.o\.)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:ord\.?\s*no\.?|ord\.?\s*#)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:purchase\s*order\s*no\.?)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:order|commande)[\s\-_]*#[\s]*([A-Z0-9-]{3,})
+
+contract_patterns:
+  - (?i)(?:contrat|contract|n°\s*contrat|numéro\s*contrat)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:contr\.?)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:n°\s*de\s*contrat|numéro\s*de\s*contrat)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:contrat\s*n°|contrat\s*numéro)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:accord|convention)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:contract\s*no\.?|contract\s*number|agreement\s*no\.?)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:contr\.?\s*no\.?|agr\.?\s*no\.?)[\s:]*([A-Z0-9-]{3,})
+  - (?i)(?:contract|contrat)[\s\-_]*#[\s]*([A-Z0-9-]{3,})
+
+date_patterns:
+  datePiece:
+    - (?i)(?:date|émission|facturé\s*le|date\s*facture|date\s*de\s*facture)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:date|émission)[^\n]*?(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:émis\s*le|établi\s*le|créé\s*le)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:date\s*d'émission|date\s*d'établissement)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:invoice\s*date|bill\s*date|date\s*of\s*invoice)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:issued\s*on|created\s*on|dated)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:issue\s*date|creation\s*date)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:date|émission|facturé\s*le)[\s:]*(\d{1,2}\.\d{1,2}\.\d{2,4})
+    - (?i)(?:invoice\s*date|issue\s*date)[\s:]*(\d{1,2}\.\d{1,2}\.\d{2,4})
+  
+  dateCommande:
+    - (?i)(?:date\s*commande|date\s*de\s*commande|date\s*de\s*la\s*commande)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:commandé\s*le|passé\s*le)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:cmd\s*du|commande\s*du)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:order\s*date|purchase\s*date|ordered\s*on)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:po\s*date|date\s*of\s*order)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:date\s*commande|order\s*date)[\s:]*(\d{1,2}\.\d{1,2}\.\d{2,4})
+  
+  dateLivraison:
+    - (?i)(?:date\s*livraison|date\s*de\s*livraison|livré\s*le)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:expédié\s*le|envoyé\s*le|délivré\s*le)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:date\s*d'expédition|date\s*d'envoi)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:livraison\s*prévue|livraison\s*estimée)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:delivery\s*date|shipped\s*on|delivery\s*on)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:shipping\s*date|dispatch\s*date)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:delivered\s*on|sent\s*on)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})
+    - (?i)(?:date\s*livraison|delivery\s*date)[\s:]*(\d{1,2}\.\d{1,2}\.\d{2,4})
+
+general_date_pattern: (\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4})
+
+client_patterns:
+  societe:
+    - (?i)(?:client|customer|acheteur|destinataire)[\s:]*([A-Za-z0-9\s&.,'-]{3,50})
+    - (?i)(?:facturer\s*à|facturé\s*à|adressé\s*à)[\s:]*([A-Za-z0-9\s&.,'-]{3,50})
+    - (?i)(?:société|entreprise|compagnie)[\s:]*([A-Za-z0-9\s&.,'-]{3,50})
+    - (?i)(?:raison\s*sociale|dénomination)[\s:]*([A-Za-z0-9\s&.,'-]{3,50})
+    - (?i)(?:nom\s*de\s*l'entreprise)[\s:]*([A-Za-z0-9\s&.,'-]{3,50})
+    - (?i)(?:company\s*name|business\s*name|corporation)[\s:]*([A-Za-z0-9\s&.,'-]{3,50})
+    - (?i)(?:bill\s*to|invoice\s*to|sold\s*to)[\s:]*([A-Za-z0-9\s&.,'-]{3,50})
+    - (?i)(?:customer\s*name|client\s*name)[\s:]*([A-Za-z0-9\s&.,'-]{3,50})
+    - (?i)(?:organization|firm)[\s:]*([A-Za-z0-9\s&.,'-]{3,50})
+  
+  code:
+    - (?i)(?:code\s*client|customer\s*code|référence\s*client)[\s:]*([A-Za-z0-9-]{2,20})
+    - (?i)(?:n°\s*client|numéro\s*client|id\s*client)[\s:]*([A-Za-z0-9-]{2,20})
+    - (?i)(?:réf\.?\s*client|ref\.?\s*client)[\s:]*([A-Za-z0-9-]{2,20})
+    - (?i)(?:customer\s*no\.?|customer\s*number|client\s*id)[\s:]*([A-Za-z0-9-]{2,20})
+    - (?i)(?:account\s*no\.?|account\s*number|acc\.?\s*no\.?)[\s:]*([A-Za-z0-9-]{2,20})
+    - (?i)(?:customer\s*ref|client\s*ref)[\s:]*([A-Za-z0-9-]{2,20})
+  
+  tva:
+    - (?i)(?:TVA\s*client|TVA\s*intra|n°\s*TVA|numéro\s*TVA)[\s:]*([A-Z0-9]{2,14})
+    - (?i)(?:n°\s*de\s*TVA|numéro\s*de\s*TVA|identifiant\s*TVA)[\s:]*([A-Z0-9]{2,14})
+    - (?i)(?:TVA\s*intracommunautaire)[\s:]*([A-Z0-9]{2,14})
+    - (?i)(?:VAT\s*no\.?|VAT\s*number|tax\s*id)[\s:]*([A-Z0-9]{2,14})
+    - (?i)(?:EU\s*VAT|VAT\s*reg\.?)[\s:]*([A-Z0-9]{2,14})
+    - (?i)(?:tax\s*number|taxation\s*id)[\s:]*([A-Z0-9]{2,14})
+  
+  siret:
+    - (?i)(?:SIRET\s*client|SIRET)[\s:]*(\d{14})
+    - (?i)(?:n°\s*SIRET|numéro\s*SIRET)[\s:]*(\d{14})
+    - (?i)(?:SIREN)[\s:]*(\d{9})
+    - (?i)(?:SIRET\s*client|SIRET)[\s:]*(\d{3}\s?\d{3}\s?\d{3}\s?\d{5})
+  
+  ville:
+    - (?i)(?:ville|city|commune)[\s:]*([A-Za-z\s-]{2,30})
+    - (?i)\b([A-Z][A-Za-z\s-]{2,25})\s+\d{5}\b
+    - (?i)(?:localité)[\s:]*([A-Za-z\s-]{2,30})
+    - (?i)\b(\d{5})\s+([A-Z][A-Za-z\s-]{2,25})\b
+    - (?i)(?:town|municipality)[\s:]*([A-Za-z\s-]{2,30})
+    
+  pays:
+    - (?i)(?:pays|country|nation)[\s:]*([A-Za-z\s-]{3,20})
+    - (?i)(?:nationalité)[\s:]*([A-Za-z\s-]{3,20})
+    - (?i)(?:country\s*of\s*origin|nationality)[\s:]*([A-Za-z\s-]{3,20})
+
+amount_patterns:
+  totalTTC:
+    - (?i)(?:total\s*ttc|montant\s*ttc|net\s*à\s*payer|total\s*à\s*payer)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:ttc)[^\n]*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?
+    - (?i)(?:montant\s*total\s*ttc|somme\s*ttc)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:total\s*toutes\s*taxes\s*comprises)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:montant\s*dû|à\s*payer)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:total\s*amount|grand\s*total|amount\s*due)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:total\s*incl\.?\s*tax|total\s*including\s*tax)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:amount\s*payable|net\s*amount)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:balance\s*due|total\s*due)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:total|ttc|grand\s*total)[\s:]*(?:€|EUR|£|GBP|\$|USD)?\s*(\d+[,.]\d{2})
+  
+  totalHT:
+    - (?i)(?:total\s*ht|montant\s*ht|prix\s*ht|sous-total)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:ht)[^\n]*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?
+    - (?i)(?:montant\s*total\s*ht|somme\s*ht)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:total\s*hors\s*taxes?|prix\s*hors\s*taxes?)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:sous-total\s*ht|st\s*ht)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:subtotal|sub-total|net\s*total)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:total\s*excl\.?\s*tax|total\s*excluding\s*tax)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:amount\s*before\s*tax|pre-tax\s*amount)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:taxable\s*amount|net\s*amount\s*ht)[\s:]*(\d+[,.]\d{2})
+  
+  totalTVA:
+    - (?i)(?:total\s*tva|montant\s*tva|tva)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:tva)[^\n]*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?
+    - (?i)(?:montant\s*de\s*la\s*tva|taxes)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:total\s*des\s*taxes|somme\s*tva)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:vat\s*amount|tax\s*amount|total\s*vat)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:vat)[^\n]*?(\d+[,.]\d{2})\s*(?:€|EUR|£|GBP|\$|USD)?
+    - (?i)(?:sales\s*tax|tax\s*total)[\s:]*(\d+[,.]\d{2})
+    - (?i)(?:total\s*tax|taxation)[\s:]*(\d+[,.]\d{2})
+
+product_lines_pattern: (?i)(?:Désignation|Article|Produit|Description|Item|Product|Service|Libellé|Denomination).*?(?:Quantité|Qté|Qte|Quantity|Qty|Q\.?|Nombre).*?(?:Prix|Montant|Total|Price|Amount|Cost|Tarif)

@@ -3,6 +3,7 @@ import tempfile
 import re
 from PIL import Image
 import json
+import yaml
 
 try:
     import pytesseract
@@ -21,6 +22,16 @@ try:
     PYPDF2_AVAILABLE = True
 except ImportError:
     PYPDF2_AVAILABLE = False
+
+def load_regex_patterns():
+    """Charge les patterns regex depuis le fichier YAML"""
+    patterns_file = os.path.join(os.path.dirname(__file__), 'regex_patterns.yaml')
+    try:
+        with open(patterns_file, 'r', encoding='utf-8') as file:
+            return yaml.safe_load(file)
+    except Exception as e:
+        print(f"Erreur lors du chargement des patterns regex: {str(e)}")
+        return None
 
 class TextProcessor:    
     @staticmethod
@@ -70,6 +81,120 @@ class TextProcessor:
         return '\n'.join(result)
     
     @staticmethod
+    def _extract_structured_data_fallback(text):
+        """Méthode de secours utilisant les patterns regex codés en dur"""
+        data = {
+            "numeroFacture": None,
+            "numeroCommande": None,
+            "numeroContrat": None,
+            "datePiece": None,
+            "dateCommande": None,
+            "dateLivraison": None,
+            "client": {
+                "societe": None,
+                "code": None,
+                "tva": None,
+                "siret": None,
+                "ville": None,
+                "pays": None
+            },
+            "totalTTC": None,
+            "totalHT": None,
+            "totalTVA": None,
+            "articles": []
+        }
+        
+        # Charger les patterns depuis le fichier YAML
+        patterns = load_regex_patterns()
+        
+        # Si le chargement a échoué, utiliser les patterns codés en dur
+        if not patterns:
+            # Extraire le numéro de facture
+            invoice_patterns = [
+                r'(?i)(?:facture|invoice|n°|numéro|ref)[\s:]*([A-Z0-9-]{5,})',
+                r'(?i)(?:facture|invoice)[^\n]*?(?:n°|numéro|ref)[^\n]*?([A-Z0-9-]{5,})'
+            ]
+            
+            # Extraire le numéro de commande
+            order_patterns = [
+                r'(?i)(?:commande|order|n°\s*commande|numéro\s*commande)[\s:]*([A-Z0-9-]{3,})',
+                r'(?i)(?:bon\s*de\s*commande)[^\n]*?(?:n°|numéro)[^\n]*?([A-Z0-9-]{3,})'
+            ]
+            
+            # Extraire le numéro de contrat
+            contract_patterns = [
+                r'(?i)(?:contrat|contract|n°\s*contrat|numéro\s*contrat)[\s:]*([A-Z0-9-]{3,})',
+            ]
+            
+            # Extraire les dates
+            date_patterns = {
+                "datePiece": [
+                    r'(?i)(?:date|émission|facturé le|date\s*facture)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
+                    r'(?i)(?:date|émission)[^\n]*?(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})'
+                ],
+                "dateCommande": [
+                    r'(?i)(?:date\s*commande|date\s*de\s*commande)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
+                ],
+                "dateLivraison": [
+                    r'(?i)(?:date\s*livraison|date\s*de\s*livraison|livré\s*le)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
+                ]
+            }
+            
+            # Si aucune date spécifique n'est trouvée, utiliser la première date du document
+            general_date_pattern = r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})'
+            
+            # Extraire les informations du client
+            client_patterns = {
+                "societe": [
+                    r'(?i)(?:client|customer|acheteur|destinataire)[\s:]*([A-Za-z0-9\s]{3,50})',
+                    r'(?i)(?:facturer\s*à|facturé\s*à)[\s:]*([A-Za-z0-9\s]{3,50})'
+                ],
+                "code": [
+                    r'(?i)(?:code\s*client|customer\s*code|référence\s*client)[\s:]*([A-Za-z0-9-]{2,20})'
+                ],
+                "tva": [
+                    r'(?i)(?:TVA\s*client|TVA\s*intra|n°\s*TVA)[\s:]*([A-Z0-9]{2,14})'
+                ],
+                "siret": [
+                    r'(?i)(?:SIRET\s*client)[\s:]*(\d{14})'
+                ],
+                "ville": [
+                    r'(?i)(?:ville|city)[\s:]*([A-Za-z\s-]{2,30})',
+                    r'(?i)\b([A-Z][A-Za-z\s-]{2,25})\s+\d{5}\b'
+                ],
+                "pays": [
+                    r'(?i)(?:pays|country)[\s:]*([A-Za-z\s-]{3,20})'
+                ]
+            }
+            
+            # Extraire les montants
+            amount_patterns = {
+                "totalTTC": [
+                    r'(?i)(?:total\s*ttc|montant\s*ttc|net\s*à\s*payer|total\s*à\s*payer)[\s:]*(\d+[,.]\d{2})',
+                    r'(?i)(?:ttc)[^\n]*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?'
+                ],
+                "totalHT": [
+                    r'(?i)(?:total\s*ht|montant\s*ht|prix\s*ht)[\s:]*(\d+[,.]\d{2})',
+                    r'(?i)(?:ht)[^\n]*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?'
+                ],
+                "totalTVA": [
+                    r'(?i)(?:total\s*tva|montant\s*tva|tva)[\s:]*(\d+[,.]\d{2})',
+                    r'(?i)(?:tva)[^\n]*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?'
+                ]
+            }
+        else:
+            # Utiliser les patterns du fichier YAML
+            invoice_patterns = patterns.get('invoice_patterns', [])
+            order_patterns = patterns.get('order_patterns', [])
+            contract_patterns = patterns.get('contract_patterns', [])
+            date_patterns = patterns.get('date_patterns', {})
+            general_date_pattern = patterns.get('general_date_pattern', r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})')
+            client_patterns = patterns.get('client_patterns', {})
+            amount_patterns = patterns.get('amount_patterns', {})
+        
+        return data, invoice_patterns, order_patterns, contract_patterns, date_patterns, general_date_pattern, client_patterns, amount_patterns
+        
+    @staticmethod
     def extract_structured_data(text):
         data = {
             "numeroFacture": None,
@@ -92,12 +217,23 @@ class TextProcessor:
             "articles": []
         }
         
-        # Extraire le numéro de facture
-        invoice_patterns = [
-            r'(?i)(?:facture|invoice|n°|numéro|ref)[\s:]*([A-Z0-9-]{5,})',
-            r'(?i)(?:facture|invoice)[^\n]*?(?:n°|numéro|ref)[^\n]*?([A-Z0-9-]{5,})'
-        ]
+        # Charger les patterns regex depuis le fichier YAML
+        patterns = load_regex_patterns()
+        if not patterns:
+            # Fallback en cas d'erreur de chargement du fichier YAML
+            print("Utilisation des patterns regex par défaut")
+            data, invoice_patterns, order_patterns, contract_patterns, date_patterns, general_date_pattern, client_patterns, amount_patterns = TextProcessor._extract_structured_data_fallback(text)
+        else:
+            # Utiliser les patterns du fichier YAML
+            invoice_patterns = patterns.get('invoice_patterns', [])
+            order_patterns = patterns.get('order_patterns', [])
+            contract_patterns = patterns.get('contract_patterns', [])
+            date_patterns = patterns.get('date_patterns', {})
+            general_date_pattern = patterns.get('general_date_pattern', r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})')
+            client_patterns = patterns.get('client_patterns', {})
+            amount_patterns = patterns.get('amount_patterns', {})
         
+        # Extraire le numéro de facture
         for pattern in invoice_patterns:
             invoice_match = re.search(pattern, text)
             if invoice_match:
@@ -105,11 +241,6 @@ class TextProcessor:
                 break
         
         # Extraire le numéro de commande
-        order_patterns = [
-            r'(?i)(?:commande|order|n°\s*commande|numéro\s*commande)[\s:]*([A-Z0-9-]{3,})',
-            r'(?i)(?:bon\s*de\s*commande)[^\n]*?(?:n°|numéro)[^\n]*?([A-Z0-9-]{3,})'
-        ]
-        
         for pattern in order_patterns:
             order_match = re.search(pattern, text)
             if order_match:
@@ -117,10 +248,6 @@ class TextProcessor:
                 break
         
         # Extraire le numéro de contrat
-        contract_patterns = [
-            r'(?i)(?:contrat|contract|n°\s*contrat|numéro\s*contrat)[\s:]*([A-Z0-9-]{3,})',
-        ]
-        
         for pattern in contract_patterns:
             contract_match = re.search(pattern, text)
             if contract_match:
@@ -128,24 +255,8 @@ class TextProcessor:
                 break
         
         # Extraire les dates
-        date_patterns = {
-            "datePiece": [
-                r'(?i)(?:date|émission|facturé le|date\s*facture)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
-                r'(?i)(?:date|émission)[^\n]*?(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})'
-            ],
-            "dateCommande": [
-                r'(?i)(?:date\s*commande|date\s*de\s*commande)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
-            ],
-            "dateLivraison": [
-                r'(?i)(?:date\s*livraison|date\s*de\s*livraison|livré\s*le)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
-            ]
-        }
-        
-        # Si aucune date spécifique n'est trouvée, utiliser la première date du document
-        general_date_pattern = r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})'
-        
-        for date_field, patterns in date_patterns.items():
-            for pattern in patterns:
+        for date_field, date_field_patterns in date_patterns.items():
+            for pattern in date_field_patterns:
                 date_match = re.search(pattern, text)
                 if date_match:
                     data[date_field] = date_match.group(1).strip()
@@ -158,54 +269,16 @@ class TextProcessor:
                 data["datePiece"] = date_match.group(1).strip()
         
         # Extraire les informations du client
-        client_patterns = {
-            "societe": [
-                r'(?i)(?:client|customer|acheteur|destinataire)[\s:]*([A-Za-z0-9\s]{3,50})',
-                r'(?i)(?:facturer\s*à|facturé\s*à)[\s:]*([A-Za-z0-9\s]{3,50})'
-            ],
-            "code": [
-                r'(?i)(?:code\s*client|customer\s*code|référence\s*client)[\s:]*([A-Za-z0-9-]{2,20})'
-            ],
-            "tva": [
-                r'(?i)(?:TVA\s*client|TVA\s*intra|n°\s*TVA)[\s:]*([A-Z0-9]{2,14})'
-            ],
-            "siret": [
-                r'(?i)(?:SIRET\s*client)[\s:]*(\d{14})'
-            ],
-            "ville": [
-                r'(?i)(?:ville|city)[\s:]*([A-Za-z\s-]{2,30})',
-                r'(?i)\b([A-Z][A-Za-z\s-]{2,25})\s+\d{5}\b'
-            ],
-            "pays": [
-                r'(?i)(?:pays|country)[\s:]*([A-Za-z\s-]{3,20})'
-            ]
-        }
-        
-        for field, patterns in client_patterns.items():
-            for pattern in patterns:
+        for field, field_patterns in client_patterns.items():
+            for pattern in field_patterns:
                 match = re.search(pattern, text)
                 if match:
                     data["client"][field] = match.group(1).strip()
                     break
         
         # Extraire les montants
-        amount_patterns = {
-            "totalTTC": [
-                r'(?i)(?:total\s*ttc|montant\s*ttc|net\s*à\s*payer|total\s*à\s*payer)[\s:]*(\d+[,.]\d{2})',
-                r'(?i)(?:ttc)[^\n]*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?'
-            ],
-            "totalHT": [
-                r'(?i)(?:total\s*ht|montant\s*ht|prix\s*ht)[\s:]*(\d+[,.]\d{2})',
-                r'(?i)(?:ht)[^\n]*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?'
-            ],
-            "totalTVA": [
-                r'(?i)(?:total\s*tva|montant\s*tva|tva)[\s:]*(\d+[,.]\d{2})',
-                r'(?i)(?:tva)[^\n]*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?'
-            ]
-        }
-        
-        for amount_field, patterns in amount_patterns.items():
-            for pattern in patterns:
+        for amount_field, amount_field_patterns in amount_patterns.items():
+            for pattern in amount_field_patterns:
                 amount_match = re.search(pattern, text)
                 if amount_match:
                     data[amount_field] = amount_match.group(1).replace(',', '.')
@@ -213,7 +286,8 @@ class TextProcessor:
         
         # Extraire les articles/lignes de produits
         # Recherche de tableaux ou de listes d'articles
-        product_lines_pattern = r'(?i)(?:Désignation|Article|Produit|Description).*?(?:Quantité|Qté|Qte).*?(?:Prix|Montant|Total)'
+        product_lines_pattern = patterns.get('product_lines_pattern', 
+            r'(?i)(?:Désignation|Article|Produit|Description).*?(?:Quantité|Qté|Qte).*?(?:Prix|Montant|Total)')
         if re.search(product_lines_pattern, text):
             # Présence probable d'un tableau de produits
             lines = text.split('\n')
