@@ -28,6 +28,7 @@ export class FileUploaderComponent implements OnChanges {
   isUploading = false;
   dragOver = false;
   structuredData: any = null;
+  jsonOutput: any = null;
   detectedFields: DetectedField[] = [];
   categorizedFields: {[category: string]: DetectedField[]} = {};
   
@@ -62,6 +63,14 @@ export class FileUploaderComponent implements OnChanges {
   updateStructuredData(): void {
     if (this.extractionData?.invoice?.extracted_content?.structured_data) {
       this.structuredData = this.extractionData.invoice.extracted_content.structured_data;
+      
+      // Récupérer le format JSON
+      if (this.structuredData.json_output) {
+        this.jsonOutput = this.structuredData.json_output;
+      } else if (this.extractionData?.invoice?.extracted_content?.json_output) {
+        this.jsonOutput = this.extractionData.invoice.extracted_content.json_output;
+      }
+      
       this.processDetectedFields();
       this.processCategorizedFields();
     }
@@ -148,6 +157,7 @@ export class FileUploaderComponent implements OnChanges {
 
     this.isUploading = true;
     this.structuredData = null;
+    this.jsonOutput = null;
 
     this.invoiceService.uploadInvoice(this.selectedFile).subscribe({
       next: (response) => {

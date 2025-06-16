@@ -2,6 +2,8 @@
 Utilitaires pour le traitement du texte des factures
 """
 
+import json
+
 def text_to_html(text):
     """
     Convertit le texte formaté en HTML avec mise en forme améliorée
@@ -52,11 +54,20 @@ def create_invoice_html(invoice_data):
     """
     formatted_text = invoice_data.get("formatted_text", "")
     structured_data = invoice_data.get("structured_data", {})
+    json_output = structured_data.get("json_output", {})
     
     # Extraire les informations structurées
-    invoice_number = structured_data.get("invoice_number", "Non disponible")
-    date = structured_data.get("date", "Non disponible")
-    total_amount = structured_data.get("total_amount", "Non disponible")
+    invoice_number = json_output.get("numeroFacture") or structured_data.get("invoice_number", "Non disponible")
+    date = json_output.get("datePiece") or structured_data.get("date", "Non disponible")
+    total_amount = json_output.get("totalTTC") or structured_data.get("total_amount", "Non disponible")
+    
+    # Informations client
+    client = json_output.get("client", {})
+    client_name = client.get("societe", "Non disponible")
+    client_tva = client.get("tva", "Non disponible")
+    
+    # Articles
+    articles = json_output.get("articles", [])
     
     # Créer le HTML
     html = f"""
@@ -110,6 +121,28 @@ def create_invoice_html(invoice_data):
                 font-weight: bold;
                 color: #7f8c8d;
             }}
+            table {{
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+            }}
+            th, td {{
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }}
+            th {{
+                background-color: #f2f2f2;
+            }}
+            .json-data {{
+                background-color: #f8f9fa;
+                padding: 15px;
+                border-radius: 5px;
+                border: 1px solid #e9ecef;
+                font-family: monospace;
+                white-space: pre-wrap;
+                margin-top: 20px;
+            }}
         </style>
     </head>
     <body>
@@ -120,11 +153,17 @@ def create_invoice_html(invoice_data):
         <div class="invoice-summary">
             <p><span class="info-label">Numéro de facture:</span> {invoice_number}</p>
             <p><span class="info-label">Date:</span> {date}</p>
+            <p><span class="info-label">Client:</span> {client_name}</p>
             <p><span class="info-label">Montant total:</span> {total_amount} €</p>
         </div>
         
         <div class="invoice-container">
             {text_to_html(formatted_text)}
+        </div>
+        
+        <h3>Données structurées extraites</h3>
+        <div class="json-data">
+            {json.dumps(json_output, indent=2, ensure_ascii=False)}
         </div>
     </body>
     </html>

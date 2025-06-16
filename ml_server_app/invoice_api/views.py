@@ -84,8 +84,12 @@ class InvoiceViewSet(viewsets.ModelViewSet):
             return HttpResponse(html_content, content_type='text/html')
         
         # Par défaut, retourner en JSON
+        structured_data = extracted_data.get("structured_data", {})
+        json_output = structured_data.get("json_output", {})
+        
         return Response({
             'status': 'success',
             'formatted_text': formatted_text,
-            'structured_data': extracted_data.get("structured_data", {})
+            'structured_data': structured_data,
+            'json_output': json_output
         })

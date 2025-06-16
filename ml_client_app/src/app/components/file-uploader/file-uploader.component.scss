@@ -175,3 +175,37 @@ mat-card {
     border-bottom: none;
   }
 }
+
+// Styles pour le tableau d'articles
+.articles-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.articles-table th, .articles-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.articles-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+// Style pour l'affichage du JSON
+.json-output {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #e9ecef;
+  font-family: monospace;
+  white-space: pre-wrap;
+  margin-top: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-size: 12px;
+}

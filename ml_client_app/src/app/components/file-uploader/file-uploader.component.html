@@ -33,33 +33,68 @@
       
       <!-- Données principales -->
       <div class="main-data-container">
-        <div *ngIf="structuredData.invoice_number" class="main-data-item">
+        <div *ngIf="jsonOutput?.numeroFacture" class="main-data-item">
           <div class="main-data-icon">
             <mat-icon>receipt</mat-icon>
           </div>
           <div class="main-data-content">
             <div class="main-data-label">Numéro de facture</div>
-            <div class="main-data-value">{{ structuredData.invoice_number }}</div>
+            <div class="main-data-value">{{ jsonOutput.numeroFacture }}</div>
           </div>
         </div>
         
-        <div *ngIf="structuredData.date" class="main-data-item">
+        <div *ngIf="jsonOutput?.datePiece" class="main-data-item">
           <div class="main-data-icon">
             <mat-icon>event</mat-icon>
           </div>
           <div class="main-data-content">
             <div class="main-data-label">Date</div>
-            <div class="main-data-value">{{ structuredData.date }}</div>
+            <div class="main-data-value">{{ jsonOutput.datePiece }}</div>
           </div>
         </div>
         
-        <div *ngIf="structuredData.total_amount" class="main-data-item">
+        <div *ngIf="jsonOutput?.totalTTC" class="main-data-item">
           <div class="main-data-icon">
             <mat-icon>euro_symbol</mat-icon>
           </div>
           <div class="main-data-content">
-            <div class="main-data-label">Montant total</div>
-            <div class="main-data-value">{{ structuredData.total_amount }} €</div>
+            <div class="main-data-label">Montant total TTC</div>
+            <div class="main-data-value">{{ jsonOutput.totalTTC }} €</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Informations client -->
+      <div *ngIf="jsonOutput?.client" class="category-section">
+        <div class="category-header" style="borderLeftColor: #4CAF50">
+          <mat-icon style="color: #4CAF50">business</mat-icon>
+          <h4>Informations client</h4>
+        </div>
+        
+        <div class="structured-data-grid">
+          <div *ngIf="jsonOutput.client.societe" class="data-item">
+            <div class="data-label">Société</div>
+            <div class="data-value">{{ jsonOutput.client.societe }}</div>
+          </div>
+          <div *ngIf="jsonOutput.client.code" class="data-item">
+            <div class="data-label">Code client</div>
+            <div class="data-value">{{ jsonOutput.client.code }}</div>
+          </div>
+          <div *ngIf="jsonOutput.client.tva" class="data-item">
+            <div class="data-label">TVA</div>
+            <div class="data-value">{{ jsonOutput.client.tva }}</div>
+          </div>
+          <div *ngIf="jsonOutput.client.siret" class="data-item">
+            <div class="data-label">SIRET</div>
+            <div class="data-value">{{ jsonOutput.client.siret }}</div>
+          </div>
+          <div *ngIf="jsonOutput.client.ville" class="data-item">
+            <div class="data-label">Ville</div>
+            <div class="data-value">{{ jsonOutput.client.ville }}</div>
+          </div>
+          <div *ngIf="jsonOutput.client.pays" class="data-item">
+            <div class="data-label">Pays</div>
+            <div class="data-value">{{ jsonOutput.client.pays }}</div>
           </div>
         </div>
       </div>
@@ -82,17 +117,44 @@
       </div>
       
       <!-- Lignes de produits -->
-      <div *ngIf="structuredData.items && structuredData.items.length > 0" class="category-section">
-        <div class="category-header" [style.borderLeftColor]="categories['product_details'].color">
-          <mat-icon [style.color]="categories['product_details'].color">{{ categories['product_details'].icon }}</mat-icon>
-          <h4>Lignes de produits</h4>
+      <div *ngIf="jsonOutput?.articles && jsonOutput.articles.length > 0" class="category-section">
+        <div class="category-header" style="borderLeftColor: #FF9800">
+          <mat-icon style="color: #FF9800">shopping_cart</mat-icon>
+          <h4>Articles</h4>
         </div>
         
-        <div class="product-lines">
-          <div *ngFor="let item of structuredData.items" class="product-line">
-            {{ item }}
-          </div>
+        <table class="articles-table">
+          <thead>
+            <tr>
+              <th>Désignation</th>
+              <th>Quantité</th>
+              <th>Prix HT</th>
+              <th>Remise</th>
+              <th>Total HT</th>
+              <th>Total TTC</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let article of jsonOutput.articles">
+              <td>{{ article.nom }}</td>
+              <td>{{ article.quantite }}</td>
+              <td>{{ article.prixHT }} €</td>
+              <td>{{ article.remise }}</td>
+              <td>{{ article.totalHT }} €</td>
+              <td>{{ article.totalTTC }} €</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Format JSON complet -->
+      <div class="category-section">
+        <div class="category-header" style="borderLeftColor: #2196F3">
+          <mat-icon style="color: #2196F3">code</mat-icon>
+          <h4>Format JSON</h4>
         </div>
+        
+        <pre class="json-output">{{ jsonOutput | json }}</pre>
       </div>
     </div>
   </mat-card-content>

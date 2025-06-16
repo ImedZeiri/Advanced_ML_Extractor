@@ -93,6 +93,28 @@ class TextProcessor:
             }
         }
         
+        # Format JSON demandé
+        json_output = {
+            "numeroFacture": None,
+            "numeroCommande": None,
+            "numeroContrat": None,
+            "datePiece": None,
+            "dateCommande": None,
+            "dateLivraison": None,
+            "client": {
+                "societe": None,
+                "code": None,
+                "tva": None,
+                "siret": None,
+                "ville": None,
+                "pays": None
+            },
+            "totalTTC": None,
+            "totalHT": None,
+            "totalTVA": None,
+            "articles": []
+        }
+        
         # Dictionnaires de mots-clés pour la catégorisation
         field_categories = {
             "vendor_info": [
@@ -135,6 +157,30 @@ class TextProcessor:
             invoice_match = re.search(pattern, text)
             if invoice_match:
                 data["invoice_number"] = invoice_match.group(1).strip()
+                json_output["numeroFacture"] = invoice_match.group(1).strip()
+                break
+                
+        # Extraire le numéro de commande
+        order_patterns = [
+            r'(?i)(?:commande|order|n°\s*commande|numéro\s*commande|référence\s*commande)[\s:]*([A-Z0-9-]{3,})',
+            r'(?i)(?:bon\s*de\s*commande)[\s:]*([A-Z0-9-]{3,})'
+        ]
+        
+        for pattern in order_patterns:
+            order_match = re.search(pattern, text)
+            if order_match:
+                json_output["numeroCommande"] = order_match.group(1).strip()
+                break
+                
+        # Extraire le numéro de contrat
+        contract_patterns = [
+            r'(?i)(?:contrat|contract|n°\s*contrat|numéro\s*contrat)[\s:]*([A-Z0-9-]{3,})'
+        ]
+        
+        for pattern in contract_patterns:
+            contract_match = re.search(pattern, text)
+            if contract_match:
+                json_output["numeroContrat"] = contract_match.group(1).strip()
                 break
         
         # Extraire les dates (avec différents formats)
@@ -144,27 +190,91 @@ class TextProcessor:
             r'(\d{1,2}\s+(?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s+\d{2,4})'
         ]
         
+        # Date de la pièce (facture)
         for pattern in date_patterns:
             date_match = re.search(pattern, text)
             if date_match:
                 data["date"] = date_match.group(1).strip()
+                json_output["datePiece"] = date_match.group(1).strip()
+                break
+                
+        # Date de commande
+        order_date_patterns = [
+            r'(?i)(?:date\s*(?:de\s*)?commande|order\s*date)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})'
+        ]
+        
+        for pattern in order_date_patterns:
+            order_date_match = re.search(pattern, text)
+            if order_date_match:
+                json_output["dateCommande"] = order_date_match.group(1).strip()
+                break
+                
+        # Date de livraison
+        delivery_date_patterns = [
+            r'(?i)(?:date\s*(?:de\s*)?livraison|delivery\s*date|livré\s*le)[\s:]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})'
+        ]
+        
+        for pattern in delivery_date_patterns:
+            delivery_date_match = re.search(pattern, text)
+            if delivery_date_match:
+                json_output["dateLivraison"] = delivery_date_match.group(1).strip()
                 break
         
-        # Extraire le montant total
-        total_patterns = [
+        # Extraire le montant total TTC
+        total_ttc_patterns = [
             r'(?i)(?:total\s+ttc|montant\s+ttc|net\s+à\s+payer|total\s+à\s+payer)[\s:]*(\d+[,.]\d{2})',
-            r'(?i)(?:total|montant|somme).*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?',
+            r'(?i)(?:ttc|t\.t\.c\.).*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?',
             r'(?i)(?:à\s+payer)[\s:]*(\d+[,.]\d{2})'
         ]
         
-        for pattern in total_patterns:
+        for pattern in total_ttc_patterns:
             amount_match = re.search(pattern, text)
             if amount_match:
-                data["total_amount"] = amount_match.group(1).replace(',', '.')
+                amount = amount_match.group(1).replace(',', '.')
+                data["total_amount"] = amount
+                json_output["totalTTC"] = amount
+                break
+                
+        # Extraire le montant total HT
+        total_ht_patterns = [
+            r'(?i)(?:total\s+ht|montant\s+ht|prix\s+ht)[\s:]*(\d+[,.]\d{2})',
+            r'(?i)(?:ht|h\.t\.).*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?'
+        ]
+        
+        for pattern in total_ht_patterns:
+            ht_match = re.search(pattern, text)
+            if ht_match:
+                json_output["totalHT"] = ht_match.group(1).replace(',', '.')
+                break
+                
+        # Extraire le montant total TVA
+        total_tva_patterns = [
+            r'(?i)(?:total\s+tva|montant\s+tva|tva)[\s:]*(\d+[,.]\d{2})',
+            r'(?i)(?:tva|t\.v\.a\.).*?(\d+[,.]\d{2})\s*(?:€|EUR|EURO|EUROS)?'
+        ]
+        
+        for pattern in total_tva_patterns:
+            tva_match = re.search(pattern, text)
+            if tva_match:
+                json_output["totalTVA"] = tva_match.group(1).replace(',', '.')
                 break
         
-        # Extraire les informations du fournisseur
-        # Recherche de SIRET, SIREN, site web, etc.
+        # Extraire les informations du client
+        client_patterns = {
+            "societe": r'(?i)(?:client|customer|acheteur|destinataire)[\s:]*([A-Za-z0-9\s\-\'\.&]{3,50})',
+            "code": r'(?i)(?:code\s*client|customer\s*code|référence\s*client)[\s:]*([A-Za-z0-9\-]{2,20})',
+            "tva": r'(?i)(?:tva\s*client|tva\s*intra|n°\s*tva)[\s:]*([A-Za-z0-9]{2,14})',
+            "siret": r'(?i)(?:siret\s*client|siret)[\s:]*(\d{14})',
+            "ville": r'(?i)(?:ville|city|localité)[\s:]*([A-Za-z\s\-\']{2,30})',
+            "pays": r'(?i)(?:pays|country)[\s:]*([A-Za-z\s\-\']{2,30})'
+        }
+        
+        for key, pattern in client_patterns.items():
+            match = re.search(pattern, text)
+            if match:
+                json_output["client"][key] = match.group(1).strip()
+                
+        # Extraire les informations du fournisseur (pour le modèle de données existant)
         vendor_patterns = {
             "siret": r'(?i)(?:SIRET)[\s:]*(\d{14})',
             "siren": r'(?i)(?:SIREN)[\s:]*(\d{9})',
@@ -197,7 +307,6 @@ class TextProcessor:
         product_lines_pattern = r'(?i)(?:Désignation|Article|Produit|Description).*?(?:Quantité|Qté|Qte).*?(?:Prix|Montant|Total)'
         if re.search(product_lines_pattern, text):
             # Présence probable d'un tableau de produits
-            # Extraction simplifiée des lignes de produits
             lines = text.split('\n')
             product_section = False
             product_lines = []
@@ -216,11 +325,61 @@ class TextProcessor:
             
             if product_lines:
                 data["items"] = product_lines
+                
+                # Essayer d'extraire les détails des articles pour le format JSON demandé
+                for line in product_lines:
+                    # Modèle simplifié pour extraire les informations d'un article
+                    article = {
+                        "nom": None,
+                        "quantite": None,
+                        "prixHT": None,
+                        "remise": None,
+                        "totalHT": None,
+                        "totalTTC": None
+                    }
+                    
+                    # Extraction du nom de l'article (première partie de la ligne avant les chiffres)
+                    nom_match = re.match(r'^(.*?)(?:\d+[,.]\d{2}|\d+\s*(?:x|pcs|u|unité))', line)
+                    if nom_match:
+                        article["nom"] = nom_match.group(1).strip()
+                    
+                    # Extraction de la quantité
+                    qty_match = re.search(r'(\d+(?:[,.]\d+)?)\s*(?:x|pcs|u|unité)', line)
+                    if qty_match:
+                        article["quantite"] = qty_match.group(1).replace(',', '.')
+                    
+                    # Extraction du prix HT
+                    prix_ht_match = re.search(r'(?:prix|p\.u\.|pu|unitaire)[\s:]*(\d+[,.]\d{2})', line, re.IGNORECASE)
+                    if prix_ht_match:
+                        article["prixHT"] = prix_ht_match.group(1).replace(',', '.')
+                    
+                    # Extraction de la remise
+                    remise_match = re.search(r'(?:remise|discount)[\s:]*(\d+[,.]\d{2}|\d+\s*%)', line, re.IGNORECASE)
+                    if remise_match:
+                        article["remise"] = remise_match.group(1).replace(',', '.')
+                    
+                    # Extraction du total HT
+                    total_ht_match = re.search(r'(?:total\s*ht|ht)[\s:]*(\d+[,.]\d{2})', line, re.IGNORECASE)
+                    if total_ht_match:
+                        article["totalHT"] = total_ht_match.group(1).replace(',', '.')
+                    
+                    # Extraction du total TTC
+                    total_ttc_match = re.search(r'(?:total\s*ttc|ttc)[\s:]*(\d+[,.]\d{2})', line, re.IGNORECASE)
+                    if total_ttc_match:
+                        article["totalTTC"] = total_ttc_match.group(1).replace(',', '.')
+                    
+                    # Si on n'a pas trouvé de nom mais qu'on a d'autres informations, utiliser la ligne entière comme nom
+                    if not article["nom"] and (article["quantite"] or article["prixHT"] or article["totalHT"]):
+                        article["nom"] = line.strip()
+                    
+                    # Ajouter l'article seulement s'il a au moins un nom
+                    if article["nom"]:
+                        json_output["articles"].append(article)
         
         # Détecter automatiquement les paires clé-valeur
         key_value_patterns = [
             r'([A-Za-z0-9\s\-\']{3,30})\s*[:=]\s*([A-Za-z0-9\s\-\.,€\$£&@\'\/]{1,50})',  # Clé: Valeur ou Clé = Valeur
-            r'([A-Za-z0-9\s\-\']{3,30})\s*[:|]\s*([A-Za-z0-9\s\-\.,€\$£&@\'\/]{1,50})',  # Variante avec | comme séparateur
+            r'([A-Za-z0-9\s\-\']{3,30})\s*[:|]\s*([A-Za-z0-9\s\-\.,€\$£&@\'\/]{1,50})',  # Clé: Valeur ou Clé | Valeur
             r'([A-Za-z0-9\s\-\']{3,30})\s{2,}([A-Za-z0-9\s\-\.,€\$£&@\'\/]{1,50})'       # Clé suivie de plusieurs espaces puis Valeur
         ]
         
@@ -259,6 +418,9 @@ class TextProcessor:
                 # Si non catégorisé, mettre dans "other"
                 if not categorized:
                     data["categorized_fields"]["other"][key] = value
+        
+        # Ajouter le format JSON au résultat
+        data["json_output"] = json_output
         
         return data
     
