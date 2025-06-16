@@ -23,7 +23,7 @@ export class AppComponent {
       this.fileSrc = this.sanitizer.bypassSecurityTrustResourceUrl(data.invoice.file);
       
       const fileExt = data.invoice.file.toLowerCase().split('.').pop();
-      this.isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExt);
+      this.isImage = ['jpg', 'jpeg', 'png'].includes(fileExt);
     }
   }
 }
