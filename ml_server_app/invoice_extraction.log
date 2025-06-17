@@ -1,0 +1,20 @@
+2025-06-17 13:01:15,710 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\extractors.py changed, reloading.
+2025-06-17 13:01:46,579 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\extractors.py changed, reloading.
+2025-06-17 13:03:09,521 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\extractors.py changed, reloading.
+2025-06-17 13:05:02,833 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\extractors.py changed, reloading.
+2025-06-17 14:04:26,629 - invoice_extractor - WARNING - Incohérence dans les montants: TTC=50.85, HT=50.85, TVA=50.85
+2025-06-17 14:04:26,630 - invoice_extractor - INFO - Score de confiance des données extraites: 0.86
+2025-06-17 14:04:40,370 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 14:04:40,372 - invoice_extractor - WARNING - Bibliothèque spaCy non disponible
+2025-06-17 14:04:51,063 - huggingface_hub.file_download - WARNING - Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+2025-06-17 14:13:51,829 - huggingface_hub.file_download - WARNING - Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+2025-06-17 14:15:40,708 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 14:15:40,709 - invoice_extractor - INFO - Texte tronqué de 955 à 512 caractères pour l'analyse transformers
+2025-06-17 14:15:56,101 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 14:16:41,439 - invoice_extractor - WARNING - Numéro de facture sans chiffre: Client
+2025-06-17 14:16:41,440 - invoice_extractor - INFO - Score de confiance des données extraites: 0.57
+2025-06-17 14:16:41,440 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 14:16:41,442 - invoice_extractor - WARNING - Bibliothèque spaCy non disponible
+2025-06-17 14:16:43,893 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 14:16:43,893 - invoice_extractor - INFO - Texte tronqué de 2395 à 512 caractères pour l'analyse transformers
+2025-06-17 14:16:56,788 - invoice_extractor - INFO - Extraction ML effectuée avec succès

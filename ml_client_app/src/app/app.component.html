@@ -36,19 +36,6 @@
                     extractionData.invoice.extracted_content.formatted_text
                   }}</pre>
                 </div>
-                <div
-                  *ngIf="extractionData.invoice.html_formatted_text_url"
-                  class="view-options"
-                >
-                  <a
-                    [href]="extractionData.invoice.html_formatted_text_url"
-                    target="_blank"
-                    mat-raised-button
-                    color="primary"
-                  >
-                    <mat-icon>open_in_new</mat-icon> Voir en HTML
-                  </a>
-                </div>
               </mat-tab>
               <mat-tab label="Texte brut">
                 <div class="extracted-text">
@@ -93,11 +80,6 @@
           >
             <h3>Erreur d'extraction:</h3>
             <p>{{ extractionData.invoice.extracted_content.error }}</p>
-          </div>
-
-          <div class="json-data">
-            <h3>Données JSON complètes:</h3>
-            <pre>{{ extractionData | json }}</pre>
           </div>
         </mat-card-content>
       </mat-card>
