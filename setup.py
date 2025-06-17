@@ -11,13 +11,33 @@ def check_tesseract():
     """Vérifie si Tesseract OCR est installé"""
     try:
         import pytesseract
-        path = pytesseract.get_tesseract_cmd()
-        if os.path.exists(path):
-            print(f"✅ Tesseract OCR trouvé: {path}")
-            return True
+        # Vérifier si la fonction get_tesseract_cmd existe
+        if hasattr(pytesseract, 'get_tesseract_cmd'):
+            path = pytesseract.get_tesseract_cmd()
+            if os.path.exists(path):
+                print(f"✅ Tesseract OCR trouvé: {path}")
+                return True
+            else:
+                print("❌ Tesseract OCR non trouvé dans le chemin par défaut")
+                return False
         else:
-            print("❌ Tesseract OCR non trouvé dans le chemin par défaut")
-            return False
+            # Méthode alternative pour vérifier Tesseract
+            try:
+                # Essayer d'exécuter une commande simple pour voir si Tesseract est disponible
+                result = subprocess.run(['tesseract', '--version'], 
+                                       stdout=subprocess.PIPE, 
+                                       stderr=subprocess.PIPE, 
+                                       text=True, 
+                                       check=False)
+                if result.returncode == 0:
+                    print(f"✅ Tesseract OCR trouvé: {result.stdout.split()[0]}")
+                    return True
+                else:
+                    print("❌ Tesseract OCR non trouvé dans le PATH")
+                    return False
+            except FileNotFoundError:
+                print("❌ Tesseract OCR non trouvé dans le PATH")
+                return False
     except ImportError:
         print("❌ pytesseract n'est pas installé")
         return False

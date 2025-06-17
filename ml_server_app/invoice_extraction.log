@@ -18,3 +18,12 @@
 2025-06-17 14:16:43,893 - invoice_extractor - INFO - Modèles transformers chargés avec succès
 2025-06-17 14:16:43,893 - invoice_extractor - INFO - Texte tronqué de 2395 à 512 caractères pour l'analyse transformers
 2025-06-17 14:16:56,788 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 16:16:12,226 - invoice_extractor - WARNING - Incohérence dans les montants: TTC=337.27, HT=351.32, TVA=56.21
+2025-06-17 16:16:12,227 - invoice_extractor - INFO - Score de confiance des données extraites: 1.00
+2025-06-17 16:16:17,742 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 16:16:19,700 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 16:16:36,762 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 16:16:52,239 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 16:16:52,679 - invoice_extractor - INFO - Langue détectée: anglais
+2025-06-17 16:16:52,817 - invoice_extractor - INFO - Texte tronqué de 1948 à 512 caractères pour l'analyse transformers
+2025-06-17 16:17:12,366 - invoice_extractor - INFO - Extraction ML effectuée avec succès

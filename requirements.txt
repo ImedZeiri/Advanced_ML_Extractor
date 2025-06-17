@@ -14,5 +14,5 @@ transformers>=4.26.0
 torch>=2.0.0
 scikit-learn>=1.0.0
 # Modèles linguistiques pour spaCy (à installer séparément)
-# python -m spacy download fr_core_news_lg
-# python -m spacy download en_core_web_lg
+python -m spacy download fr_core_news_lg
+python -m spacy download en_core_web_lg
