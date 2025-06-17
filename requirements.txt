@@ -8,11 +8,16 @@ PyPDF2>=2.0.0
 opencv-python>=4.5.3
 numpy>=1.20.0
 pyyaml>=6.0.0
-# Nouvelles dépendances pour l'extraction avancée
 spacy>=3.5.0
 transformers>=4.26.0
 torch>=2.0.0
 scikit-learn>=1.0.0
-# Modèles linguistiques pour spaCy (à installer séparément)
 python -m spacy download fr_core_news_lg
 python -m spacy download en_core_web_lg
+
+pip install -U pip setuptools wheel
+pip install -U "spacy[transformers,lookups]"
+
+python -m spacy download en_core_web_sm
+python -m spacy download fr_core_news_sm
+python -m spacy download xx_ent_wiki_sm

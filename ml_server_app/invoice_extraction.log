@@ -27,3 +27,144 @@
 2025-06-17 16:16:52,679 - invoice_extractor - INFO - Langue détectée: anglais
 2025-06-17 16:16:52,817 - invoice_extractor - INFO - Texte tronqué de 1948 à 512 caractères pour l'analyse transformers
 2025-06-17 16:17:12,366 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 16:23:36,612 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\serializers.py changed, reloading.
+2025-06-17 16:25:33,845 - invoice_extractor - INFO - Traitement de l'image Capture_zPiFGST.PNG
+2025-06-17 16:25:37,096 - invoice_extractor - INFO - Confiance OCR moyenne = 36.78%
+2025-06-17 16:25:40,258 - invoice_extractor - INFO - Score de confiance des données extraites: 0.00
+2025-06-17 16:25:46,706 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 16:25:49,169 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 16:26:06,764 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 16:26:21,763 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 16:26:21,942 - invoice_extractor - INFO - Langue détectée: anglais
+2025-06-17 16:26:47,771 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 16:26:47,772 - invoice_extractor - INFO - Nom d'entreprise ajouté depuis ML: PE
+2025-06-17 16:27:05,361 - invoice_extractor - WARNING - Incohérence dans les montants: TTC=50.85, HT=50.85, TVA=50.85
+2025-06-17 16:27:05,362 - invoice_extractor - INFO - Score de confiance des données extraites: 0.86
+2025-06-17 16:27:05,362 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 16:27:05,362 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 16:27:06,619 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 16:27:17,422 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 16:27:17,791 - invoice_extractor - INFO - Langue détectée: anglais
+2025-06-17 16:27:17,853 - invoice_extractor - INFO - Texte tronqué de 955 à 512 caractères pour l'analyse transformers
+2025-06-17 16:27:43,049 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 16:27:58,977 - PyPDF2._reader - WARNING - incorrect startxref pointer(3)
+2025-06-17 16:28:02,662 - invoice_extractor - INFO - Score de confiance des données extraites: 0.57
+2025-06-17 16:28:02,663 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 16:28:02,663 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 16:28:03,496 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 16:28:12,829 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 16:28:13,012 - invoice_extractor - INFO - Langue détectée: anglais
+2025-06-17 16:28:13,621 - invoice_extractor - INFO - Texte tronqué de 11812 à 512 caractères pour l'analyse transformers
+2025-06-17 16:28:30,288 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 16:28:30,289 - invoice_extractor - INFO - Date ajoutée depuis ML: January 2025
+2025-06-17 16:28:30,289 - invoice_extractor - INFO - Montant total ajouté depuis ML: 40 euros
+2025-06-17 16:30:36,496 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\serializers.py changed, reloading.
+2025-06-17 16:35:16,117 - invoice_extractor - WARNING - Incohérence dans les montants: TTC=337.27, HT=351.32, TVA=56.21
+2025-06-17 16:35:16,118 - invoice_extractor - INFO - Score de confiance des données extraites: 1.00
+2025-06-17 16:35:21,043 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 16:35:22,708 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 16:35:39,669 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 16:35:53,531 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 16:35:53,717 - invoice_extractor - INFO - Langue détectée: anglais
+2025-06-17 16:35:53,841 - invoice_extractor - INFO - Texte tronqué de 1948 à 512 caractères pour l'analyse transformers
+2025-06-17 16:36:19,342 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 16:40:24,900 - invoice_extractor - WARNING - Date invalide: 1/16/2025
+2025-06-17 16:40:24,900 - invoice_extractor - WARNING - Date invalide: 1/16/2025
+2025-06-17 16:40:24,901 - invoice_extractor - INFO - Score de confiance des données extraites: 0.43
+2025-06-17 16:40:24,901 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 16:40:24,901 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 16:40:26,001 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 16:40:40,433 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 16:40:40,618 - invoice_extractor - INFO - Langue détectée: anglais
+2025-06-17 16:40:40,685 - invoice_extractor - INFO - Texte tronqué de 1060 à 512 caractères pour l'analyse transformers
+2025-06-17 16:40:57,472 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 16:40:57,472 - invoice_extractor - INFO - Date ajoutée depuis ML: Monthly
+2025-06-17 16:41:58,688 - invoice_extractor - WARNING - Numéro de facture sans chiffre: entification
+2025-06-17 16:41:58,688 - invoice_extractor - INFO - Score de confiance des données extraites: 0.14
+2025-06-17 16:41:58,689 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 16:41:58,689 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 16:41:59,828 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 16:42:09,933 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 16:42:10,145 - invoice_extractor - INFO - Langue détectée: anglais
+2025-06-17 16:42:10,261 - invoice_extractor - INFO - Texte tronqué de 1735 à 512 caractères pour l'analyse transformers
+2025-06-17 16:42:35,627 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 16:42:35,627 - invoice_extractor - INFO - Date ajoutée depuis ML: 2025
+2025-06-17 16:42:35,627 - invoice_extractor - INFO - Nom d'entreprise ajouté depuis ML: de commer ce :
+2025-06-17 16:43:36,238 - invoice_extractor - WARNING - Numéro de facture sans chiffre: Produits
+2025-06-17 16:43:36,239 - invoice_extractor - INFO - Score de confiance des données extraites: 0.29
+2025-06-17 16:43:36,239 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 16:43:36,239 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 16:43:37,307 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 16:43:46,862 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 16:43:47,052 - invoice_extractor - INFO - Langue détectée: anglais
+2025-06-17 16:43:47,213 - invoice_extractor - INFO - Texte tronqué de 2498 à 512 caractères pour l'analyse transformers
+2025-06-17 16:44:10,035 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 16:44:10,035 - invoice_extractor - INFO - Date ajoutée depuis ML: 6602 12
+2025-06-17 16:51:09,402 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\ml_extractor.py changed, reloading.
+2025-06-17 16:53:36,196 - invoice_extractor - INFO - Score de confiance des données extraites: 0.86
+2025-06-17 16:53:43,622 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 16:53:46,172 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 16:54:05,706 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 16:54:27,067 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 16:54:30,732 - invoice_extractor - INFO - Langue détectée: anglais
+2025-06-17 16:54:30,915 - invoice_extractor - INFO - Texte tronqué de 1943 à 512 caractères pour l'analyse transformers
+2025-06-17 16:55:00,069 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 17:01:48,853 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\views.py changed, reloading.
+2025-06-17 17:06:36,637 - invoice_extractor - WARNING - Incohérence dans les montants: TTC=337.27, HT=351.32, TVA=56.21
+2025-06-17 17:06:36,638 - invoice_extractor - INFO - Score de confiance des données extraites: 1.00
+2025-06-17 17:06:43,495 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 17:06:46,140 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 17:07:04,912 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 17:07:25,668 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 17:07:25,959 - invoice_extractor - INFO - Langue détectée: anglais
+2025-06-17 17:07:26,107 - invoice_extractor - INFO - Texte tronqué de 1948 à 512 caractères pour l'analyse transformers
+2025-06-17 17:08:04,479 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 17:08:25,935 - django.request - WARNING - Unsupported Media Type: /api/invoices/153/train/
+2025-06-17 17:09:14,109 - django.request - WARNING - Unsupported Media Type: /api/invoices/153/train/
+2025-06-17 17:19:57,412 - invoice_extractor - INFO - Score de confiance des données extraites: 0.86
+2025-06-17 17:20:07,875 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 17:20:13,877 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 17:20:34,110 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 17:20:52,579 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 17:20:53,801 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\views.py changed, reloading.
+2025-06-17 17:25:07,049 - invoice_extractor - INFO - Score de confiance des données extraites: 0.86
+2025-06-17 17:25:07,998 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\model_trainer.py changed, reloading.
+2025-06-17 17:27:29,314 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\model_trainer.py changed, reloading.
+2025-06-17 17:29:31,533 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\model_trainer.py changed, reloading.
+2025-06-17 17:31:08,070 - invoice_extractor - WARNING - Incohérence dans les montants: TTC=337.27, HT=351.32, TVA=56.21
+2025-06-17 17:31:08,073 - invoice_extractor - INFO - Score de confiance des données extraites: 1.00
+2025-06-17 17:31:14,385 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 17:31:16,877 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 17:31:34,689 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 17:31:56,188 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 17:32:05,074 - invoice_extractor - INFO - Langue détectée: anglais
+2025-06-17 17:32:05,501 - invoice_extractor - INFO - Texte tronqué de 1948 à 512 caractères pour l'analyse transformers
+2025-06-17 17:32:30,304 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 17:36:05,299 - django.request - WARNING - Unsupported Media Type: /api/invoices/156/train/
+2025-06-17 17:38:32,721 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\views.py changed, reloading.
+2025-06-17 17:38:57,063 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\views.py changed, reloading.
+2025-06-17 17:41:34,610 - invoice_extractor - WARNING - Incohérence dans les montants: TTC=337.27, HT=351.32, TVA=56.21
+2025-06-17 17:41:34,611 - invoice_extractor - INFO - Score de confiance des données extraites: 1.00
+2025-06-17 17:41:42,825 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 17:41:45,161 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 17:42:01,660 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 17:42:16,010 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 17:42:16,225 - invoice_extractor - INFO - Langue détectée: anglais
+2025-06-17 17:42:16,354 - invoice_extractor - INFO - Texte tronqué de 1948 à 512 caractères pour l'analyse transformers
+2025-06-17 17:42:33,596 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 17:44:17,007 - invoice_api.model_trainer - INFO - Données d'entraînement sauvegardées dans C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\training_data\TR-OODRIVE_omEt1CC_training.json
+2025-06-17 17:44:17,034 - invoice_api.model_trainer - INFO - Traitement de 1 fichiers d'entraînement
+2025-06-17 17:44:17,042 - invoice_api.model_trainer - ERROR - Erreur lors du traitement du fichier TR-OODRIVE_omEt1CC_training.json: 'float' object has no attribute 'replace'
+2025-06-17 17:44:17,062 - invoice_api.model_trainer - INFO - Patterns regex mis à jour avec succès dans C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\regex_patterns.yaml
+2025-06-17 17:44:17,063 - invoice_api.views - INFO - Modèle entraîné avec succès
+2025-06-17 17:44:48,810 - invoice_extractor - WARNING - Numéro de facture sans chiffre: votre
+2025-06-17 17:44:48,812 - invoice_extractor - WARNING - Incohérence dans les montants: TTC=337.27, HT=351.32, TVA=56.21
+2025-06-17 17:44:48,812 - invoice_extractor - INFO - Score de confiance des données extraites: 0.86
+2025-06-17 17:44:48,812 - invoice_extractor - INFO - Bibliothèque transformers disponible
+2025-06-17 17:44:48,813 - invoice_extractor - INFO - Bibliothèque spaCy disponible
+2025-06-17 17:44:50,558 - invoice_extractor - INFO - Modèles transformers chargés avec succès
+2025-06-17 17:45:05,639 - invoice_extractor - INFO - Modèles spaCy chargés avec succès
+2025-06-17 17:45:05,801 - invoice_extractor - INFO - Langue détectée: anglais
+2025-06-17 17:45:05,907 - invoice_extractor - INFO - Texte tronqué de 1948 à 512 caractères pour l'analyse transformers
+2025-06-17 17:45:25,771 - invoice_extractor - INFO - Extraction ML effectuée avec succès
+2025-06-17 17:46:58,204 - django.utils.autoreload - INFO - C:\Users\admin\Desktop\Advanced_ML_Extractor\ml_server_app\invoice_api\views.py changed, reloading.
