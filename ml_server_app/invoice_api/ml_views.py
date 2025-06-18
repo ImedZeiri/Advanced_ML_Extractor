@@ -50,6 +50,33 @@ def model_info(request):
         }
     })
 
+@api_view(['POST'])
+def reset_model(request):
+    """
+    Endpoint pour réinitialiser le modèle LayoutLMv3
+    """
+    try:
+        # Importer le singleton
+        from .ml_models import layoutlmv3_extractor
+        
+        # Réinitialiser le processeur et le modèle
+        layoutlmv3_extractor.processor = None
+        layoutlmv3_extractor.model = None
+        
+        # Recharger le modèle avec les bons paramètres
+        layoutlmv3_extractor.load_model()
+        
+        return Response({
+            'status': 'success',
+            'message': 'Modèle réinitialisé avec succès'
+        })
+    except Exception as e:
+        logger.error(f"Erreur lors de la réinitialisation du modèle: {str(e)}")
+        return Response({
+            'status': 'error',
+            'message': f'Erreur lors de la réinitialisation du modèle: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 @api_view(['GET'])
 def export_annotations(request):
     """
@@ -74,3 +101,32 @@ def export_annotations(request):
         'count': len(annotations),
         'annotations': annotations
     })
+
+@api_view(['GET'])
+def training_status(request, job_id):
+    """
+    Endpoint pour vérifier le statut d'un job d'entraînement
+    """
+    try:
+        training_job = TrainingJob.objects.get(id=job_id)
+        
+        return Response({
+            'status': 'success',
+            'job_status': training_job.status,
+            'created_at': training_job.created_at,
+            'updated_at': training_job.updated_at,
+            'annotations_count': training_job.annotations.count(),
+            'results': training_job.get_results(),
+            'error_message': training_job.error_message
+        })
+    except TrainingJob.DoesNotExist:
+        return Response({
+            'status': 'error',
+            'message': f'Job d\'entraînement {job_id} non trouvé'
+        }, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        logger.error(f"Erreur lors de la récupération du statut du job d'entraînement: {str(e)}")
+        return Response({
+            'status': 'error',
+            'message': f'Erreur lors de la récupération du statut du job d\'entraînement: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -127,6 +127,23 @@ export class FileUploaderComponent implements OnChanges {
       }
     });
   }
+  
+  resetModel(): void {
+    this.invoiceService.resetModel().subscribe({
+      next: (response) => {
+        this.snackBar.open('Modèle réinitialisé avec succès', 'Fermer', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
+        // Vérifier à nouveau la disponibilité du modèle
+        this.checkModelAvailability();
+      },
+      error: (error) => {
+        this.showErrorDialog(error.error?.message || 'Erreur lors de la réinitialisation du modèle');
+      }
+    });
+  }
 
   submitCorrections(): void {
     if (!this.extractionData?.invoice?.id) {

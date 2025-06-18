@@ -58,16 +58,26 @@ class InvoiceDataset(Dataset):
             boxes = annotation.get('boxes', [])
             if not boxes:
                 # Générer des boîtes factices si non disponibles
-                boxes = [[0, 0, 100, 100]] * len(words)
+                # Utiliser des valeurs dans la plage 0-1000
+                boxes = [[0, 0, 500, 500]] * len(words)
         else:
             # Faire l'OCR
             ocr_result = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT, lang='fra+eng')
             words = [word for word in ocr_result['text'] if word.strip()]
             boxes = []
+            
+            # Obtenir les dimensions de l'image pour normaliser les coordonnées
+            width, height = image.size
+            
             for i in range(len(ocr_result['text'])):
                 if ocr_result['text'][i].strip():
+                    # Extraire les coordonnées
                     x, y, w, h = ocr_result['left'][i], ocr_result['top'][i], ocr_result['width'][i], ocr_result['height'][i]
-                    boxes.append([x, y, x + w, y + h])
+                    
+                    # Normaliser les coordonnées avec la fonction utilitaire
+                    normalized_bbox = normalize_bbox([x, y, w, h], width, height)
+                    
+                    boxes.append(normalized_bbox)
         
         # Préparer les étiquettes pour chaque mot
         labels = []
@@ -77,26 +87,103 @@ class InvoiceDataset(Dataset):
             # Pour simplifier, on utilise une étiquette générique ici
             labels.append(0)  # 0 = autre, 1 = numéro de facture, 2 = date, etc.
         
-        # Encoder les entrées
-        encoding = self.processor(
-            image,
-            text=words,
-            boxes=boxes,
-            truncation=True,
-            padding="max_length",
-            max_length=self.max_length,
-            return_tensors="pt",
-            apply_ocr=False  # Désactiver l'OCR car nous fournissons déjà les mots et les boîtes
-        )
-        
-        # Ajouter les étiquettes
-        encoding["labels"] = torch.tensor(labels)
-        
-        # Supprimer la dimension batch
-        for k, v in encoding.items():
-            encoding[k] = v.squeeze()
+        try:
+            # Vérifier que toutes les boîtes sont dans la plage 0-1000
+            for i, box in enumerate(boxes):
+                if not all(0 <= coord <= 1000 for coord in box):
+                    logger.warning(f"Boîte hors plage détectée: {box}, normalisation forcée")
+                    boxes[i] = [max(0, min(coord, 1000)) for coord in box]
+                    
+                # S'assurer que x2 > x1 et y2 > y1
+                if boxes[i][2] <= boxes[i][0]:
+                    boxes[i][2] = min(boxes[i][0] + 10, 1000)
+                if boxes[i][3] <= boxes[i][1]:
+                    boxes[i][3] = min(boxes[i][1] + 10, 1000)
             
-        return encoding
+            # Encoder les entrées - utiliser une approche différente pour éviter les problèmes
+            # Créer les entrées séparément
+            image_features = self.processor.image_processor(images=image, return_tensors="pt")
+            encoding = self.processor.tokenizer(
+                text=words,
+                boxes=boxes,
+                truncation=True,
+                padding="max_length",
+                max_length=self.max_length,
+                return_tensors="pt"
+            )
+            
+            # Fusionner les entrées
+            for k, v in image_features.items():
+                encoding[k] = v
+            
+            # Créer des étiquettes de la même taille que les tokens
+            # Le tokenizer peut créer plus de tokens que de mots d'origine
+            input_ids_length = encoding["input_ids"].shape[1]
+            
+            # Créer un tenseur d'étiquettes de la bonne taille (rempli de 0)
+            token_labels = torch.zeros(input_ids_length, dtype=torch.long)
+            
+            # Ajouter les étiquettes
+            encoding["labels"] = token_labels
+            
+            # Supprimer la dimension batch
+            for k, v in encoding.items():
+                encoding[k] = v.squeeze()
+                
+            return encoding
+        except Exception as e:
+            logger.error(f"Erreur lors de l'encodage des entrées: {str(e)}")
+            # Retourner un encodage vide en cas d'erreur
+            return {
+                "input_ids": torch.zeros(self.max_length, dtype=torch.long),
+                "attention_mask": torch.zeros(self.max_length, dtype=torch.long),
+                "bbox": torch.zeros((self.max_length, 4), dtype=torch.long),
+                "pixel_values": torch.zeros((3, 224, 224), dtype=torch.float),
+                "labels": torch.zeros(self.max_length, dtype=torch.long)
+            }
+
+def normalize_bbox(bbox, width, height):
+    """
+    Normalise les coordonnées d'une boîte délimitante dans la plage 0-1000
+    
+    Args:
+        bbox: Liste [x, y, w, h] ou [x, y, x2, y2]
+        width: Largeur de l'image
+        height: Hauteur de l'image
+        
+    Returns:
+        Liste [x_norm, y_norm, x2_norm, y2_norm] avec des valeurs entre 0 et 1000
+    """
+    # Vérifier si le format est [x, y, w, h] ou [x, y, x2, y2]
+    if len(bbox) == 4:
+        if bbox[2] <= bbox[0] or bbox[3] <= bbox[1]:  # Format [x, y, w, h]
+            x, y, w, h = bbox
+            x2, y2 = x + w, y + h
+        else:  # Format [x, y, x2, y2]
+            x, y, x2, y2 = bbox
+    else:
+        # Format invalide, utiliser des valeurs par défaut
+        return [0, 0, 1000, 1000]
+    
+    # Normaliser les coordonnées entre 0 et 1000
+    x_norm = int(x * 1000 / width) if width > 0 else 0
+    y_norm = int(y * 1000 / height) if height > 0 else 0
+    x2_norm = int(x2 * 1000 / width) if width > 0 else 1000
+    y2_norm = int(y2 * 1000 / height) if height > 0 else 1000
+    
+    # S'assurer que les coordonnées sont dans la plage 0-1000
+    x_norm = max(0, min(x_norm, 1000))
+    y_norm = max(0, min(y_norm, 1000))
+    x2_norm = max(0, min(x2_norm, 1000))
+    y2_norm = max(0, min(y2_norm, 1000))
+    
+    # S'assurer que x2 > x1 et y2 > y1
+    if x2_norm <= x_norm:
+        x2_norm = min(x_norm + 10, 1000)
+    if y2_norm <= y_norm:
+        y2_norm = min(y_norm + 10, 1000)
+    
+    return [x_norm, y_norm, x2_norm, y2_norm]
 
 class LayoutLMv3Extractor:
     """Classe pour l'extraction d'informations à partir de factures en utilisant LayoutLMv3"""
@@ -123,15 +210,40 @@ class LayoutLMv3Extractor:
     def load_model(self):
         """Charge le modèle LayoutLMv3 et le processeur"""
         try:
+            # Configuration spécifique pour le processeur
+            processor_kwargs = {
+                "apply_ocr": False,  # Crucial: désactiver l'OCR intégré
+                "ocr_lang": ["fra", "eng"]
+            }
+            
             # Vérifier si un modèle personnalisé existe
-            if os.path.exists(self.model_path):
-                logger.info(f"Chargement du modèle personnalisé depuis {self.model_path}")
-                self.processor = LayoutLMv3Processor.from_pretrained(self.model_path)
-                self.model = LayoutLMv3ForTokenClassification.from_pretrained(self.model_path)
+            if os.path.exists(self.model_path) and os.path.isdir(self.model_path):
+                try:
+                    logger.info(f"Chargement du modèle personnalisé depuis {self.model_path}")
+                    self.processor = LayoutLMv3Processor.from_pretrained(
+                        self.model_path,
+                        **processor_kwargs
+                    )
+                    self.model = LayoutLMv3ForTokenClassification.from_pretrained(self.model_path)
+                except Exception as e:
+                    logger.error(f"Erreur lors du chargement du modèle personnalisé: {str(e)}")
+                    logger.info("Utilisation du modèle pré-entraîné par défaut")
+                    # Si le chargement échoue, utiliser le modèle pré-entraîné
+                    self.processor = LayoutLMv3Processor.from_pretrained(
+                        "microsoft/layoutlmv3-base",
+                        **processor_kwargs
+                    )
+                    self.model = LayoutLMv3ForTokenClassification.from_pretrained(
+                        "microsoft/layoutlmv3-base",
+                        num_labels=len(self.label_map)
+                    )
             else:
                 # Utiliser le modèle pré-entraîné par défaut
                 logger.info("Chargement du modèle pré-entraîné LayoutLMv3")
-                self.processor = LayoutLMv3Processor.from_pretrained("microsoft/layoutlmv3-base")
+                self.processor = LayoutLMv3Processor.from_pretrained(
+                    "microsoft/layoutlmv3-base",
+                    **processor_kwargs
+                )
                 self.model = LayoutLMv3ForTokenClassification.from_pretrained(
                     "microsoft/layoutlmv3-base",
                     num_labels=len(self.label_map)
@@ -180,23 +292,49 @@ class LayoutLMv3Extractor:
             words = []
             boxes = []
             
+            # Obtenir les dimensions de l'image pour normaliser les coordonnées
+            width, height = image.size
+            
             for i in range(len(ocr_result['text'])):
                 if ocr_result['text'][i].strip():
                     words.append(ocr_result['text'][i])
+                    
+                    # Extraire les coordonnées
                     x, y, w, h = ocr_result['left'][i], ocr_result['top'][i], ocr_result['width'][i], ocr_result['height'][i]
-                    boxes.append([x, y, x + w, y + h])
+                    
+                    # Normaliser les coordonnées avec la fonction utilitaire
+                    normalized_bbox = normalize_bbox([x, y, w, h], width, height)
+                    
+                    boxes.append(normalized_bbox)
             
-            # Encoder les entrées
-            encoding = self.processor(
-                image,
+            # Vérifier que toutes les boîtes sont dans la plage 0-1000
+            for i, box in enumerate(boxes):
+                if not all(0 <= coord <= 1000 for coord in box):
+                    logger.warning(f"Boîte hors plage détectée: {box}, normalisation forcée")
+                    boxes[i] = [max(0, min(coord, 1000)) for coord in box]
+                    
+                # S'assurer que x2 > x1 et y2 > y1
+                if boxes[i][2] <= boxes[i][0]:
+                    boxes[i][2] = min(boxes[i][0] + 10, 1000)
+                if boxes[i][3] <= boxes[i][1]:
+                    boxes[i][3] = min(boxes[i][1] + 10, 1000)
+            
+            # Encoder les entrées - utiliser une approche différente pour éviter les problèmes
+            # Créer les entrées séparément
+            image_features = self.processor.image_processor(images=image, return_tensors="pt")
+            text_features = self.processor.tokenizer(
                 text=words,
                 boxes=boxes,
                 truncation=True,
                 padding="max_length",
                 max_length=512,
-                return_tensors="pt",
-                apply_ocr=False  # Désactiver l'OCR car nous fournissons déjà les mots et les boîtes
+                return_tensors="pt"
             )
+            
+            # Fusionner les entrées
+            encoding = text_features.copy()
+            for k, v in image_features.items():
+                encoding[k] = v
             
             # Déplacer les tenseurs vers le device
             for k, v in encoding.items():
@@ -386,10 +524,32 @@ class LayoutLMv3Extractor:
                 
                 logger.info(f"Epoch {epoch+1}/{epochs}, Loss: {total_loss/len(dataloader)}")
             
-            # Sauvegarder le modèle
-            os.makedirs(self.model_path, exist_ok=True)
-            self.model.save_pretrained(self.model_path)
-            self.processor.save_pretrained(self.model_path)
+            # Sauvegarder le modèle dans un répertoire temporaire puis le copier
+            with tempfile.TemporaryDirectory() as temp_dir:
+                # Sauvegarder dans le répertoire temporaire
+                logger.info(f"Sauvegarde du modèle dans le répertoire temporaire: {temp_dir}")
+                self.model.save_pretrained(temp_dir)
+                self.processor.save_pretrained(temp_dir)
+                
+                # Supprimer l'ancien modèle s'il existe
+                if os.path.exists(self.model_path):
+                    logger.info(f"Suppression de l'ancien modèle: {self.model_path}")
+                    import shutil
+                    shutil.rmtree(self.model_path, ignore_errors=True)
+                
+                # Créer le répertoire de destination
+                os.makedirs(self.model_path, exist_ok=True)
+                
+                # Copier les fichiers du répertoire temporaire vers le répertoire de destination
+                logger.info(f"Copie du modèle vers: {self.model_path}")
+                import shutil
+                for item in os.listdir(temp_dir):
+                    s = os.path.join(temp_dir, item)
+                    d = os.path.join(self.model_path, item)
+                    if os.path.isdir(s):
+                        shutil.copytree(s, d, dirs_exist_ok=True)
+                    else:
+                        shutil.copy2(s, d)
             
             return {
                 "status": "success",

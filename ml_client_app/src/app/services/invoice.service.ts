@@ -96,4 +96,8 @@ export class InvoiceService {
   exportAnnotations(): Observable<any> {
     return this.http.get<any>(`${this.mlApiUrl}export-annotations/`);
   }
+  
+  resetModel(): Observable<any> {
+    return this.http.post<any>(`${this.mlApiUrl}reset-model/`, {});
+  }
 }

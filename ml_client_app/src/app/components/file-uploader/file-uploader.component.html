@@ -6,6 +6,9 @@
       <span *ngIf="modelInfo" class="model-status">
         <span class="model-status-indicator" [ngClass]="{'active': modelAvailable, 'inactive': !modelAvailable}"></span>
         <span class="model-status-text">IA avancée {{ modelAvailable ? 'active' : 'inactive' }}</span>
+        <button mat-icon-button color="primary" (click)="resetModel()" matTooltip="Réinitialiser le modèle IA">
+          <mat-icon>refresh</mat-icon>
+        </button>
       </span>
     </mat-card-subtitle>
   </mat-card-header>
