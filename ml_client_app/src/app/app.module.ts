@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FileUploaderComponent } from './components/file-uploader/file-uploader.component';
 import { SafePipe } from './pipes/safe.pipe';
+import { InvoiceDisplayComponent } from './components/invoice-display/invoice-display.component';
 
 // Angular Material
 import { MatButtonModule } from '@angular/material/button';
@@ -25,7 +26,8 @@ import { ErrorDialogComponent } from './components/error-dialog/error-dialog.com
     AppComponent,
     FileUploaderComponent,
     ErrorDialogComponent,
-    SafePipe
+    SafePipe,
+    InvoiceDisplayComponent
   ],
   imports: [
     BrowserModule,
