@@ -65,27 +65,47 @@
             
             <div class="main-data-item">
               <div class="main-data-icon">
-                <mat-icon>event</mat-icon>
+                <mat-icon>shopping_cart</mat-icon>
               </div>
               <div class="main-data-content">
-                <div class="main-data-label">Date</div>
-                <div class="main-data-value">{{ structuredData.datePiece || 'Non détectée' }}</div>
+                <div class="main-data-label">Numéro de commande</div>
+                <div class="main-data-value">{{ structuredData.numeroCommande || 'Non détecté' }}</div>
               </div>
             </div>
             
             <div class="main-data-item">
               <div class="main-data-icon">
-                <mat-icon>euro_symbol</mat-icon>
+                <mat-icon>description</mat-icon>
               </div>
               <div class="main-data-content">
-                <div class="main-data-label">Montant total TTC</div>
-                <div class="main-data-value">{{ structuredData.totalTTC ? (structuredData.totalTTC + ' €') : 'Non détecté' }}</div>
+                <div class="main-data-label">Numéro de contrat</div>
+                <div class="main-data-value">{{ structuredData.numeroContrat || 'Non détecté' }}</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Dates -->
+          <div class="data-section">
+            <h4 class="section-title">Dates</h4>
+            <div class="data-content">
+              <div class="data-item">
+                <div class="data-label">Date de pièce</div>
+                <div class="data-value">{{ structuredData.datePiece || 'Non détectée' }}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">Date de commande</div>
+                <div class="data-value">{{ structuredData.dateCommande || 'Non détectée' }}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">Date de livraison</div>
+                <div class="data-value">{{ structuredData.dateLivraison || 'Non détectée' }}</div>
               </div>
             </div>
           </div>
           
           <!-- Informations client -->
           <div class="data-section">
+            <h4 class="section-title">Informations client</h4>
             <div class="data-content">
               <div class="data-item">
                 <div class="data-label">Société</div>
@@ -116,6 +136,7 @@
           
           <!-- Montants -->
           <div class="data-section">
+            <h4 class="section-title">Montants</h4>
             <div class="data-content">
               <div class="data-item">
                 <div class="data-label">Total HT</div>
@@ -129,6 +150,60 @@
                 <div class="data-label">Total TTC</div>
                 <div class="data-value">{{ structuredData.totalTTC ? (structuredData.totalTTC + ' €') : 'Non détecté' }}</div>
               </div>
+            </div>
+          </div>
+          
+          <!-- Articles -->
+          <div class="data-section" *ngIf="structuredData.articles && structuredData.articles.length > 0">
+            <h4 class="section-title">Articles</h4>
+            <div class="articles-container">
+              <table mat-table [dataSource]="structuredData.articles" class="articles-table">
+                <!-- Nom Column -->
+                <ng-container matColumnDef="nom">
+                  <th mat-header-cell *matHeaderCellDef>Nom</th>
+                  <td mat-cell *matCellDef="let article">{{ article.nom || 'Non spécifié' }}</td>
+                </ng-container>
+                
+                <!-- Quantité Column -->
+                <ng-container matColumnDef="quantite">
+                  <th mat-header-cell *matHeaderCellDef>Quantité</th>
+                  <td mat-cell *matCellDef="let article">{{ article.quantite || 'Non spécifié' }}</td>
+                </ng-container>
+                
+                <!-- Prix HT Column -->
+                <ng-container matColumnDef="prixHT">
+                  <th mat-header-cell *matHeaderCellDef>Prix HT</th>
+                  <td mat-cell *matCellDef="let article">{{ article.prixHT ? (article.prixHT + ' €') : 'Non spécifié' }}</td>
+                </ng-container>
+                
+                <!-- Remise Column -->
+                <ng-container matColumnDef="remise">
+                  <th mat-header-cell *matHeaderCellDef>Remise</th>
+                  <td mat-cell *matCellDef="let article">{{ article.remise ? (article.remise + ' €') : 'Non spécifié' }}</td>
+                </ng-container>
+                
+                <!-- Total HT Column -->
+                <ng-container matColumnDef="totalHT">
+                  <th mat-header-cell *matHeaderCellDef>Total HT</th>
+                  <td mat-cell *matCellDef="let article">{{ article.totalHT ? (article.totalHT + ' €') : 'Non spécifié' }}</td>
+                </ng-container>
+                
+                <!-- Total TTC Column -->
+                <ng-container matColumnDef="totalTTC">
+                  <th mat-header-cell *matHeaderCellDef>Total TTC</th>
+                  <td mat-cell *matCellDef="let article">{{ article.totalTTC ? (article.totalTTC + ' €') : 'Non spécifié' }}</td>
+                </ng-container>
+                
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+          
+          <div class="data-section" *ngIf="!structuredData.articles || structuredData.articles.length === 0">
+            <h4 class="section-title">Articles</h4>
+            <div class="no-articles">
+              <p>Aucun article détecté</p>
             </div>
           </div>
         </div>

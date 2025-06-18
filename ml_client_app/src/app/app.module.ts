@@ -17,6 +17,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 
 @NgModule({
@@ -38,7 +39,8 @@ import { ErrorDialogComponent } from './components/error-dialog/error-dialog.com
     MatSidenavModule,
     MatToolbarModule,
     MatDialogModule,
-    MatListModule
+    MatListModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

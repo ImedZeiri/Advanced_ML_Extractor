@@ -4,6 +4,38 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { InvoiceService } from '../../services/invoice.service';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 
+interface Article {
+  nom: string;
+  quantite: number;
+  prixHT: number;
+  remise: number;
+  totalHT: number;
+  totalTTC: number;
+}
+
+interface Client {
+  societe: string;
+  code: string;
+  tva: string;
+  siret: string;
+  ville: string;
+  pays: string;
+}
+
+interface StructuredData {
+  numeroFacture: string;
+  numeroCommande: number;
+  numeroContrat: string;
+  datePiece: string;
+  dateCommande: string;
+  dateLivraison: string;
+  client: Client;
+  totalTTC: number;
+  totalHT: number;
+  totalTVA: number;
+  articles: Article[];
+}
+
 @Component({
   selector: 'app-file-uploader',
   templateUrl: './file-uploader.component.html',
@@ -16,8 +48,9 @@ export class FileUploaderComponent implements OnChanges {
   selectedFile: File | null = null;
   isUploading = false;
   dragOver = false;
-  structuredData: any = null;
+  structuredData: StructuredData | null = null;
   pdfUrl: string | null = null;
+  displayedColumns: string[] = ['nom', 'quantite', 'prixHT', 'remise', 'totalHT', 'totalTTC'];
   
   constructor(
     private invoiceService: InvoiceService,
