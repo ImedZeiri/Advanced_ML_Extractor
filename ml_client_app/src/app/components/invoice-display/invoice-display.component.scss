@@ -140,6 +140,13 @@
     tr:hover td {
       background-color: #f9f9f9;
     }
+    
+    .no-data-cell {
+      text-align: center;
+      font-style: italic;
+      color: #999;
+      padding: 20px;
+    }
   }
 }
 

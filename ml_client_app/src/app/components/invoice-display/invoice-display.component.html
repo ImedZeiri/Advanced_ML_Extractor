@@ -12,11 +12,11 @@
         <span class="label">Date de facture:</span>
         <span class="value">{{ formatDate(invoiceData.datePiece) }}</span>
       </div>
-      <div class="date-item" *ngIf="isDefined(invoiceData.dateCommande)">
+      <div class="date-item">
         <span class="label">Date de commande:</span>
         <span class="value">{{ formatDate(invoiceData.dateCommande) }}</span>
       </div>
-      <div class="date-item" *ngIf="isDefined(invoiceData.dateLivraison)">
+      <div class="date-item">
         <span class="label">Date de livraison:</span>
         <span class="value">{{ formatDate(invoiceData.dateLivraison) }}</span>
       </div>
@@ -24,13 +24,13 @@
   </div>
 
   <div class="invoice-references">
-    <div class="reference-item" *ngIf="isDefined(invoiceData.numeroCommande)">
+    <div class="reference-item">
       <span class="label">Numéro de commande:</span>
-      <span class="value">{{ invoiceData.numeroCommande }}</span>
+      <span class="value">{{ invoiceData.numeroCommande || 'Non détecté' }}</span>
     </div>
-    <div class="reference-item" *ngIf="isDefined(invoiceData.numeroContrat)">
+    <div class="reference-item">
       <span class="label">Numéro de contrat:</span>
-      <span class="value">{{ invoiceData.numeroContrat }}</span>
+      <span class="value">{{ invoiceData.numeroContrat || 'Non détecté' }}</span>
     </div>
   </div>
 
@@ -38,35 +38,35 @@
     <div class="client-info">
       <h2>Informations client</h2>
       <div class="info-content">
-        <div class="info-item" *ngIf="isDefined(invoiceData.client.societe)">
+        <div class="info-item">
           <span class="label">Société:</span>
-          <span class="value">{{ invoiceData.client.societe }}</span>
+          <span class="value">{{ invoiceData.client?.societe || 'Non détecté' }}</span>
         </div>
-        <div class="info-item" *ngIf="isDefined(invoiceData.client.code)">
+        <div class="info-item">
           <span class="label">Code client:</span>
-          <span class="value">{{ invoiceData.client.code }}</span>
+          <span class="value">{{ invoiceData.client?.code || 'Non détecté' }}</span>
         </div>
-        <div class="info-item" *ngIf="isDefined(invoiceData.client.tva)">
+        <div class="info-item">
           <span class="label">N° TVA:</span>
-          <span class="value">{{ invoiceData.client.tva }}</span>
+          <span class="value">{{ invoiceData.client?.tva || 'Non détecté' }}</span>
         </div>
-        <div class="info-item" *ngIf="isDefined(invoiceData.client.siret)">
+        <div class="info-item">
           <span class="label">SIRET:</span>
-          <span class="value">{{ invoiceData.client.siret }}</span>
+          <span class="value">{{ invoiceData.client?.siret || 'Non détecté' }}</span>
         </div>
-        <div class="info-item" *ngIf="isDefined(invoiceData.client.ville)">
+        <div class="info-item">
           <span class="label">Ville:</span>
-          <span class="value">{{ invoiceData.client.ville }}</span>
+          <span class="value">{{ invoiceData.client?.ville || 'Non détecté' }}</span>
         </div>
-        <div class="info-item" *ngIf="isDefined(invoiceData.client.pays)">
+        <div class="info-item">
           <span class="label">Pays:</span>
-          <span class="value">{{ invoiceData.client.pays }}</span>
+          <span class="value">{{ invoiceData.client?.pays || 'Non détecté' }}</span>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="invoice-items" *ngIf="invoiceData.articles && invoiceData.articles.length > 0">
+  <div class="invoice-items">
     <h2>Détail des articles</h2>
     <table class="items-table">
       <thead>
@@ -87,6 +87,9 @@
           <td>{{ formatAmount(article.remise) }}</td>
           <td>{{ formatAmount(article.totalHT) }}</td>
           <td>{{ formatAmount(article.totalTTC) }}</td>
+        </tr>
+        <tr *ngIf="!invoiceData.articles || invoiceData.articles.length === 0">
+          <td colspan="6" class="no-data-cell">Aucun article détecté</td>
         </tr>
       </tbody>
     </table>

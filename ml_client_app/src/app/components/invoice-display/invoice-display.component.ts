@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 interface Article {
   nom: string;
@@ -37,10 +37,29 @@ interface StructuredData {
   templateUrl: './invoice-display.component.html',
   styleUrls: ['./invoice-display.component.scss']
 })
-export class InvoiceDisplayComponent {
+export class InvoiceDisplayComponent implements OnInit {
   @Input() invoiceData: StructuredData | null = null;
   
   constructor() { }
+  
+  ngOnInit(): void {
+    // S'assurer que les articles existent toujours
+    if (this.invoiceData && !this.invoiceData.articles) {
+      this.invoiceData.articles = [];
+    }
+    
+    // S'assurer que le client existe toujours
+    if (this.invoiceData && !this.invoiceData.client) {
+      this.invoiceData.client = {
+        societe: '',
+        code: '',
+        tva: '',
+        siret: '',
+        ville: '',
+        pays: ''
+      };
+    }
+  }
   
   // Méthode pour formater les montants
   formatAmount(amount: number | undefined | null): string {
@@ -56,10 +75,5 @@ export class InvoiceDisplayComponent {
       return 'Non détectée';
     }
     return date;
-  }
-  
-  // Méthode pour vérifier si une valeur est définie
-  isDefined(value: any): boolean {
-    return value !== undefined && value !== null && value !== '';
   }
 }
