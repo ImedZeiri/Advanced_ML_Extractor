@@ -8,3 +8,10 @@ PyPDF2>=2.0.0
 opencv-python>=4.5.3
 numpy>=1.20.0
 pyyaml>=6.0.0
+
+# Dépendances pour LayoutLMv3
+torch>=1.10.0
+transformers>=4.15.0
+datasets>=1.18.0
+scikit-learn>=1.0.0
+tensorboard>=2.7.0

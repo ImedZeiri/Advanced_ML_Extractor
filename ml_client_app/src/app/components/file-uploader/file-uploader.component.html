@@ -1,7 +1,13 @@
 <mat-card>
   <mat-card-header>
     <mat-card-title>Téléchargement de factures</mat-card-title>
-    <mat-card-subtitle>Téléchargez vos factures pour traitement automatique</mat-card-subtitle>
+    <mat-card-subtitle>
+      Téléchargez vos factures pour traitement automatique
+      <span *ngIf="modelInfo" class="model-status">
+        <span class="model-status-indicator" [ngClass]="{'active': modelAvailable, 'inactive': !modelAvailable}"></span>
+        <span class="model-status-text">IA avancée {{ modelAvailable ? 'active' : 'inactive' }}</span>
+      </span>
+    </mat-card-subtitle>
   </mat-card-header>
   
   <mat-card-content>
@@ -30,6 +36,11 @@
     <!-- Données structurées -->
     <div *ngIf="structuredData" class="structured-data-container">
       <h3>Données extraites</h3>
+      <div class="edit-mode-toggle">
+        <mat-slide-toggle [(ngModel)]="editMode" color="primary">
+          Mode édition {{ editMode ? 'activé' : 'désactivé' }}
+        </mat-slide-toggle>
+      </div>
       
       <!-- Données principales -->
       <div class="main-data-container">
@@ -39,7 +50,10 @@
           </div>
           <div class="main-data-content">
             <div class="main-data-label">Numéro de facture</div>
-            <div class="main-data-value">{{ structuredData.numeroFacture || 'Non détecté' }}</div>
+            <div class="main-data-value" *ngIf="!editMode">{{ structuredData.numeroFacture || 'Non détecté' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.numeroFacture" placeholder="Numéro de facture">
+            </mat-form-field>
           </div>
         </div>
         
@@ -49,7 +63,10 @@
           </div>
           <div class="main-data-content">
             <div class="main-data-label">Date</div>
-            <div class="main-data-value">{{ structuredData.datePiece || 'Non détectée' }}</div>
+            <div class="main-data-value" *ngIf="!editMode">{{ structuredData.datePiece || 'Non détectée' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.datePiece" placeholder="Date">
+            </mat-form-field>
           </div>
         </div>
         
@@ -59,7 +76,11 @@
           </div>
           <div class="main-data-content">
             <div class="main-data-label">Montant total TTC</div>
-            <div class="main-data-value">{{ structuredData.totalTTC ? (structuredData.totalTTC + ' €') : 'Non détecté' }}</div>
+            <div class="main-data-value" *ngIf="!editMode">{{ structuredData.totalTTC ? (structuredData.totalTTC + ' €') : 'Non détecté' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.totalTTC" placeholder="Montant total TTC" type="number" step="0.01">
+              <span matSuffix>€</span>
+            </mat-form-field>
           </div>
         </div>
       </div>
@@ -74,27 +95,45 @@
         <div class="structured-data-grid">
           <div class="data-item">
             <div class="data-label">Société</div>
-            <div class="data-value">{{ structuredData.client.societe || 'Non détectée' }}</div>
+            <div class="data-value" *ngIf="!editMode">{{ structuredData.client.societe || 'Non détectée' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.client.societe" placeholder="Société">
+            </mat-form-field>
           </div>
           <div class="data-item">
             <div class="data-label">Code client</div>
-            <div class="data-value">{{ structuredData.client.code || 'Non détecté' }}</div>
+            <div class="data-value" *ngIf="!editMode">{{ structuredData.client.code || 'Non détecté' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.client.code" placeholder="Code client">
+            </mat-form-field>
           </div>
           <div class="data-item">
             <div class="data-label">TVA</div>
-            <div class="data-value">{{ structuredData.client.tva || 'Non détectée' }}</div>
+            <div class="data-value" *ngIf="!editMode">{{ structuredData.client.tva || 'Non détectée' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.client.tva" placeholder="TVA">
+            </mat-form-field>
           </div>
           <div class="data-item">
             <div class="data-label">SIRET</div>
-            <div class="data-value">{{ structuredData.client.siret || 'Non détecté' }}</div>
+            <div class="data-value" *ngIf="!editMode">{{ structuredData.client.siret || 'Non détecté' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.client.siret" placeholder="SIRET">
+            </mat-form-field>
           </div>
           <div class="data-item">
             <div class="data-label">Ville</div>
-            <div class="data-value">{{ structuredData.client.ville || 'Non détectée' }}</div>
+            <div class="data-value" *ngIf="!editMode">{{ structuredData.client.ville || 'Non détectée' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.client.ville" placeholder="Ville">
+            </mat-form-field>
           </div>
           <div class="data-item">
             <div class="data-label">Pays</div>
-            <div class="data-value">{{ structuredData.client.pays || 'Non détecté' }}</div>
+            <div class="data-value" *ngIf="!editMode">{{ structuredData.client.pays || 'Non détecté' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.client.pays" placeholder="Pays">
+            </mat-form-field>
           </div>
         </div>
       </div>
@@ -109,19 +148,31 @@
         <div class="structured-data-grid">
           <div class="data-item">
             <div class="data-label">Numéro de commande</div>
-            <div class="data-value">{{ structuredData.numeroCommande || 'Non détecté' }}</div>
+            <div class="data-value" *ngIf="!editMode">{{ structuredData.numeroCommande || 'Non détecté' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.numeroCommande" placeholder="Numéro de commande">
+            </mat-form-field>
           </div>
           <div class="data-item">
             <div class="data-label">Numéro de contrat</div>
-            <div class="data-value">{{ structuredData.numeroContrat || 'Non détecté' }}</div>
+            <div class="data-value" *ngIf="!editMode">{{ structuredData.numeroContrat || 'Non détecté' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.numeroContrat" placeholder="Numéro de contrat">
+            </mat-form-field>
           </div>
           <div class="data-item">
             <div class="data-label">Date de commande</div>
-            <div class="data-value">{{ structuredData.dateCommande || 'Non détectée' }}</div>
+            <div class="data-value" *ngIf="!editMode">{{ structuredData.dateCommande || 'Non détectée' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.dateCommande" placeholder="Date de commande">
+            </mat-form-field>
           </div>
           <div class="data-item">
             <div class="data-label">Date de livraison</div>
-            <div class="data-value">{{ structuredData.dateLivraison || 'Non détectée' }}</div>
+            <div class="data-value" *ngIf="!editMode">{{ structuredData.dateLivraison || 'Non détectée' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.dateLivraison" placeholder="Date de livraison">
+            </mat-form-field>
           </div>
         </div>
       </div>
@@ -136,15 +187,27 @@
         <div class="structured-data-grid">
           <div class="data-item">
             <div class="data-label">Total HT</div>
-            <div class="data-value">{{ structuredData.totalHT ? (structuredData.totalHT + ' €') : 'Non détecté' }}</div>
+            <div class="data-value" *ngIf="!editMode">{{ structuredData.totalHT ? (structuredData.totalHT + ' €') : 'Non détecté' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.totalHT" placeholder="Total HT" type="number" step="0.01">
+              <span matSuffix>€</span>
+            </mat-form-field>
           </div>
           <div class="data-item">
             <div class="data-label">Total TVA</div>
-            <div class="data-value">{{ structuredData.totalTVA ? (structuredData.totalTVA + ' €') : 'Non détecté' }}</div>
+            <div class="data-value" *ngIf="!editMode">{{ structuredData.totalTVA ? (structuredData.totalTVA + ' €') : 'Non détecté' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.totalTVA" placeholder="Total TVA" type="number" step="0.01">
+              <span matSuffix>€</span>
+            </mat-form-field>
           </div>
           <div class="data-item">
             <div class="data-label">Total TTC</div>
-            <div class="data-value">{{ structuredData.totalTTC ? (structuredData.totalTTC + ' €') : 'Non détecté' }}</div>
+            <div class="data-value" *ngIf="!editMode">{{ structuredData.totalTTC ? (structuredData.totalTTC + ' €') : 'Non détecté' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field">
+              <input matInput [(ngModel)]="structuredData.totalTTC" placeholder="Total TTC" type="number" step="0.01">
+              <span matSuffix>€</span>
+            </mat-form-field>
           </div>
         </div>
       </div>
@@ -157,18 +220,86 @@
         </div>
         
         <div *ngIf="structuredData.articles && structuredData.articles.length > 0" class="product-lines">
-          <div *ngFor="let article of structuredData.articles" class="product-line">
-            <div>{{ article.nom || 'Article sans nom' }}</div>
-            <div class="product-detail">Quantité: {{ article.quantite || 'Non détectée' }}</div>
-            <div class="product-detail">Prix HT: {{ article.prixHT ? (article.prixHT + ' €') : 'Non détecté' }}</div>
-            <div class="product-detail">Remise: {{ article.remise || 'Non détectée' }}</div>
-            <div class="product-detail">Total HT: {{ article.totalHT ? (article.totalHT + ' €') : 'Non détecté' }}</div>
-            <div class="product-detail">Total TTC: {{ article.totalTTC ? (article.totalTTC + ' €') : 'Non détecté' }}</div>
+          <div *ngFor="let article of structuredData.articles; let i = index" class="product-line">
+            <div *ngIf="!editMode">{{ article.nom || 'Article sans nom' }}</div>
+            <mat-form-field *ngIf="editMode" appearance="outline" class="edit-field full-width">
+              <input matInput [(ngModel)]="article.nom" placeholder="Nom de l'article">
+            </mat-form-field>
+            
+            <div class="product-details-grid" *ngIf="editMode">
+              <mat-form-field appearance="outline" class="edit-field">
+                <mat-label>Quantité</mat-label>
+                <input matInput [(ngModel)]="article.quantite" placeholder="Quantité" type="number" step="1">
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" class="edit-field">
+                <mat-label>Prix HT</mat-label>
+                <input matInput [(ngModel)]="article.prixHT" placeholder="Prix HT" type="number" step="0.01">
+                <span matSuffix>€</span>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" class="edit-field">
+                <mat-label>Remise</mat-label>
+                <input matInput [(ngModel)]="article.remise" placeholder="Remise">
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" class="edit-field">
+                <mat-label>Total HT</mat-label>
+                <input matInput [(ngModel)]="article.totalHT" placeholder="Total HT" type="number" step="0.01">
+                <span matSuffix>€</span>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" class="edit-field">
+                <mat-label>Total TTC</mat-label>
+                <input matInput [(ngModel)]="article.totalTTC" placeholder="Total TTC" type="number" step="0.01">
+                <span matSuffix>€</span>
+              </mat-form-field>
+              
+              <button mat-icon-button color="warn" (click)="removeArticle(i)" class="remove-article-btn">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            
+            <div *ngIf="!editMode" class="product-details">
+              <div class="product-detail">Quantité: {{ article.quantite || 'Non détectée' }}</div>
+              <div class="product-detail">Prix HT: {{ article.prixHT ? (article.prixHT + ' €') : 'Non détecté' }}</div>
+              <div class="product-detail">Remise: {{ article.remise || 'Non détectée' }}</div>
+              <div class="product-detail">Total HT: {{ article.totalHT ? (article.totalHT + ' €') : 'Non détecté' }}</div>
+              <div class="product-detail">Total TTC: {{ article.totalTTC ? (article.totalTTC + ' €') : 'Non détecté' }}</div>
+            </div>
           </div>
+          
+          <button *ngIf="editMode" mat-stroked-button color="primary" (click)="addArticle()" class="add-article-btn">
+            <mat-icon>add</mat-icon> Ajouter un article
+          </button>
         </div>
+        
         <div *ngIf="!structuredData.articles || structuredData.articles.length === 0" class="no-data">
-          Aucun article détecté
+          <span *ngIf="!editMode">Aucun article détecté</span>
+          <button *ngIf="editMode" mat-stroked-button color="primary" (click)="addArticle()" class="add-article-btn">
+            <mat-icon>add</mat-icon> Ajouter un article
+          </button>
         </div>
+      </div>
+      
+      <!-- Boutons d'action en mode édition -->
+      <div *ngIf="editMode" class="action-buttons">
+        <button mat-raised-button color="warn" (click)="cancelEdit()">
+          <mat-icon>cancel</mat-icon> Annuler
+        </button>
+        <button mat-raised-button color="primary" (click)="submitCorrections()" [disabled]="isSubmitting">
+          <mat-icon>save</mat-icon> 
+          <span *ngIf="!isSubmitting">
+            Enregistrer {{ modelAvailable ? 'et entraîner le modèle' : 'les corrections' }}
+          </span>
+          <span *ngIf="isSubmitting">Enregistrement en cours...</span>
+        </button>
+      </div>
+      
+      <!-- Indicateur de statut du modèle -->
+      <div *ngIf="!modelAvailable" class="model-info-banner">
+        <mat-icon color="warn">info</mat-icon>
+        <span>Le mode IA avancée n'est pas disponible. Les corrections seront enregistrées mais n'entraîneront pas le modèle.</span>
       </div>
     </div>
   </mat-card-content>
