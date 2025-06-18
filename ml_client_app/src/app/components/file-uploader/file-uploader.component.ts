@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSidenav } from '@angular/material/sidenav';
 import { InvoiceService } from '../../services/invoice.service';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 
@@ -16,6 +17,7 @@ export class FileUploaderComponent implements OnChanges {
   isUploading = false;
   dragOver = false;
   structuredData: any = null;
+  pdfUrl: string | null = null;
   
   constructor(
     private invoiceService: InvoiceService,
@@ -25,6 +27,9 @@ export class FileUploaderComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['extractionData'] && this.extractionData) {
       this.updateStructuredData();
+      if (this.extractionData.invoice?.file) {
+        this.pdfUrl = this.extractionData.invoice.file;
+      }
     }
   }
   
@@ -33,8 +38,6 @@ export class FileUploaderComponent implements OnChanges {
       this.structuredData = this.extractionData.invoice.extracted_content.structured_data;
     }
   }
-  
-  // Ces méthodes ne sont plus nécessaires car nous affichons toujours tous les champs
 
   onFileSelected(event: any): void {
     if (event.target.files) {
@@ -52,6 +55,7 @@ export class FileUploaderComponent implements OnChanges {
 
     this.isUploading = true;
     this.structuredData = null;
+    this.pdfUrl = null;
 
     this.invoiceService.uploadInvoice(this.selectedFile).subscribe({
       next: (response) => {

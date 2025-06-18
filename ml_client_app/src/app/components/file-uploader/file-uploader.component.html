@@ -1,186 +1,149 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Téléchargement de factures</mat-card-title>
-    <mat-card-subtitle>Téléchargez vos factures pour traitement automatique</mat-card-subtitle>
-  </mat-card-header>
-  
-  <mat-card-content>
-    <div class="upload-area" 
-         [class.drag-over]="dragOver" 
-         (dragover)="dragOver=true; $event.preventDefault();" 
-         (dragleave)="dragOver=false" 
-         (drop)="dragOver=false; onFileSelected($event); $event.preventDefault();">
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="over" position="end" class="pdf-sidenav">
+    <div class="sidenav-header">
+      <h2>Facture originale</h2>
+      <button mat-icon-button (click)="sidenav.close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="pdf-container" *ngIf="pdfUrl">
+      <iframe [src]="pdfUrl | safe" width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Téléchargement de factures</mat-card-title>
+        <mat-card-subtitle>Téléchargez vos factures pour traitement automatique</mat-card-subtitle>
+      </mat-card-header>
       
-      <mat-icon class="upload-icon">cloud_upload</mat-icon>
-      <p>Glissez et déposez votre facture ici ou</p>
+      <mat-card-content>
+        <div class="upload-area" 
+             [class.drag-over]="dragOver" 
+             (dragover)="dragOver=true; $event.preventDefault();" 
+             (dragleave)="dragOver=false" 
+             (drop)="dragOver=false; onFileSelected($event); $event.preventDefault();">
+          
+          <mat-icon class="upload-icon">cloud_upload</mat-icon>
+          <p>Glissez et déposez votre facture ici ou</p>
+          
+          <div class="file-input-container">
+            <input type="file" id="file" (change)="onFileSelected($event)" accept=".pdf,.jpg,.jpeg,.png" #fileInput hidden>
+            <button mat-raised-button color="primary" (click)="fileInput.click();structuredData=null">
+              <mat-icon>attach_file</mat-icon>
+              Sélectionner un fichier
+            </button>
+          </div>
+          
+          <p *ngIf="selectedFile" class="selected-file">
+            Fichier sélectionné: {{ selectedFile.name }}
+          </p>
+        </div>
+        
+        <!-- Données structurées -->
+        <div *ngIf="structuredData" class="structured-data-container">
+          <div class="extraction-success-header">
+            <h3>Données extraites avec succès</h3>
+            <button mat-raised-button color="accent" *ngIf="pdfUrl" (click)="sidenav.open()">
+              <mat-icon>description</mat-icon>
+              Voir la facture originale
+            </button>
+          </div>
+          
+          <!-- Données principales -->
+          <div class="main-data-container">
+            <div class="main-data-item">
+              <div class="main-data-icon">
+                <mat-icon>receipt</mat-icon>
+              </div>
+              <div class="main-data-content">
+                <div class="main-data-label">Numéro de facture</div>
+                <div class="main-data-value">{{ structuredData.numeroFacture || 'Non détecté' }}</div>
+              </div>
+            </div>
+            
+            <div class="main-data-item">
+              <div class="main-data-icon">
+                <mat-icon>event</mat-icon>
+              </div>
+              <div class="main-data-content">
+                <div class="main-data-label">Date</div>
+                <div class="main-data-value">{{ structuredData.datePiece || 'Non détectée' }}</div>
+              </div>
+            </div>
+            
+            <div class="main-data-item">
+              <div class="main-data-icon">
+                <mat-icon>euro_symbol</mat-icon>
+              </div>
+              <div class="main-data-content">
+                <div class="main-data-label">Montant total TTC</div>
+                <div class="main-data-value">{{ structuredData.totalTTC ? (structuredData.totalTTC + ' €') : 'Non détecté' }}</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Informations client -->
+          <div class="data-section">
+            <div class="data-content">
+              <div class="data-item">
+                <div class="data-label">Société</div>
+                <div class="data-value">{{ structuredData.client.societe || 'Non détectée' }}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">Code client</div>
+                <div class="data-value">{{ structuredData.client.code || 'Non détecté' }}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">TVA</div>
+                <div class="data-value">{{ structuredData.client.tva || 'Non détectée' }}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">SIRET</div>
+                <div class="data-value">{{ structuredData.client.siret || 'Non détecté' }}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">Ville</div>
+                <div class="data-value">{{ structuredData.client.ville || 'Non détectée' }}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">Pays</div>
+                <div class="data-value">{{ structuredData.client.pays || 'Non détecté' }}</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Montants -->
+          <div class="data-section">
+            <div class="data-content">
+              <div class="data-item">
+                <div class="data-label">Total HT</div>
+                <div class="data-value">{{ structuredData.totalHT ? (structuredData.totalHT + ' €') : 'Non détecté' }}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">Total TVA</div>
+                <div class="data-value">{{ structuredData.totalTVA ? (structuredData.totalTVA + ' €') : 'Non détecté' }}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">Total TTC</div>
+                <div class="data-value">{{ structuredData.totalTTC ? (structuredData.totalTTC + ' €') : 'Non détecté' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
       
-      <div class="file-input-container">
-        <input type="file" id="file" (change)="onFileSelected($event)" accept=".pdf,.jpg,.jpeg,.png" #fileInput hidden>
-        <button mat-raised-button color="primary" (click)="fileInput.click();structuredData=null">
-          <mat-icon>attach_file</mat-icon>
-          Sélectionner un fichier
+      <mat-card-actions align="end">
+        <button mat-raised-button color="accent" (click)="onUpload()" [disabled]="!selectedFile || isUploading">
+          <mat-icon>upload</mat-icon>
+          {{ isUploading ? 'Téléchargement en cours...' : 'Télécharger' }}
         </button>
-      </div>
+      </mat-card-actions>
       
-      <p *ngIf="selectedFile" class="selected-file">
-        Fichier sélectionné: {{ selectedFile.name }}
-      </p>
-    </div>
-    
-    <!-- Données structurées -->
-    <div *ngIf="structuredData" class="structured-data-container">
-      <h3>Données extraites</h3>
-      
-      <!-- Données principales -->
-      <div class="main-data-container">
-        <div class="main-data-item">
-          <div class="main-data-icon">
-            <mat-icon>receipt</mat-icon>
-          </div>
-          <div class="main-data-content">
-            <div class="main-data-label">Numéro de facture</div>
-            <div class="main-data-value">{{ structuredData.numeroFacture || 'Non détecté' }}</div>
-          </div>
-        </div>
-        
-        <div class="main-data-item">
-          <div class="main-data-icon">
-            <mat-icon>event</mat-icon>
-          </div>
-          <div class="main-data-content">
-            <div class="main-data-label">Date</div>
-            <div class="main-data-value">{{ structuredData.datePiece || 'Non détectée' }}</div>
-          </div>
-        </div>
-        
-        <div class="main-data-item">
-          <div class="main-data-icon">
-            <mat-icon>euro_symbol</mat-icon>
-          </div>
-          <div class="main-data-content">
-            <div class="main-data-label">Montant total TTC</div>
-            <div class="main-data-value">{{ structuredData.totalTTC ? (structuredData.totalTTC + ' €') : 'Non détecté' }}</div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Informations client -->
-      <div class="category-section">
-        <div class="category-header" style="borderLeftColor: #2196f3">
-          <mat-icon style="color: #2196f3">person</mat-icon>
-          <h4>Informations client</h4>
-        </div>
-        
-        <div class="structured-data-grid">
-          <div class="data-item">
-            <div class="data-label">Société</div>
-            <div class="data-value">{{ structuredData.client.societe || 'Non détectée' }}</div>
-          </div>
-          <div class="data-item">
-            <div class="data-label">Code client</div>
-            <div class="data-value">{{ structuredData.client.code || 'Non détecté' }}</div>
-          </div>
-          <div class="data-item">
-            <div class="data-label">TVA</div>
-            <div class="data-value">{{ structuredData.client.tva || 'Non détectée' }}</div>
-          </div>
-          <div class="data-item">
-            <div class="data-label">SIRET</div>
-            <div class="data-value">{{ structuredData.client.siret || 'Non détecté' }}</div>
-          </div>
-          <div class="data-item">
-            <div class="data-label">Ville</div>
-            <div class="data-value">{{ structuredData.client.ville || 'Non détectée' }}</div>
-          </div>
-          <div class="data-item">
-            <div class="data-label">Pays</div>
-            <div class="data-value">{{ structuredData.client.pays || 'Non détecté' }}</div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Informations commande -->
-      <div class="category-section">
-        <div class="category-header" style="borderLeftColor: #ff9800">
-          <mat-icon style="color: #ff9800">shopping_basket</mat-icon>
-          <h4>Informations commande</h4>
-        </div>
-        
-        <div class="structured-data-grid">
-          <div class="data-item">
-            <div class="data-label">Numéro de commande</div>
-            <div class="data-value">{{ structuredData.numeroCommande || 'Non détecté' }}</div>
-          </div>
-          <div class="data-item">
-            <div class="data-label">Numéro de contrat</div>
-            <div class="data-value">{{ structuredData.numeroContrat || 'Non détecté' }}</div>
-          </div>
-          <div class="data-item">
-            <div class="data-label">Date de commande</div>
-            <div class="data-value">{{ structuredData.dateCommande || 'Non détectée' }}</div>
-          </div>
-          <div class="data-item">
-            <div class="data-label">Date de livraison</div>
-            <div class="data-value">{{ structuredData.dateLivraison || 'Non détectée' }}</div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Montants -->
-      <div class="category-section">
-        <div class="category-header" style="borderLeftColor: #795548">
-          <mat-icon style="color: #795548">euro_symbol</mat-icon>
-          <h4>Montants</h4>
-        </div>
-        
-        <div class="structured-data-grid">
-          <div class="data-item">
-            <div class="data-label">Total HT</div>
-            <div class="data-value">{{ structuredData.totalHT ? (structuredData.totalHT + ' €') : 'Non détecté' }}</div>
-          </div>
-          <div class="data-item">
-            <div class="data-label">Total TVA</div>
-            <div class="data-value">{{ structuredData.totalTVA ? (structuredData.totalTVA + ' €') : 'Non détecté' }}</div>
-          </div>
-          <div class="data-item">
-            <div class="data-label">Total TTC</div>
-            <div class="data-value">{{ structuredData.totalTTC ? (structuredData.totalTTC + ' €') : 'Non détecté' }}</div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Articles -->
-      <div class="category-section">
-        <div class="category-header" style="borderLeftColor: #9c27b0">
-          <mat-icon style="color: #9c27b0">shopping_cart</mat-icon>
-          <h4>Articles</h4>
-        </div>
-        
-        <div *ngIf="structuredData.articles && structuredData.articles.length > 0" class="product-lines">
-          <div *ngFor="let article of structuredData.articles" class="product-line">
-            <div>{{ article.nom || 'Article sans nom' }}</div>
-            <div class="product-detail">Quantité: {{ article.quantite || 'Non détectée' }}</div>
-            <div class="product-detail">Prix HT: {{ article.prixHT ? (article.prixHT + ' €') : 'Non détecté' }}</div>
-            <div class="product-detail">Remise: {{ article.remise || 'Non détectée' }}</div>
-            <div class="product-detail">Total HT: {{ article.totalHT ? (article.totalHT + ' €') : 'Non détecté' }}</div>
-            <div class="product-detail">Total TTC: {{ article.totalTTC ? (article.totalTTC + ' €') : 'Non détecté' }}</div>
-          </div>
-        </div>
-        <div *ngIf="!structuredData.articles || structuredData.articles.length === 0" class="no-data">
-          Aucun article détecté
-        </div>
-      </div>
-    </div>
-  </mat-card-content>
-  
-  <mat-card-actions align="end">
-    <button mat-raised-button color="accent" (click)="onUpload()" [disabled]="!selectedFile || isUploading">
-      <mat-icon>upload</mat-icon>
-      {{ isUploading ? 'Téléchargement en cours...' : 'Télécharger' }}
-    </button>
-  </mat-card-actions>
-  
-  <mat-card-footer *ngIf="isUploading">
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  </mat-card-footer>
-</mat-card>
+      <mat-card-footer *ngIf="isUploading">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </mat-card-footer>
+    </mat-card>
+  </mat-sidenav-content>
+</mat-sidenav-container>

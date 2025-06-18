@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FileUploaderComponent } from './components/file-uploader/file-uploader.component';
+import { SafePipe } from './pipes/safe.pipe';
 
 // Angular Material
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +16,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatListModule } from '@angular/material/list';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 
@@ -23,7 +23,8 @@ import { ErrorDialogComponent } from './components/error-dialog/error-dialog.com
   declarations: [
     AppComponent,
     FileUploaderComponent,
-    ErrorDialogComponent
+    ErrorDialogComponent,
+    SafePipe
   ],
   imports: [
     BrowserModule,
@@ -37,7 +38,6 @@ import { ErrorDialogComponent } from './components/error-dialog/error-dialog.com
     MatSidenavModule,
     MatToolbarModule,
     MatDialogModule,
-    MatTabsModule,
     MatListModule
   ],
   providers: [],
