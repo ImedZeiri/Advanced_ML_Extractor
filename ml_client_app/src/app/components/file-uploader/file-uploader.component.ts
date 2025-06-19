@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 import { InvoiceService } from '../../services/invoice.service';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 interface Article {
   nom: string;
@@ -48,6 +49,36 @@ interface StructuredData {
   selector: 'app-file-uploader',
   templateUrl: './file-uploader.component.html',
   styleUrls: ['./file-uploader.component.scss'],
+  animations: [
+    trigger('expandCollapse', [
+      state('expanded', style({
+        width: '50%',
+        opacity: 1
+      })),
+      state('collapsed', style({
+        width: '0%',
+        opacity: 0,
+        display: 'none'
+      })),
+      transition('collapsed => expanded', [
+        style({ display: 'block' }),
+        animate('300ms ease-out')
+      ]),
+      transition('expanded => collapsed', [
+        animate('300ms ease-in', style({ width: '0%', opacity: 0 })),
+        style({ display: 'none' })
+      ])
+    ]),
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms ease-out', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class FileUploaderComponent implements OnChanges {
   @Output() extractionSuccess = new EventEmitter<any>();
@@ -64,6 +95,7 @@ export class FileUploaderComponent implements OnChanges {
   structuredData: StructuredData | null = null;
   pdfUrl: string | null = null;
   isExpanded = false;
+  showPdf = false;
   displayedColumns: string[] = [
     'nom',
     'quantite',
@@ -151,5 +183,25 @@ export class FileUploaderComponent implements OnChanges {
 
   toggleExpand(): void {
     this.isExpanded = !this.isExpanded;
+    
+    // Si on réduit la vue, masquer immédiatement le PDF
+    if (!this.isExpanded) {
+      this.showPdf = false;
+    }
+    
+    // Ajout d'une classe temporaire pour l'animation
+    const container = document.querySelector('.result-container');
+    if (container) {
+      container.classList.add('animating');
+      
+      setTimeout(() => {
+        container.classList.remove('animating');
+        
+        // Afficher le PDF après la fin de l'animation si on est en mode expansion
+        if (this.isExpanded) {
+          this.showPdf = true;
+        }
+      }, 300); // Durée de l'animation
+    }
   }
 }

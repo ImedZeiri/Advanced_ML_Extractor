@@ -18,11 +18,8 @@
           [invoiceData]="structuredData"
         ></app-invoice-display>
       </div>
-      <div class="original-invoice" *ngIf="isExpanded">
-        <div class="invoice-header">
-          <h3>Facture originale</h3>
-        </div>
-        <div class="pdf-container" *ngIf="pdfUrl">
+      <div class="original-invoice" [@expandCollapse]="isExpanded ? 'expanded' : 'collapsed'">
+        <div class="pdf-container" *ngIf="pdfUrl && showPdf" [@fadeInOut]>
           <iframe
             [src]="pdfUrl | safe"
             width="100%"
@@ -100,7 +97,7 @@
       </div>
     </mat-card>
 
-    <div *ngIf="structuredData" class="floating-actions">
+    <div *ngIf="structuredData" class="floating-actions" [@fadeInOut]>
       <button
         mat-fab
         color="primary"

@@ -27,6 +27,7 @@
 .result-sidenav-expanded {
   width: 85%;
   transition: width 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 .sidenav-header {
@@ -36,28 +37,50 @@
   padding: 16px;
   background-color: #3f51b5;
   color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  
+  h2 {
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
   
   .header-actions {
     display: flex;
     gap: 8px;
+    
+    button {
+      transition: transform 0.2s ease;
+      
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
   }
 }
 
 .pdf-container {
-  height: calc(100% - 64px);
+  height: 91vh;
   width: 100%;
 }
 
 .result-container {
   height: 91vh;
   overflow-y: auto;
+  transition: all 0.3s ease;
   
+  &.animating {
+    overflow: hidden;
+  }
   &.split-view {
     display: flex;
     flex-direction: row;
     
     .extraction-results {
-      width: 50%;
+      width: 60%;
       padding-right: 10px;
       border-right: 1px solid #e0e0e0;
       overflow-y: auto;
@@ -67,6 +90,14 @@
       width: 50%;
       padding-left: 10px;
       overflow-y: auto;
+      transition: all 0.3s ease;
+      
+      &.pdf-loading {
+        .pdf-container {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
       
       .invoice-header {
         padding: 10px 0;
@@ -76,7 +107,29 @@
         h3 {
           margin: 0;
           color: #3f51b5;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          
+          &::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background-color: #3f51b5;
+            margin-right: 8px;
+            border-radius: 2px;
+          }
         }
+      }
+      
+      .pdf-container {
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
       }
     }
   }
