@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 import { InvoiceService } from '../../services/invoice.service';
@@ -39,36 +47,43 @@ interface StructuredData {
 @Component({
   selector: 'app-file-uploader',
   templateUrl: './file-uploader.component.html',
-  styleUrls: ['./file-uploader.component.scss']
+  styleUrls: ['./file-uploader.component.scss'],
 })
 export class FileUploaderComponent implements OnChanges {
   @Output() extractionSuccess = new EventEmitter<any>();
   @Input() extractionData: any = null;
-  
+
   // Référence aux sidenavs
   @ViewChild('pdfSidenav') pdfSidenav!: MatSidenav;
   @ViewChild('resultSidenav') resultSidenav!: MatSidenav;
-  
+
   selectedFile: File | null = null;
   isUploading = false;
   isLoading = false;
   dragOver = false;
   structuredData: StructuredData | null = null;
   pdfUrl: string | null = null;
-  displayedColumns: string[] = ['nom', 'quantite', 'prixHT', 'remise', 'totalHT', 'totalTTC'];
-  
+  displayedColumns: string[] = [
+    'nom',
+    'quantite',
+    'prixHT',
+    'remise',
+    'totalHT',
+    'totalTTC',
+  ];
+
   constructor(
     private invoiceService: InvoiceService,
     private dialog: MatDialog
-  ) { }
-  
+  ) {}
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['extractionData'] && this.extractionData) {
       this.updateStructuredData();
       if (this.extractionData.invoice?.file) {
         this.pdfUrl = this.extractionData.invoice.file;
       }
-      
+
       // Ouvrir le sidenav automatiquement quand les données sont disponibles
       if (this.structuredData && this.resultSidenav) {
         this.isLoading = false;
@@ -76,10 +91,11 @@ export class FileUploaderComponent implements OnChanges {
       }
     }
   }
-  
+
   updateStructuredData(): void {
     if (this.extractionData?.invoice?.extracted_content?.structured_data) {
-      this.structuredData = this.extractionData.invoice.extracted_content.structured_data;
+      this.structuredData =
+        this.extractionData.invoice.extracted_content.structured_data;
     }
   }
 
@@ -100,18 +116,17 @@ export class FileUploaderComponent implements OnChanges {
     this.isUploading = true;
     this.structuredData = null;
     this.pdfUrl = null;
-    
-    // Ouvrir le sidenav et afficher le loader
+
     this.isLoading = true;
-    if (this.resultSidenav) {
-      this.resultSidenav.open();
-    }
 
     this.invoiceService.uploadInvoice(this.selectedFile).subscribe({
       next: (response) => {
         this.isUploading = false;
         this.extractionSuccess.emit(response);
         this.selectedFile = null;
+        if (this.resultSidenav) {
+          this.resultSidenav.open();
+        }
       },
       error: (error) => {
         this.isUploading = false;
@@ -119,15 +134,17 @@ export class FileUploaderComponent implements OnChanges {
         if (this.resultSidenav) {
           this.resultSidenav.close();
         }
-        this.showErrorDialog(error.message || 'Une erreur est survenue lors du téléchargement');
-      }
+        this.showErrorDialog(
+          error.message || 'Une erreur est survenue lors du téléchargement'
+        );
+      },
     });
   }
 
   showErrorDialog(message: string): void {
     this.dialog.open(ErrorDialogComponent, {
       width: '350px',
-      data: { message }
+      data: { message },
     });
   }
 }

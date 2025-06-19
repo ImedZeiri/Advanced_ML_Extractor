@@ -19,10 +19,6 @@
       </button>
     </div>
     <div class="result-container">
-      <div *ngIf="isLoading" class="loading-container">
-        <mat-spinner diameter="50"></mat-spinner>
-        <p>Traitement en cours...</p>
-      </div>
       <app-invoice-display *ngIf="!isLoading" [invoiceData]="structuredData"></app-invoice-display>
     </div>
   </mat-sidenav>
@@ -34,7 +30,7 @@
         <mat-card-subtitle>Téléchargez vos factures pour traitement automatique</mat-card-subtitle>
       </mat-card-header>
       
-      <mat-card-content>
+      <mat-card-content *ngIf="!isLoading">
         <div class="upload-area" 
              [class.drag-over]="dragOver" 
              (dragover)="dragOver=true; $event.preventDefault();" 
@@ -58,16 +54,18 @@
         </div>
       </mat-card-content>
       
-      <mat-card-actions align="end">
+      <mat-card-actions align="end" *ngIf="!isLoading">
         <button mat-raised-button color="accent" (click)="onUpload()" [disabled]="!selectedFile || isUploading">
           <mat-icon>upload</mat-icon>
           {{ isUploading ? 'Téléchargement en cours...' : 'Télécharger' }}
         </button>
       </mat-card-actions>
+
+      <div *ngIf="isLoading" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Traitement en cours...</p>
+      </div>
       
-      <mat-card-footer *ngIf="isUploading">
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-      </mat-card-footer>
     </mat-card>
     
     <div *ngIf="structuredData" class="floating-actions">
