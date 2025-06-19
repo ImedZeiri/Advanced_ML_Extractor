@@ -1,7 +1,40 @@
-import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSidenav } from '@angular/material/sidenav';
 import { InvoiceService } from '../../services/invoice.service';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
+
+interface Article {
+  nom: string;
+  quantite: number;
+  prixHT: number;
+  remise: number;
+  totalHT: number;
+  totalTTC: number;
+}
+
+interface Client {
+  societe: string;
+  code: string;
+  tva: string;
+  siret: string;
+  ville: string;
+  pays: string;
+}
+
+interface StructuredData {
+  numeroFacture: string;
+  numeroCommande: number;
+  numeroContrat: string;
+  datePiece: string;
+  dateCommande: string;
+  dateLivraison: string;
+  client: Client;
+  totalTTC: number;
+  totalHT: number;
+  totalTVA: number;
+  articles: Article[];
+}
 
 @Component({
   selector: 'app-file-uploader',
@@ -12,10 +45,17 @@ export class FileUploaderComponent implements OnChanges {
   @Output() extractionSuccess = new EventEmitter<any>();
   @Input() extractionData: any = null;
   
+  // Référence aux sidenavs
+  @ViewChild('pdfSidenav') pdfSidenav!: MatSidenav;
+  @ViewChild('resultSidenav') resultSidenav!: MatSidenav;
+  
   selectedFile: File | null = null;
   isUploading = false;
+  isLoading = false;
   dragOver = false;
-  structuredData: any = null;
+  structuredData: StructuredData | null = null;
+  pdfUrl: string | null = null;
+  displayedColumns: string[] = ['nom', 'quantite', 'prixHT', 'remise', 'totalHT', 'totalTTC'];
   
   constructor(
     private invoiceService: InvoiceService,
@@ -25,6 +65,15 @@ export class FileUploaderComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['extractionData'] && this.extractionData) {
       this.updateStructuredData();
+      if (this.extractionData.invoice?.file) {
+        this.pdfUrl = this.extractionData.invoice.file;
+      }
+      
+      // Ouvrir le sidenav automatiquement quand les données sont disponibles
+      if (this.structuredData && this.resultSidenav) {
+        this.isLoading = false;
+        this.resultSidenav.open();
+      }
     }
   }
   
@@ -33,8 +82,6 @@ export class FileUploaderComponent implements OnChanges {
       this.structuredData = this.extractionData.invoice.extracted_content.structured_data;
     }
   }
-  
-  // Ces méthodes ne sont plus nécessaires car nous affichons toujours tous les champs
 
   onFileSelected(event: any): void {
     if (event.target.files) {
@@ -52,6 +99,13 @@ export class FileUploaderComponent implements OnChanges {
 
     this.isUploading = true;
     this.structuredData = null;
+    this.pdfUrl = null;
+    
+    // Ouvrir le sidenav et afficher le loader
+    this.isLoading = true;
+    if (this.resultSidenav) {
+      this.resultSidenav.open();
+    }
 
     this.invoiceService.uploadInvoice(this.selectedFile).subscribe({
       next: (response) => {
@@ -61,6 +115,10 @@ export class FileUploaderComponent implements OnChanges {
       },
       error: (error) => {
         this.isUploading = false;
+        this.isLoading = false;
+        if (this.resultSidenav) {
+          this.resultSidenav.close();
+        }
         this.showErrorDialog(error.message || 'Une erreur est survenue lors du téléchargement');
       }
     });

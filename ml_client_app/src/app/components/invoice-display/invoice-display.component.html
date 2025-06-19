@@ -1,0 +1,120 @@
+<div class="invoice-container" *ngIf="invoiceData">
+  <div class="invoice-header">
+    <div class="invoice-title">
+      <h1>FACTURE</h1>
+      <div class="invoice-number">
+        <span class="label">Numéro de facture:</span>
+        <span class="value">{{ invoiceData.numeroFacture || 'Non détecté' }}</span>
+      </div>
+    </div>
+    <div class="invoice-dates">
+      <div class="date-item">
+        <span class="label">Date de facture:</span>
+        <span class="value">{{ formatDate(invoiceData.datePiece) }}</span>
+      </div>
+      <div class="date-item">
+        <span class="label">Date de commande:</span>
+        <span class="value">{{ formatDate(invoiceData.dateCommande) }}</span>
+      </div>
+      <div class="date-item">
+        <span class="label">Date de livraison:</span>
+        <span class="value">{{ formatDate(invoiceData.dateLivraison) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="invoice-references">
+    <div class="reference-item">
+      <span class="label">Numéro de commande:</span>
+      <span class="value">{{ invoiceData.numeroCommande || 'Non détecté' }}</span>
+    </div>
+    <div class="reference-item">
+      <span class="label">Numéro de contrat:</span>
+      <span class="value">{{ invoiceData.numeroContrat || 'Non détecté' }}</span>
+    </div>
+  </div>
+
+  <div class="invoice-parties">
+    <div class="client-info">
+      <h2>Informations client</h2>
+      <div class="info-content">
+        <div class="info-item">
+          <span class="label">Société:</span>
+          <span class="value">{{ invoiceData.client?.societe || 'Non détecté' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Code client:</span>
+          <span class="value">{{ invoiceData.client?.code || 'Non détecté' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">N° TVA:</span>
+          <span class="value">{{ invoiceData.client?.tva || 'Non détecté' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">SIRET:</span>
+          <span class="value">{{ invoiceData.client?.siret || 'Non détecté' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Ville:</span>
+          <span class="value">{{ invoiceData.client?.ville || 'Non détecté' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Pays:</span>
+          <span class="value">{{ invoiceData.client?.pays || 'Non détecté' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="invoice-items">
+    <h2>Détail des articles</h2>
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th>Désignation</th>
+          <th>Quantité</th>
+          <th>Prix unitaire HT</th>
+          <th>Remise</th>
+          <th>Total HT</th>
+          <th>Total TTC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let article of invoiceData.articles">
+          <td>{{ article.nom || 'Non spécifié' }}</td>
+          <td>{{ article.quantite || 'Non spécifié' }}</td>
+          <td>{{ formatAmount(article.prixHT) }}</td>
+          <td>{{ formatAmount(article.remise) }}</td>
+          <td>{{ formatAmount(article.totalHT) }}</td>
+          <td>{{ formatAmount(article.totalTTC) }}</td>
+        </tr>
+        <tr *ngIf="!invoiceData.articles || invoiceData.articles.length === 0">
+          <td colspan="6" class="no-data-cell">Aucun article détecté</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="invoice-summary">
+    <div class="summary-item">
+      <span class="label">Total HT:</span>
+      <span class="value">{{ formatAmount(invoiceData.totalHT) }}</span>
+    </div>
+    <div class="summary-item">
+      <span class="label">Total TVA:</span>
+      <span class="value">{{ formatAmount(invoiceData.totalTVA) }}</span>
+    </div>
+    <div class="summary-item total">
+      <span class="label">Total TTC:</span>
+      <span class="value">{{ formatAmount(invoiceData.totalTTC) }}</span>
+    </div>
+  </div>
+
+  <div class="invoice-footer">
+    <p>Merci pour votre confiance</p>
+  </div>
+</div>
+
+<div class="no-data" *ngIf="!invoiceData">
+  <p>Aucune donnée de facture disponible</p>
+</div>
