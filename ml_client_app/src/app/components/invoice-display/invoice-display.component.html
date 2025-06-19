@@ -1,24 +1,36 @@
 <div class="invoice-container" *ngIf="invoiceData">
+  <div class="edit-toggle">
+    <label class="switch">
+      <input type="checkbox" [checked]="isEditable" (change)="toggleEditMode()">
+      <span class="slider"></span>
+    </label>
+    <span class="toggle-label">{{ isEditable ? 'Mode édition' : 'Mode lecture' }}</span>
+  </div>
+
   <div class="invoice-header">
     <div class="invoice-title">
       <h1>FACTURE</h1>
       <div class="invoice-number">
         <span class="label">Numéro de facture:</span>
-        <span class="value">{{ invoiceData.numeroFacture || 'Non détecté' }}</span>
+        <span class="value" *ngIf="!isEditable">{{ invoiceData.numeroFacture || 'Non détecté' }}</span>
+        <input *ngIf="isEditable" type="text" [(ngModel)]="invoiceData.numeroFacture" class="editable-input">
       </div>
     </div>
     <div class="invoice-dates">
       <div class="date-item">
         <span class="label">Date de facture:</span>
-        <span class="value">{{ formatDate(invoiceData.datePiece) }}</span>
+        <span class="value" *ngIf="!isEditable">{{ formatDate(invoiceData.datePiece) }}</span>
+        <input *ngIf="isEditable" type="date" [(ngModel)]="invoiceData.datePiece" class="editable-input">
       </div>
       <div class="date-item">
         <span class="label">Date de commande:</span>
-        <span class="value">{{ formatDate(invoiceData.dateCommande) }}</span>
+        <span class="value" *ngIf="!isEditable">{{ formatDate(invoiceData.dateCommande) }}</span>
+        <input *ngIf="isEditable" type="date" [(ngModel)]="invoiceData.dateCommande" class="editable-input">
       </div>
       <div class="date-item">
         <span class="label">Date de livraison:</span>
-        <span class="value">{{ formatDate(invoiceData.dateLivraison) }}</span>
+        <span class="value" *ngIf="!isEditable">{{ formatDate(invoiceData.dateLivraison) }}</span>
+        <input *ngIf="isEditable" type="date" [(ngModel)]="invoiceData.dateLivraison" class="editable-input">
       </div>
     </div>
   </div>
@@ -26,11 +38,13 @@
   <div class="invoice-references">
     <div class="reference-item">
       <span class="label">Numéro de commande:</span>
-      <span class="value">{{ invoiceData.numeroCommande || 'Non détecté' }}</span>
+      <span class="value" *ngIf="!isEditable">{{ invoiceData.numeroCommande || 'Non détecté' }}</span>
+      <input *ngIf="isEditable" type="number" [(ngModel)]="invoiceData.numeroCommande" class="editable-input">
     </div>
     <div class="reference-item">
       <span class="label">Numéro de contrat:</span>
-      <span class="value">{{ invoiceData.numeroContrat || 'Non détecté' }}</span>
+      <span class="value" *ngIf="!isEditable">{{ invoiceData.numeroContrat || 'Non détecté' }}</span>
+      <input *ngIf="isEditable" type="text" [(ngModel)]="invoiceData.numeroContrat" class="editable-input">
     </div>
   </div>
 
@@ -40,27 +54,33 @@
       <div class="info-content">
         <div class="info-item">
           <span class="label">Société:</span>
-          <span class="value">{{ invoiceData.client?.societe || 'Non détecté' }}</span>
+          <span class="value" *ngIf="!isEditable">{{ invoiceData.client?.societe || 'Non détecté' }}</span>
+          <input *ngIf="isEditable" type="text" [(ngModel)]="invoiceData.client.societe" class="editable-input">
         </div>
         <div class="info-item">
           <span class="label">Code client:</span>
-          <span class="value">{{ invoiceData.client?.code || 'Non détecté' }}</span>
+          <span class="value" *ngIf="!isEditable">{{ invoiceData.client?.code || 'Non détecté' }}</span>
+          <input *ngIf="isEditable" type="text" [(ngModel)]="invoiceData.client.code" class="editable-input">
         </div>
         <div class="info-item">
           <span class="label">N° TVA:</span>
-          <span class="value">{{ invoiceData.client?.tva || 'Non détecté' }}</span>
+          <span class="value" *ngIf="!isEditable">{{ invoiceData.client?.tva || 'Non détecté' }}</span>
+          <input *ngIf="isEditable" type="text" [(ngModel)]="invoiceData.client.tva" class="editable-input">
         </div>
         <div class="info-item">
           <span class="label">SIRET:</span>
-          <span class="value">{{ invoiceData.client?.siret || 'Non détecté' }}</span>
+          <span class="value" *ngIf="!isEditable">{{ invoiceData.client?.siret || 'Non détecté' }}</span>
+          <input *ngIf="isEditable" type="text" [(ngModel)]="invoiceData.client.siret" class="editable-input">
         </div>
         <div class="info-item">
           <span class="label">Ville:</span>
-          <span class="value">{{ invoiceData.client?.ville || 'Non détecté' }}</span>
+          <span class="value" *ngIf="!isEditable">{{ invoiceData.client?.ville || 'Non détecté' }}</span>
+          <input *ngIf="isEditable" type="text" [(ngModel)]="invoiceData.client.ville" class="editable-input">
         </div>
         <div class="info-item">
           <span class="label">Pays:</span>
-          <span class="value">{{ invoiceData.client?.pays || 'Non détecté' }}</span>
+          <span class="value" *ngIf="!isEditable">{{ invoiceData.client?.pays || 'Non détecté' }}</span>
+          <input *ngIf="isEditable" type="text" [(ngModel)]="invoiceData.client.pays" class="editable-input">
         </div>
       </div>
     </div>
@@ -77,19 +97,53 @@
           <th>Remise</th>
           <th>Total HT</th>
           <th>Total TTC</th>
+          <th *ngIf="isEditable">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let article of invoiceData.articles">
-          <td>{{ article.nom || 'Non spécifié' }}</td>
-          <td>{{ article.quantite || 'Non spécifié' }}</td>
-          <td>{{ formatAmount(article.prixHT) }}</td>
-          <td>{{ formatAmount(article.remise) }}</td>
+        <tr *ngFor="let article of invoiceData.articles; let i = index">
+          <td>
+            <span *ngIf="!isEditable">{{ article.nom || 'Non spécifié' }}</span>
+            <input *ngIf="isEditable" type="text" [(ngModel)]="article.nom" class="editable-input">
+          </td>
+          <td>
+            <span *ngIf="!isEditable">{{ article.quantite || 'Non spécifié' }}</span>
+            <input *ngIf="isEditable" type="number" [(ngModel)]="article.quantite" class="editable-input" (change)="updateArticleTotals(article)">
+          </td>
+          <td>
+            <span *ngIf="!isEditable">{{ formatAmount(article.prixHT) }}</span>
+            <input *ngIf="isEditable" type="number" [(ngModel)]="article.prixHT" class="editable-input" (change)="updateArticleTotals(article)">
+          </td>
+          <td>
+            <span *ngIf="!isEditable">{{ formatAmount(article.remise) }}</span>
+            <input *ngIf="isEditable" type="number" [(ngModel)]="article.remise" class="editable-input" (change)="updateArticleTotals(article)">
+          </td>
           <td>{{ formatAmount(article.totalHT) }}</td>
           <td>{{ formatAmount(article.totalTTC) }}</td>
+          <td *ngIf="isEditable">
+            <button class="delete-btn" (click)="removeArticle(i)">Supprimer</button>
+          </td>
         </tr>
         <tr *ngIf="!invoiceData.articles || invoiceData.articles.length === 0">
-          <td colspan="6" class="no-data-cell">Aucun article détecté</td>
+          <td [attr.colspan]="isEditable ? 7 : 6" class="no-data-cell">Aucun article détecté</td>
+        </tr>
+        <tr *ngIf="isEditable" class="new-article-row">
+          <td>
+            <input type="text" [(ngModel)]="newArticle.nom" placeholder="Nom de l'article" class="editable-input">
+          </td>
+          <td>
+            <input type="number" [(ngModel)]="newArticle.quantite" placeholder="Quantité" class="editable-input">
+          </td>
+          <td>
+            <input type="number" [(ngModel)]="newArticle.prixHT" placeholder="Prix HT" class="editable-input">
+          </td>
+          <td>
+            <input type="number" [(ngModel)]="newArticle.remise" placeholder="Remise %" class="editable-input">
+          </td>
+          <td colspan="2"></td>
+          <td>
+            <button class="add-btn" (click)="addArticle()">Ajouter</button>
+          </td>
         </tr>
       </tbody>
     </table>

@@ -39,6 +39,15 @@ interface StructuredData {
 })
 export class InvoiceDisplayComponent implements OnInit {
   @Input() invoiceData: StructuredData | null = null;
+  isEditable = false;
+  newArticle: Article = {
+    nom: '',
+    quantite: 0,
+    prixHT: 0,
+    remise: 0,
+    totalHT: 0,
+    totalTTC: 0
+  };
   
   constructor() { }
   
@@ -75,5 +84,59 @@ export class InvoiceDisplayComponent implements OnInit {
       return 'Non détectée';
     }
     return date;
+  }
+  
+  // Méthode pour basculer le mode édition
+  toggleEditMode(): void {
+    this.isEditable = !this.isEditable;
+  }
+  
+  // Méthode pour ajouter un nouvel article
+  addArticle(): void {
+    if (!this.invoiceData) return;
+    
+    // Calculer les totaux
+    this.newArticle.totalHT = this.newArticle.quantite * this.newArticle.prixHT * (1 - this.newArticle.remise / 100);
+    this.newArticle.totalTTC = this.newArticle.totalHT * 1.2; // TVA à 20% par défaut
+    
+    // Ajouter l'article
+    this.invoiceData.articles.push({...this.newArticle});
+    
+    // Recalculer les totaux de la facture
+    this.recalculateInvoiceTotals();
+    
+    // Réinitialiser le nouvel article
+    this.newArticle = {
+      nom: '',
+      quantite: 0,
+      prixHT: 0,
+      remise: 0,
+      totalHT: 0,
+      totalTTC: 0
+    };
+  }
+  
+  // Méthode pour supprimer un article
+  removeArticle(index: number): void {
+    if (!this.invoiceData) return;
+    
+    this.invoiceData.articles.splice(index, 1);
+    this.recalculateInvoiceTotals();
+  }
+  
+  // Méthode pour recalculer les totaux de la facture
+  recalculateInvoiceTotals(): void {
+    if (!this.invoiceData) return;
+    
+    this.invoiceData.totalHT = this.invoiceData.articles.reduce((sum, article) => sum + article.totalHT, 0);
+    this.invoiceData.totalTTC = this.invoiceData.articles.reduce((sum, article) => sum + article.totalTTC, 0);
+    this.invoiceData.totalTVA = this.invoiceData.totalTTC - this.invoiceData.totalHT;
+  }
+  
+  // Méthode pour mettre à jour les totaux d'un article
+  updateArticleTotals(article: Article): void {
+    article.totalHT = article.quantite * article.prixHT * (1 - article.remise / 100);
+    article.totalTTC = article.totalHT * 1.2; // TVA à 20% par défaut
+    this.recalculateInvoiceTotals();
   }
 }

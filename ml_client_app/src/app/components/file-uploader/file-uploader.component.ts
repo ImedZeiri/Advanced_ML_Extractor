@@ -11,7 +11,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 import { InvoiceService } from '../../services/invoice.service';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+} from '@angular/animations';
 
 interface Article {
   nom: string;
@@ -51,34 +57,38 @@ interface StructuredData {
   styleUrls: ['./file-uploader.component.scss'],
   animations: [
     trigger('expandCollapse', [
-      state('expanded', style({
-        width: '50%',
-        opacity: 1
-      })),
-      state('collapsed', style({
-        width: '0%',
-        opacity: 0,
-        display: 'none'
-      })),
+      state(
+        'expanded',
+        style({
+          width: '50%',
+          opacity: 1,
+        })
+      ),
+      state(
+        'collapsed',
+        style({
+          width: '0%',
+          opacity: 0,
+          display: 'none',
+        })
+      ),
       transition('collapsed => expanded', [
         style({ display: 'block' }),
-        animate('300ms ease-out')
+        animate('300ms ease-out'),
       ]),
       transition('expanded => collapsed', [
         animate('300ms ease-in', style({ width: '0%', opacity: 0 })),
-        style({ display: 'none' })
-      ])
+        style({ display: 'none' }),
+      ]),
     ]),
     trigger('fadeInOut', [
       transition(':enter', [
         style({ opacity: 0 }),
-        animate('300ms ease-out', style({ opacity: 1 }))
+        animate('300ms ease-out', style({ opacity: 1 })),
       ]),
-      transition(':leave', [
-        animate('300ms ease-in', style({ opacity: 0 }))
-      ])
-    ])
-  ]
+      transition(':leave', [animate('300ms ease-in', style({ opacity: 0 }))]),
+    ]),
+  ],
 })
 export class FileUploaderComponent implements OnChanges {
   @Output() extractionSuccess = new EventEmitter<any>();
@@ -145,7 +155,7 @@ export class FileUploaderComponent implements OnChanges {
       this.showErrorDialog('Veuillez sélectionner un fichier');
       return;
     }
-
+    this.showPdf = false;
     this.isUploading = true;
     this.structuredData = null;
     this.pdfUrl = null;
@@ -183,25 +193,24 @@ export class FileUploaderComponent implements OnChanges {
 
   toggleExpand(): void {
     this.isExpanded = !this.isExpanded;
-    
+
     // Si on réduit la vue, masquer immédiatement le PDF
     if (!this.isExpanded) {
       this.showPdf = false;
     }
-    
+
     // Ajout d'une classe temporaire pour l'animation
     const container = document.querySelector('.result-container');
     if (container) {
       container.classList.add('animating');
-      
+
       setTimeout(() => {
         container.classList.remove('animating');
-        
-        // Afficher le PDF après la fin de l'animation si on est en mode expansion
+
         if (this.isExpanded) {
           this.showPdf = true;
         }
-      }, 300); // Durée de l'animation
+      }, 300);
     }
   }
 }
