@@ -4,44 +4,43 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 30px;
   margin-bottom: 30px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   color: #333;
   position: relative;
 }
 
-// Switch button styles
 .edit-toggle {
   position: absolute;
   top: 20px;
   right: 20px;
   display: flex;
   align-items: center;
-  
+
   .toggle-label {
     margin-left: 10px;
     font-weight: 500;
   }
-  
+
   .switch {
     position: relative;
     display: inline-block;
     width: 50px;
     height: 24px;
-    
+
     input {
       opacity: 0;
       width: 0;
       height: 0;
-      
+
       &:checked + .slider {
-        background-color: #4CAF50;
+        background-color: #4caf50;
       }
-      
+
       &:checked + .slider:before {
         transform: translateX(26px);
       }
     }
-    
+
     .slider {
       position: absolute;
       cursor: pointer;
@@ -50,9 +49,9 @@
       right: 0;
       bottom: 0;
       background-color: #ccc;
-      transition: .4s;
+      transition: 0.4s;
       border-radius: 24px;
-      
+
       &:before {
         position: absolute;
         content: "";
@@ -61,7 +60,7 @@
         left: 4px;
         bottom: 4px;
         background-color: white;
-        transition: .4s;
+        transition: 0.4s;
         border-radius: 50%;
       }
     }
@@ -75,7 +74,7 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
-  
+
   &:focus {
     outline: none;
     border-color: #3f51b5;
@@ -84,7 +83,8 @@
 }
 
 // Button styles
-.add-btn, .delete-btn {
+.add-btn,
+.delete-btn {
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
@@ -94,9 +94,9 @@
 }
 
 .add-btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
-  
+
   &:hover {
     background-color: #45a049;
   }
@@ -105,7 +105,7 @@
 .delete-btn {
   background-color: #f44336;
   color: white;
-  
+
   &:hover {
     background-color: #d32f2f;
   }
@@ -121,6 +121,7 @@
   margin-bottom: 30px;
   border-bottom: 2px solid #3f51b5;
   padding-bottom: 20px;
+  margin-top: 30px;
 }
 
 .invoice-title {
@@ -130,15 +131,15 @@
     font-size: 28px;
     font-weight: 700;
   }
-  
+
   .invoice-number {
     font-size: 16px;
-    
+
     .label {
       font-weight: 500;
       margin-right: 5px;
     }
-    
+
     .value {
       font-weight: 700;
     }
@@ -147,10 +148,10 @@
 
 .invoice-dates {
   text-align: right;
-  
+
   .date-item {
     margin-bottom: 5px;
-    
+
     .label {
       font-weight: 500;
       margin-right: 5px;
@@ -166,13 +167,13 @@
   padding: 15px;
   background-color: #f9f9f9;
   border-radius: 6px;
-  
+
   .reference-item {
     .label {
       font-weight: 500;
       margin-right: 5px;
     }
-    
+
     .value {
       font-weight: 700;
     }
@@ -182,10 +183,10 @@
 .invoice-parties {
   display: flex;
   margin-bottom: 30px;
-  
+
   .client-info {
     flex: 1;
-    
+
     h2 {
       color: #3f51b5;
       font-size: 18px;
@@ -193,15 +194,15 @@
       margin-bottom: 15px;
       font-weight: 500;
     }
-    
+
     .info-content {
       background-color: #f9f9f9;
       padding: 15px;
       border-radius: 6px;
-      
+
       .info-item {
         margin-bottom: 8px;
-        
+
         .label {
           font-weight: 500;
           margin-right: 5px;
@@ -215,7 +216,7 @@
 
 .invoice-items {
   margin-bottom: 30px;
-  
+
   h2 {
     color: #3f51b5;
     font-size: 18px;
@@ -223,31 +224,32 @@
     margin-bottom: 15px;
     font-weight: 500;
   }
-  
+
   .items-table {
     width: 100%;
     border-collapse: collapse;
-    
-    th, td {
+
+    th,
+    td {
       padding: 12px 15px;
       text-align: left;
       border-bottom: 1px solid #e0e0e0;
     }
-    
+
     th {
       background-color: #f5f5f5;
       font-weight: 500;
       color: #333;
     }
-    
+
     tr:last-child td {
       border-bottom: none;
     }
-    
+
     tr:hover td {
       background-color: #f9f9f9;
     }
-    
+
     .no-data-cell {
       text-align: center;
       font-style: italic;
@@ -262,18 +264,18 @@
   flex-direction: column;
   align-items: flex-end;
   margin-bottom: 30px;
-  
+
   .summary-item {
     margin-bottom: 8px;
     padding: 8px 15px;
     min-width: 200px;
     text-align: right;
-    
+
     .label {
       font-weight: 500;
       margin-right: 15px;
     }
-    
+
     &.total {
       font-size: 18px;
       font-weight: 700;
