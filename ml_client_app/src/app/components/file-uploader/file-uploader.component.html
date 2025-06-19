@@ -1,25 +1,36 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #pdfSidenav mode="over" position="start" class="pdf-sidenav">
-    <div class="sidenav-header">
-      <h2>Facture originale</h2>
-      <button mat-icon-button (click)="pdfSidenav.close()">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-    <div class="pdf-container" *ngIf="pdfUrl">
-      <iframe [src]="pdfUrl | safe" width="100%" height="100%" frameborder="0"></iframe>
-    </div>
-  </mat-sidenav>
-  
-  <mat-sidenav #resultSidenav mode="over" position="end" class="result-sidenav">
+  <mat-sidenav #resultSidenav mode="over" position="end" [ngClass]="{'result-sidenav': !isExpanded, 'result-sidenav-expanded': isExpanded}">
     <div class="sidenav-header">
       <h2>Résultat de l'extraction</h2>
-      <button mat-icon-button (click)="resultSidenav.close()">
-        <mat-icon>close</mat-icon>
-      </button>
+      <div class="header-actions">
+        <button mat-icon-button (click)="toggleExpand()" matTooltip="{{isExpanded ? 'Réduire' : 'Afficher la facture originale'}}">
+          <mat-icon>{{isExpanded ? 'chevron_right' : 'chevron_left'}}</mat-icon>
+        </button>
+        <button mat-icon-button (click)="resultSidenav.close()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
     </div>
-    <div class="result-container">
-      <app-invoice-display *ngIf="!isLoading" [invoiceData]="structuredData"></app-invoice-display>
+    <div class="result-container" [ngClass]="{'split-view': isExpanded}">
+      <div class="extraction-results">
+        <app-invoice-display
+          *ngIf="!isLoading"
+          [invoiceData]="structuredData"
+        ></app-invoice-display>
+      </div>
+      <div class="original-invoice" *ngIf="isExpanded">
+        <div class="invoice-header">
+          <h3>Facture originale</h3>
+        </div>
+        <div class="pdf-container" *ngIf="pdfUrl">
+          <iframe
+            [src]="pdfUrl | safe"
+            width="100%"
+            height="100%"
+            frameborder="0"
+          ></iframe>
+        </div>
+      </div>
     </div>
   </mat-sidenav>
 
@@ -27,37 +38,59 @@
     <mat-card>
       <mat-card-header>
         <mat-card-title>Téléchargement de factures</mat-card-title>
-        <mat-card-subtitle>Téléchargez vos factures pour traitement automatique</mat-card-subtitle>
+        <mat-card-subtitle
+          >Téléchargez vos factures pour traitement
+          automatique</mat-card-subtitle
+        >
       </mat-card-header>
-      
+
       <mat-card-content *ngIf="!isLoading">
-        <div class="upload-area" 
-             [class.drag-over]="dragOver" 
-             (dragover)="dragOver=true; $event.preventDefault();" 
-             (dragleave)="dragOver=false" 
-             (drop)="dragOver=false; onFileSelected($event); $event.preventDefault();">
-          
+        <div
+          class="upload-area"
+          [class.drag-over]="dragOver"
+          (dragover)="dragOver = true; $event.preventDefault()"
+          (dragleave)="dragOver = false"
+          (drop)="
+            dragOver = false; onFileSelected($event); $event.preventDefault()
+          "
+        >
           <mat-icon class="upload-icon">cloud_upload</mat-icon>
           <p>Glissez et déposez votre facture ici ou</p>
-          
+
           <div class="file-input-container">
-            <input type="file" id="file" (change)="onFileSelected($event)" accept=".pdf,.jpg,.jpeg,.png" #fileInput hidden>
-            <button mat-raised-button color="primary" (click)="fileInput.click();structuredData=null">
+            <input
+              type="file"
+              id="file"
+              (change)="onFileSelected($event)"
+              accept=".pdf,.jpg,.jpeg,.png"
+              #fileInput
+              hidden
+            />
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="fileInput.click(); structuredData = null"
+            >
               <mat-icon>attach_file</mat-icon>
               Sélectionner un fichier
             </button>
           </div>
-          
+
           <p *ngIf="selectedFile" class="selected-file">
             Fichier sélectionné: {{ selectedFile.name }}
           </p>
         </div>
       </mat-card-content>
-      
+
       <mat-card-actions align="end" *ngIf="!isLoading">
-        <button mat-raised-button color="accent" (click)="onUpload()" [disabled]="!selectedFile || isUploading">
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="onUpload()"
+          [disabled]="!selectedFile || isUploading"
+        >
           <mat-icon>upload</mat-icon>
-          {{ isUploading ? 'Téléchargement en cours...' : 'Télécharger' }}
+          {{ isUploading ? "Téléchargement en cours..." : "Télécharger" }}
         </button>
       </mat-card-actions>
 
@@ -65,15 +98,16 @@
         <mat-spinner diameter="50"></mat-spinner>
         <p>Traitement en cours...</p>
       </div>
-      
     </mat-card>
-    
+
     <div *ngIf="structuredData" class="floating-actions">
-      <button mat-fab color="primary" (click)="resultSidenav.open()" matTooltip="Voir la facture">
+      <button
+        mat-fab
+        color="primary"
+        (click)="resultSidenav.open()"
+        matTooltip="Voir les résultats"
+      >
         <mat-icon>receipt</mat-icon>
-      </button>
-      <button mat-fab color="accent" *ngIf="pdfUrl" (click)="pdfSidenav.open()" matTooltip="Voir l'original">
-        <mat-icon>description</mat-icon>
       </button>
     </div>
   </mat-sidenav-content>

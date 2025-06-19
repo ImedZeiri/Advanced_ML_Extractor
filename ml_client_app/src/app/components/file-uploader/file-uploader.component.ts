@@ -63,6 +63,7 @@ export class FileUploaderComponent implements OnChanges {
   dragOver = false;
   structuredData: StructuredData | null = null;
   pdfUrl: string | null = null;
+  isExpanded = false;
   displayedColumns: string[] = [
     'nom',
     'quantite',
@@ -146,5 +147,9 @@ export class FileUploaderComponent implements OnChanges {
       width: '350px',
       data: { message },
     });
+  }
+
+  toggleExpand(): void {
+    this.isExpanded = !this.isExpanded;
   }
 }

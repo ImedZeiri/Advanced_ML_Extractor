@@ -20,7 +20,13 @@
 }
 
 .result-sidenav {
-  width: 90%;
+  width: 55%;
+  transition: width 0.3s ease;
+}
+
+.result-sidenav-expanded {
+  width: 85%;
+  transition: width 0.3s ease;
 }
 
 .sidenav-header {
@@ -30,6 +36,11 @@
   padding: 16px;
   background-color: #3f51b5;
   color: white;
+  
+  .header-actions {
+    display: flex;
+    gap: 8px;
+  }
 }
 
 .pdf-container {
@@ -40,6 +51,39 @@
 .result-container {
   height: 91vh;
   overflow-y: auto;
+  
+  &.split-view {
+    display: flex;
+    flex-direction: row;
+    
+    .extraction-results {
+      width: 50%;
+      padding-right: 10px;
+      border-right: 1px solid #e0e0e0;
+      overflow-y: auto;
+    }
+    
+    .original-invoice {
+      width: 50%;
+      padding-left: 10px;
+      overflow-y: auto;
+      
+      .invoice-header {
+        padding: 10px 0;
+        border-bottom: 1px solid #e0e0e0;
+        margin-bottom: 10px;
+        
+        h3 {
+          margin: 0;
+          color: #3f51b5;
+        }
+      }
+    }
+  }
+  
+  .extraction-results {
+    width: 100%;
+  }
 }
 
 .loading-container {
